@@ -48,7 +48,7 @@ const ConversationMenu = () => {
 
   const filteredChats = React.useMemo(() => {
     if (!selectedBotId) return getAllActiveChat;
-    console.log("getAllActive", getAllActiveChat);
+    // console.log("getAllActive", getAllActiveChat);
     return getAllActiveChat?.filter(
       (chat: any) => chat.chatbotId === selectedBotId
     );
@@ -77,53 +77,16 @@ const ConversationMenu = () => {
     );
   }
   return (
-    // <div className='w-full md:max-w-md  mx-auto flex items-center  md:h-full h-auto  '>
-    //   <TabsMenu triggers={TABS_MENU} className=' mb-2'>
-    //     <Button
-    //       variant={"ghost"}
-    //       className='gap-2 border bg-gray-200 text-black w-full md:w-[100px] '
-    //     >
-    //       Export <Download className='h-5 w-5' />
-    //     </Button>
-    //     <TabsContent value='unread' className='w-full  flex-1'>
-    //       <Separator orientation='horizontal' className='mt-3' />
-    //       <ConversationSearch
-    //         chatbots={chatbots as ChatBot[]}
-    //         onSelectBot={setSelectedBotId}
-    //         defaultSelect={selectedBotId}
-    //       />
-    //       <MessageComponent data={filteredChats as any} />
-    //     </TabsContent>
-    //     <TabsContent value='all message'>
-    //       <Separator orientation='horizontal' className='mt-3' />
-    //       <ConversationSearch
-    //         chatbots={chatbots as ChatBot[]}
-    //         onSelectBot={setSelectedBotId}
-    //         defaultSelect={selectedBotId}
-    //       />
-    //       <MessageComponent data={filteredCustomers as any} />
-    //     </TabsContent>
-
-    //     <TabsContent value='starred'>
-    //       <Separator orientation='horizontal' className='mt-3' />
-    //       starred messages
-    //     </TabsContent>
-    //     <TabsContent value='expired'>
-    //       <Separator orientation='horizontal' className='mt-3' />
-    //     </TabsContent>
-    //   </TabsMenu>
-    // </div>
-
     <div className='w-full md:max-w-md mx-auto flex items-center h-full  '>
       <TabsMenu triggers={TABS_MENU} className=''>
         <Button
           variant={"ghost"}
-          className='gap-2 border bg-gray-200 text-black w-full md:w-[100px]'
+          className='gap-2 border bg-gray-200 text-black w-full md:w-[100px] '
         >
           Export <Download className='h-5 w-5' />
         </Button>
-        <TabsContent value='unread' className='w-full flex-1'>
-          <div className=' bg-gray-100 mr-5 '>
+        <TabsContent value='active message' className='w-full flex-1'>
+          <div className=' bg-gray-100  '>
             <Separator orientation='horizontal' className='mt-3' />
             <ConversationSearch
               chatbots={chatbots as ChatBot[]}

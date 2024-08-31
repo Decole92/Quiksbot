@@ -21,10 +21,6 @@ const ChatbotMessages = ({
     refDiv.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // <Avatar
-  //               seed={chatbot?.name?.toString()}
-  //               className={`border-2 border-[${chatbot?.userMessageBgColor}] h-12 w-12 bg-white rounded-full  `}
-  //             />
   return (
     <div className='flex flex-col py-2 overflow-y-auto px-5 space-y-5  '>
       {messages?.map((message: ChatMessage) => {

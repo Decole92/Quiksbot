@@ -33,7 +33,7 @@ export const getUserCustomers = async (userId: string) => {
     const customers =
       userWithCustomers?.ChatBot.flatMap((chatBot) =>
         chatBot.customer
-          .filter((customer) => customer.chatRoom.length > 0)
+          //   .filter((customer) => customer.chatRoom.length > 0)
 
           .map((customer) => ({
             ...customer,
@@ -128,7 +128,24 @@ export const viewMessage = async (id: string) => {
     throw new Error("error occurs while fetching chatroom");
   }
 };
+export const updateChatRoomMode = async (id: string) => {
+  if (!id) return;
 
+  try {
+    const update = prisma.chatRoom?.update({
+      where: {
+        id: id,
+      },
+      data: {
+        live: false,
+      },
+    });
+
+    return update;
+  } catch (err) {
+    throw new Error("error occurs while fetching chatroom");
+  }
+};
 export const onMailer = (email: string) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",

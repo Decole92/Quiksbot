@@ -9,7 +9,8 @@ import { viewMessage } from "@/actions/customer";
 import { useGlobalStore } from "@/store/globalStore";
 import { getBot } from "@/actions/bot";
 import UrgentIcon from "../../constant/icons/urgentIcon";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
+import { getChatRoom } from "@/actions/chat";
 
 type ChatMessage = {
   id: string;
@@ -34,8 +35,8 @@ type Props = {
 };
 
 const ChatCard = ({ customer }: Props) => {
-  const setSelectedChatRoomId = useGlobalStore(
-    (state) => state.setSelectedChatRoomId
+  const [selectedChatRoomId, setSelectedChatRoomId] = useGlobalStore(
+    (state) => [state?.selectedChatRoomId, state.setSelectedChatRoomId]
   );
   const [urgent, setUrgent] = useState(false);
   const lastChatRoomEntry = customer?.chatRoom?.[customer.chatRoom.length - 1];
@@ -49,38 +50,22 @@ const ChatCard = ({ customer }: Props) => {
       console.error("Chatbot ID is not available.");
       return;
     }
+
     setSelectedChatRoomId(id!);
   };
+  const { data: chatRoom } = useSWR(
+    selectedChatRoomId ? `/api/chatRoom/${selectedChatRoomId}` : null,
+    () => getChatRoom(selectedChatRoomId!)
+  );
 
-  // const dt = new Date(lastChatRoomEntry?.createdAt);
-  // const current = new Date();
-  // const currentDate = current.getDate();
-
-  // const date = dt.getDate();
-
-  // const difference = currentDate - date;
-
-  // useEffect(() => {
-  //   if (difference <= 0) {
-  //     if (current.getHours() - dt.getHours() < 2) {
-  //       setUrgent(true);
-  //     }
-  //   }
-  // }, [customer]);
-
-  // const onSeenChat = async () => {
-  //   if (urgent) {
-  //     await viewMessage(id as any);
-  //     setUrgent(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   onSeenChat();
-  // }, [chatRoom]);
-
+  console.log("this is chatRoomId", chatRoom?.id);
+  console.log("this is selectedChatRoomId", selectedChatRoomId);
   return (
-    <Card className='rounded-none border-r-0 hover:bg-white cursor-pointer transition duration-150 ease-in-out bg-white relative '>
+    <Card
+      className={`${
+        chatRoom && selectedChatRoomId === id ? "bg-gray-100" : "bg-white"
+      } rounded-none border-r-0  cursor-pointer transition duration-150 ease-in-out relative `}
+    >
       <CardContent
         onClick={() => handleViewChatroom(id)}
         className='py-4 flex items-center gap-5'

@@ -56,8 +56,8 @@ type TABS_MENU_PROPS = {
 
 export const TABS_MENU: TABS_MENU_PROPS[] = [
   {
-    label: "unread",
-    icon: <MailWarning />,
+    label: "active message",
+    icon: <Mail />,
   },
   {
     label: "all message",

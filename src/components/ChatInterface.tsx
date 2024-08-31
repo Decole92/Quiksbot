@@ -5,18 +5,13 @@ import { useGlobalStore } from "@/store/globalStore";
 import ChatbotMessages from "./ChatbotMessages";
 import ChatbotHeader from "./ChatbotComponent/ChatbotHeader";
 import ChatbotInput from "./ChatbotComponent/chatbotInput";
-import { viewMessage } from "@/actions/customer";
+import { updateChatRoomMode, viewMessage } from "@/actions/customer";
 import { getBot } from "@/actions/bot";
 import useSWR from "swr";
 import logo from "../../public/golden.png";
 import Image from "next/image";
 import { clientPusher } from "@/lib/pusher";
 import { getChatMessages, getChatRoom } from "@/actions/chat";
-
-// const fetchChatRoom = async (id: string) => {
-//   const response = await viewMessage(id);
-//   return response;
-// };
 
 const fetchBot = async (chatbotId: string) => {
   const response = await getBot(chatbotId);
@@ -68,25 +63,33 @@ function ChatInterface() {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )[0];
   let isTimeExceeded;
-  if (lastAIMessage) {
-    // Extract the creation time of the last AI message
-    const lastMessageTime = new Date(lastAIMessage.createdAt).getTime();
 
-    // Get the current time
+  if (lastAIMessage) {
+    const lastMessageTime = new Date(lastAIMessage.createdAt).getTime();
     const currentTime = new Date().getTime();
 
-    // Calculate the time difference in minutes
     const timeDifferenceInMinutes =
       (currentTime - lastMessageTime) / (1000 * 60);
 
-    // Check if the difference is greater than 30 minutes
-    isTimeExceeded = timeDifferenceInMinutes < 60;
+    isTimeExceeded = timeDifferenceInMinutes > 30;
   }
 
   useEffect(() => {
     setChatBot();
+    mutate(getChatMessages(selectedChatRoomId!));
     setChatRoom(getChatRoom(selectedChatRoomId!));
-  }, [selectedChatRoomId, bot, chatRoom]);
+  }, [selectedChatRoomId, bot]);
+
+  useEffect(() => {
+    if (isTimeExceeded!) {
+      const updateChatRoom = async () => {
+        if (chatRoom && chatRoom.id) {
+          await updateChatRoomMode(chatRoom.id);
+        }
+      };
+      updateChatRoom();
+    }
+  }, [chatMessages, chatRoom]);
 
   useEffect(() => {
     const channel = clientPusher.subscribe("message");
@@ -114,17 +117,19 @@ function ChatInterface() {
   }, [chatMessages, mutate, selectedChatRoomId, clientPusher, chatRoom?.live]);
 
   if (loadingBot || loadingRoom) {
-    <div className='flex justify-center w-full h-full items-center'>
-      <div>
-        <Image
-          src={logo}
-          alt='logo'
-          height={100}
-          width={100}
-          className='animate-spin'
-        />
+    return (
+      <div className='flex justify-center w-full h-full items-center'>
+        <div>
+          <Image
+            src={logo}
+            alt='logo'
+            height={100}
+            width={100}
+            className='animate-spin'
+          />
+        </div>
       </div>
-    </div>;
+    );
   }
   if (bot && chatRoom) {
     return (
@@ -144,7 +149,7 @@ function ChatInterface() {
           )}
         </div>
         <div className='bottom-0 z-30 sticky bg-white w-full '>
-          {!chatRoom?.live || !isTimeExceeded ? (
+          {!chatRoom?.live ? (
             <div className='p-4 text-center border border-gray-600 rounded-full m-4'>
               Customer might not be be active you can reach your customer via
               email
@@ -163,7 +168,9 @@ function ChatInterface() {
 
   return (
     <div className='flex items-center justify-center h-screen'>
-      <div> There is no chatroom selected yet!!!</div>
+      <div>
+        <h3>There is no chatroom selected yet!!!</h3>
+      </div>
     </div>
   );
 }
