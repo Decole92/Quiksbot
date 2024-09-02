@@ -77,7 +77,7 @@ const ConversationMenu = () => {
     );
   }
   return (
-    <div className='w-full md:max-w-md mx-auto flex items-center h-full  '>
+    <div className='w-full md:max-w-md mx-auto flex items-center h-full mt-24'>
       <TabsMenu triggers={TABS_MENU} className=''>
         <Button
           variant={"ghost"}
@@ -97,7 +97,7 @@ const ConversationMenu = () => {
           <MessageComponent data={filteredChats as any} />
         </TabsContent>
         <TabsContent value='all message' className=''>
-          <div className='sticky top-28 z-10 bg-gray-100 '>
+          <div className=' bg-gray-100 '>
             <Separator orientation='horizontal' className='mt-3' />
             <ConversationSearch
               chatbots={chatbots as ChatBot[]}

@@ -149,12 +149,12 @@ model FilterQuestions {
 // }
 
 model Customer {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email       String?
-  name        String?
-  //questions CustomerResponses[]
-  countryCode String?
-  chatRoom    ChatRoom[]
+  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email    String?
+  name     String?
+  country  String?
+  city     String?
+  chatRoom ChatRoom[]
 
   //booking Bookings[]
 

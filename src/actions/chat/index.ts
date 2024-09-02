@@ -8,6 +8,8 @@ import { PineconeStore } from "@langchain/pinecone";
 import { onMailer } from "../customer";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { serverPusher } from "@/lib/pusher";
+import axios from "axios";
+import { BASE_URL } from "../../../constant/url";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_KEY!,
@@ -33,14 +35,18 @@ export const startNewChat = async ({
 
     if (!chatbot) return;
 
-    // const response = await axios.get("/api/get-location");
-
-    // console.log("response", response?.data?.country);
-
+    const response = await fetch(`${BASE_URL}/api/getLocation`);
+  const data = await response.json();
+  console.log("this is data", data)
+   const {country, city} = data;
+  
     const customer = await prisma.customer.create({
       data: {
         name: name,
         email: email,
+        country: country,
+        city: city,
+    
         Chatbot: {
           connect: { id: id },
         },
