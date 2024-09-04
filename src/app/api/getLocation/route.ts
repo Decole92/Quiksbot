@@ -14,10 +14,10 @@ export async function GET(request: Request) {
           throw new Error('HTTP error ' + response.status);
       }
       const data = await response.json();
-      const { country_name, city } = data;
+      const { country_name, city,   latitude,  longitude } = data;
 
       console.log("this is data", data);
-      return NextResponse.json({country: country_name, city: city},{status: 200});
+      return NextResponse.json({country: country_name, city: city, lat:latitude, lng:longitude},{status: 200});
  
   } catch (error) {
      return NextResponse.json({ error: 'Failed to fetch location' }, { status: 500 });

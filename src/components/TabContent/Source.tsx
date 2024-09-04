@@ -18,15 +18,17 @@ function Source({ chatbotId }: { chatbotId: string }) {
 
   const handleAddCharacteristics = async (e: React.FormEvent) => {
     e.preventDefault();
+     const feature = characteristic;
+     setCharacteristic("");
     startTransition(async () => {
-      const promise = addCharacteristic(chatbotId, characteristic);
+      const promise = addCharacteristic(chatbotId, feature);
       toast.promise(promise, {
         loading: "Adding characteristic..",
         success: "Characteristic Added Successfully!",
         error: "an error has occurred while adding characteristics",
       });
 
-      setCharacteristic("");
+     
       await mutate(() => getBot(chatbotId));
     });
   };
@@ -40,7 +42,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
     });
     await mutate(() => getBot(chatbotId));
   };
-  console.log("pdf length", chatbot?.Source?.pdfFile?.length);
+  // console.log("pdf length", chatbot?.Source?.pdfFile?.length);
   return (
     <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white  '>
       <h3 className='text-2xl pb-4 font-thin'>Bot Training Sources</h3>

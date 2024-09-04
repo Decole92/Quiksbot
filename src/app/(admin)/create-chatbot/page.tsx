@@ -33,7 +33,7 @@ function CreatePage() {
         <div className=''>
           <h2 className='text-black text-xl'>Create </h2>
           <p className='font-thin text-sm'>
-            Create a new chatbot to assist you in your conversationwith your
+            Create a new chatbot to assist you in your conversation with your
             clients.
           </p>
           <form

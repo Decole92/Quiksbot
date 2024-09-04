@@ -71,6 +71,10 @@ interface Customer {
   chatRoom: ChatRoom[];
   Chatbot: ChatBot | null;
   chatbotId: string | null;
+  country?: string,
+  city?: string,
+  lat?:string,
+  lng?: string,
 }
 
 interface ChatRoom {

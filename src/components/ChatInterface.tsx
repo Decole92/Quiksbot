@@ -148,11 +148,20 @@ function ChatInterface() {
             </div>
           )}
         </div>
-        <div className='bottom-0 z-30 sticky bg-white w-full '>
+        <div className='bottom-0 z-30 sticky bg-white w-full  '>
           {!chatRoom?.live ? (
-            <div className='p-4 text-center border border-gray-600 rounded-full m-4'>
-              Customer might not be be active you can reach your customer via
+            <div className='p-5 text-center border border-gray-600 rounded-full m-4'>
+              <h5> Customer might not be  active you can reach your customer via
               email
+                </h5>
+                <div className="">
+      <div className="grid grid-cols-2">
+
+
+        <div className="font-bold p-2 col-span-1">Email Address:</div>
+        <div className=" p-2">{chatRoom?.Customer?.email}</div>
+      </div>
+    </div>
             </div>
           ) : (
             <ChatbotInput

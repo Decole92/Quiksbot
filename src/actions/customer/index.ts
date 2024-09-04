@@ -3,6 +3,12 @@ import nodemailer from "nodemailer";
 import prisma from "../../../prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
+
+type ChartDataEntry = {
+  date: string;
+  [botName: string]: number | string; // botName is dynamic, with the date being a string
+};
+
 export const getUserCustomers = async (userId: string) => {
   if (!userId) return;
   console.log("userId from getUserCustomers", userId);
@@ -171,3 +177,74 @@ export const onMailer = (email: string) => {
     }
   });
 };
+
+export const chartBarData = async() => {
+  try {
+    const chatbots = await prisma.chatBot.findMany({
+      include: {
+        customer: {
+          include: {
+            chatRoom: {
+              select: {
+                createdAt: true,
+              },
+            },
+          
+          },
+        },
+      },
+    });
+console.log("this is chatbots from server", chatbots)
+
+    // Process the data to match the chart format
+    const chartData = chatbots.reduce<ChartDataEntry[]>((acc, chatbot) => {
+      chatbot.customer.forEach((customer) => {
+        customer.chatRoom.forEach((chatRoom) => {
+          const month = chatRoom.createdAt.toISOString().slice(0, 7); // Get YYYY-MM format
+          const botName = chatbot.name;
+    
+          // Find or create the month entry
+          let monthEntry = acc.find((entry) => entry.date === month);
+          if (!monthEntry) {
+            monthEntry = { date: month };
+            acc.push(monthEntry);
+          }
+    
+          // Increment the count for the specific chatbot
+          monthEntry[botName] = (monthEntry[botName] || 0) as number + 1;
+        });
+      });
+    
+      return acc;
+    }, []);
+    
+   
+    const heatmapData = chatbots.flatMap((chatbot: any) =>
+      chatbot.customer
+        .filter((customer: Customer) => customer.lat && customer.lng) // Ensure lat/lng are present
+        .map((customer: Customer) => ({
+          lat: parseFloat(customer.lat!),
+          lng: parseFloat(customer.lng!),
+        }))
+    );
+
+    console.log("this is chartbar from server", chartData);
+    console.log("this is heatmap data from server", heatmapData);
+
+
+
+  // console.log("this is heatmap data from server", heatmapData);
+
+  // console.log("this is chartbar from server & heatmapData", chartData, heatmapData)
+
+  //return  chartData; // Return
+  return { chartData, heatmapData };
+
+
+
+  } catch (error) {
+    console.error("Error fetching chart data:", error);
+
+  }
+}
+
