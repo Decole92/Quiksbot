@@ -22,7 +22,8 @@ import SuggestItems from "@/components/ChatbotComponent/SuggestItems";
 import { useGlobalStore } from "@/store/globalStore";
 import axios from "axios";
 import { clientPusher } from "@/lib/pusher";
-function page({ params: { id } }: { params: { id: string } }) {
+
+function ChatbotPage({ params: { id } }: { params: { id: string } }) {
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
@@ -79,7 +80,8 @@ function page({ params: { id } }: { params: { id: string } }) {
   useEffect(() => {
     const channel = clientPusher.subscribe("message");
     channel.bind("realtime", async (data: ChatMessage) => {
-      if (chatMessages?.some((message) => message.id === data.id)) return;
+      if (chatMessages?.some((message: any) => message.id === data.id))
+        return;
       if (!chatRoom?.live) return;
 
       if (!chatMessages) {
@@ -101,9 +103,9 @@ function page({ params: { id } }: { params: { id: string } }) {
   }, [chatMessages, mutate, clientPusher, chatId, chatRoom?.live]);
 
   return (
-    <div className=''>
+    <div className="">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className='sm:max-w-[425px]  '>
+        <DialogContent className="sm:max-w-[425px]  ">
           <form onSubmit={handleInformationSubmit}>
             <DialogHeader>
               <DialogTitle>Lets help you out!</DialogTitle>
@@ -111,15 +113,15 @@ function page({ params: { id } }: { params: { id: string } }) {
                 I just need a few details to get started.
               </DialogDescription>
             </DialogHeader>
-            <div className='grid gap-4 py-4 '>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='name' className='text-right'>
+            <div className="grid gap-4 py-4 ">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
                   Name
                 </Label>
                 <Input
                   required
-                  placeholder='John Doe'
-                  className='col-span-3'
+                  placeholder="John Doe"
+                  className="col-span-3"
                   value={userDetails.name}
                   onChange={(e) =>
                     setUserDetails((values) => ({
@@ -129,16 +131,16 @@ function page({ params: { id } }: { params: { id: string } }) {
                   }
                 />
               </div>
-              <div className='grid grid-cols-4 items-center gap-4 '>
-                <Label htmlFor='username' className='text-right'>
+              <div className="grid grid-cols-4 items-center gap-4 ">
+                <Label htmlFor="username" className="text-right">
                   Email
                 </Label>
                 <Input
                   required
-                  type='email'
+                  type="email"
                   value={userDetails.email}
-                  placeholder='abc@test.com'
-                  className='col-span-3'
+                  placeholder="abc@test.com"
+                  className="col-span-3"
                   onChange={(e) =>
                     setUserDetails((values) => ({
                       ...values,
@@ -149,7 +151,7 @@ function page({ params: { id } }: { params: { id: string } }) {
               </div>
             </div>
             <DialogFooter>
-              <Button disabled={isLoading} type='submit'>
+              <Button disabled={isLoading} type="submit">
                 {!isLoading ? "Continue" : "Loading..."}
               </Button>
             </DialogFooter>
@@ -157,22 +159,23 @@ function page({ params: { id } }: { params: { id: string } }) {
         </DialogContent>
       </Dialog>
       {bot && (
-        <div className='flex flex-col h-screen max-w-3xl mx-auto bg-white md:rounded-t-lg shadow-2xl md:mt-10'>
+        <div className="flex flex-col h-screen max-w-3xl mx-auto bg-white md:rounded-t-lg shadow-2xl md:mt-10">
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
 
-          <div className='flex-1 overflow-y-auto'>
+          <div className="flex-1 overflow-y-auto">
             <ChatbotMessages
               chatbot={bot as ChatBot}
               messages={chatMessages as ChatMessage[]}
             />
           </div>
 
-          <div className='sticky bottom-0 z-30 bg-white'>
+          <div className="sticky bottom-0 z-30 bg-white">
             <SuggestItems firstQuestion={bot?.firstQuestion as any} />
             <ChatbotInput
               userDetails={userDetails}
               chatRoomId={chatId}
               chatbot={bot as ChatBot}
+              type="user"
             />
           </div>
         </div>
@@ -181,4 +184,4 @@ function page({ params: { id } }: { params: { id: string } }) {
   );
 }
 //correct the chatmessage type here
-export default page;
+export default ChatbotPage;

@@ -61,15 +61,17 @@ function General({ chatbot }: { chatbot: ChatBot }) {
 
   const handleAddQuestions = async (e: React.FormEvent) => {
     e.preventDefault();
+    const question = data?.question;
+    setData((value) => ({ ...value, question: "" }));
     startTransition(async () => {
-      const promise = updateFirstQuestion(chatbot?.id, data?.question);
+      const promise = updateFirstQuestion(chatbot?.id, question);
       toast.promise(promise, {
         loading: "Adding Question..",
         success: "Question Added Successfully!",
         error: "an error has occurred while adding question",
       });
 
-      setData((value) => ({ ...value, question: "" }));
+     
       await mutate(() => getBot(chatbot?.id));
     });
   };
@@ -192,7 +194,7 @@ function General({ chatbot }: { chatbot: ChatBot }) {
                 className='flex items-center md:flex-row flex-col md:gap-4'
               >
                 <Input
-                  maxLength={2}
+                  minLength={2}
                   disabled={limitQuestion}
                   value={data?.question}
                   onChange={(e) =>

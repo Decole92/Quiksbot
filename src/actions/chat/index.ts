@@ -6,23 +6,24 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import pineconeClient from "@/lib/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
 import { onMailer } from "../customer";
-import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
+import {  User, auth, clerkClient, currentUser, getAuth } from "@clerk/nextjs/server";
 import { serverPusher } from "@/lib/pusher";
-import axios from "axios";
+
 import { BASE_URL } from "../../../constant/url";
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_KEY!,
 });
-
+type userDetails = {
+  name: string;
+  email: string;
+};
 export const startNewChat = async ({
   userDetails,
   id,
 }: {
-  userDetails: {
-    name: string;
-    email: string;
-  };
+  userDetails: userDetails;
   id: string;
 }) => {
   const { name, email } = userDetails;
@@ -35,20 +36,28 @@ export const startNewChat = async ({
 
     if (!chatbot) return;
 
-    const response = await fetch(`${BASE_URL}/api/getLocation`);
-  const data = await response.json();
-  console.log("this is data", data)
-   const {country, city, lat, lng} = data;
-  
+    console.log("about to get location here>>>");
+
+    const response = await fetch(`${BASE_URL}/api/getLocation`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const data = await response.json();
+
+    console.log("this is data server side", data);
+    const { country, city, lat, lng } = data;
+
     const customer = await prisma.customer.create({
       data: {
         name: name,
         email: email,
-        country: country,
-        city: city,
-        lat: lat.toString(),
-        lng: lng.toString(),
-    
+        country: country ? country : null,
+        city: city ? city : null,
+        lat: lat ? lat.toString() : null,
+        lng: lng ? lng.toString() : null,
+
         Chatbot: {
           connect: { id: id },
         },
@@ -132,9 +141,10 @@ export const sendMessage = async (
   message: string,
   chatRoomId: string,
   chatbot: ChatBot,
-  name: string
+  name: string,
+ 
 ) => {
-  const { userId } = auth();
+  // const { userId } = auth(); 
 
   console.log(
     `Recieved message from chat session ${chatRoomId}: ${message} from this bot ${chatbot?.name} and client Name ${name}`
@@ -145,7 +155,7 @@ export const sendMessage = async (
   try {
     const previousMessages = await getChatMessages(chatRoomId);
 
-    const formattedMessages = previousMessages?.map((message) => ({
+    const formattedMessages = previousMessages?.map((message: any) => ({
       role: message?.role === "ai" ? "system" : "user",
       name: message?.role === "ai" ? "system" : name,
       content: message?.message,
@@ -166,7 +176,7 @@ export const sendMessage = async (
       },
     });
 
-    const fileIds = bot?.Source?.pdfFile?.map((pdf) => pdf.id);
+    const fileIds = bot?.Source?.pdfFile?.map((pdf: pdfFile) => pdf.id);
     if (!fileIds || fileIds.length === 0) {
       console.log("No PDF files found for this chatbot.");
       //return;
@@ -200,7 +210,7 @@ export const sendMessage = async (
     //console.log(`this is formattedRelevantDocs ${formattedRelevantDocs}`);
 
     const systemCharacteristicData = bot?.Source?.characteristic
-      ?.map((s) => s.characteristic)
+      ?.map((s: any) => s.characteristic)
       .join(" + ");
 
     //console.log("this is systemPromptData", systemCharacteristicData);
@@ -231,7 +241,7 @@ export const sendMessage = async (
         data: {
           message: `${message}`,
           //role: "ai",
-          role: userId === name ? "ai" : "user",
+          role: name === "ai" ? "ai" : "user",
           ChatRoom: {
             connect: {
               id: chatRoomId,
@@ -248,7 +258,7 @@ export const sendMessage = async (
         seen: true,
         name,
         message,
-        role: name === userId ? "ai" : "user",
+        role: name ===  "ai" ? "ai" : "user",
         createdAt: newMessage.createdAt,
         updatedAt: newMessage.createdAt,
       });

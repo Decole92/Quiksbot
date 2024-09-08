@@ -13,10 +13,7 @@ import Image from "next/image";
 import { clientPusher } from "@/lib/pusher";
 import { getChatMessages, getChatRoom } from "@/actions/chat";
 
-const fetchBot = async (chatbotId: string) => {
-  const response = await getBot(chatbotId);
-  return response;
-};
+
 function ChatInterface() {
   const selectedChatRoomId = useGlobalStore(
     (state) => state.selectedChatRoomId
@@ -45,7 +42,7 @@ function ChatInterface() {
     chatRoom?.Customer?.chatbotId
       ? `/api/bot/${chatRoom?.Customer?.chatbotId}`
       : null,
-    () => fetchBot(chatRoom?.Customer?.chatbotId!)
+    () => getBot(chatRoom?.Customer?.chatbotId!)
   );
 
   const userDetails = {
@@ -57,9 +54,9 @@ function ChatInterface() {
   const hasMessages = chatRoom?.message && chatRoom.message.length > 0;
 
   const lastAIMessage = chatRoom?.message
-    ?.filter((msg) => msg.role === "ai")
+    ?.filter((msg: any) => msg.role === "ai")
     ?.sort(
-      (a, b) =>
+      (a:any, b:any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )[0];
   let isTimeExceeded;
@@ -95,7 +92,7 @@ function ChatInterface() {
     const channel = clientPusher.subscribe("message");
 
     channel.bind("realtime", async (data: ChatMessage) => {
-      if (chatMessages?.some((message) => message.id === data.id)) return;
+      if (chatMessages?.some((message: any) => message.id === data.id)) return;
       if (!chatRoom?.live) return;
 
       if (!chatRoom?.message) {
@@ -168,6 +165,7 @@ function ChatInterface() {
               userDetails={userDetails as any}
               chatRoomId={chatRoom?.id!}
               chatbot={bot as ChatBot}
+              type="assistant"
             />
           )}
         </div>

@@ -1,10 +1,10 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser, getAuth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "../../../prisma/client";
 import { BASE_URL } from "../../../constant/url";
-import { Prisma, Theme } from "@prisma/client";
+
 import pineconeClient from "@/lib/pinecone";
 import { indexName } from "@/lib/langchain";
 
@@ -14,9 +14,11 @@ export const updateBotName = async (
   role: string,
   imageUrl: string
 ) => {
-  const { userId } = await auth();
-  if (!userId) return;
-
+  // const { userId } = await auth();
+  // const {userId} =
+  // if (!userId) return;
+// const user = currentUser()
+// if (!user) return;
   try {
     const update = await prisma.chatBot.update({
       where: {
@@ -39,8 +41,8 @@ export const updateFirstQuestion = async (
   chatbotId: string,
   question: string
 ) => {
-  const { userId } = await auth();
-  if (!userId) return;
+  // const { userId } = await auth();
+  // if (!userId) return;
   if (!question && !chatbotId) return;
 
   try {
@@ -62,8 +64,8 @@ export const updateFirstQuestion = async (
 };
 
 export const getBot = async (id: string) => {
-  const { userId } = await auth();
-  if (!userId && !id) return;
+  // const { userId } = await auth();
+  // if (!userId && !id) return;
 
   try {
     const bot = await prisma.chatBot.findUnique({
@@ -88,8 +90,8 @@ export const getBot = async (id: string) => {
   }
 };
 export const RemoveSuggestionId = async (id: string) => {
-  const { userId } = await auth();
-  if (!userId && !id) return;
+  // const { userId } = await auth();
+  if ( !id) return;
 
   try {
     const remove = await prisma.firstQuestion.delete({
@@ -104,8 +106,8 @@ export const RemoveSuggestionId = async (id: string) => {
 };
 
 export const RemoveCharacteristicId = async (id: string) => {
-  const { userId } = await auth();
-  if (!userId && !id) return;
+  // const { userId } = await getAuth();
+  if ( !id) return;
 
   try {
     const remove = await prisma.characteristic.delete({
@@ -121,8 +123,8 @@ export const RemoveCharacteristicId = async (id: string) => {
 };
 
 export const updateGreetings = async (id: string, greetings: string) => {
-  const { userId } = await auth();
-  if (!userId && !id) return;
+  // const { userId } = await auth();
+  if ( !id) return;
 
   try {
     const updated = await prisma.chatBot.update({
@@ -140,8 +142,8 @@ export const updateGreetings = async (id: string, greetings: string) => {
 };
 
 export const updateColor = async (id: string, color: string) => {
-  const { userId } = await auth();
-  if (!userId && !id) return;
+  // const { userId } = await auth();
+  if ( !id) return;
 
   try {
     const updated = await prisma.chatBot.update({
@@ -159,9 +161,9 @@ export const updateColor = async (id: string, color: string) => {
 };
 
 export const updateTheme = async (id: string, theme: string) => {
-  const { userId } = await auth();
-  if (!userId && !id) return;
-  const themeEnum = theme as Theme;
+  // const { userId } = await auth();
+  if ( !id) return;
+  const themeEnum = theme as any;
   try {
     const updated = await prisma.chatBot.update({
       where: {
@@ -292,16 +294,14 @@ export const createNewChatbot = async (botName: string, fullName: string) => {
       completed: true,
     };
   } catch (err: any) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      if (err.code === "P2002") {
+    
         console.log(
           "There is a unique constraint violation, a new user cannot be created with this email"
         );
-        return err;
-      }
-    }
+     
+    
 
-    console.error("An error occurred:", err);
+  
     return { err, status: 500 };
   }
 };
@@ -356,8 +356,8 @@ export const addCharacteristic = async (
 };
 
 export const deletePdf = async (id: string, chatbotId: string) => {
-  const { userId } = await auth();
-  if (!userId) throw new Error("unauthorized user");
+  // const { userId } = await auth();
+  // if (!userId) throw new Error("unauthorized user");
   if (!id) return;
 
   try {

@@ -11,7 +11,8 @@
 // const openai = new OpenAI({
 //   apiKey: process.env.OPENAI_KEY!,
 // });
-
+// "@clerk/nextjs": "4.29.12",
+// "@clerk/nextjs": "^5.3.3",
 // export const startNewChat = async ({
 //   userDetails,
 //   id,
@@ -285,3 +286,40 @@
 //   populateCache: false,
 //   revalidate: false,
 // });
+// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+// import { NextResponse } from 'next/server';
+// const isProtectedRoute = createRouteMatcher([
+//   "/create-chatbot(.*)",
+//   "/dashboard(.*)",
+//   "/edit-chatbot(.*)",
+//   "/review-session(.*)",
+//   "/view-chatbot(.*)",
+//   "/analytics",
+//   "/chatlogs",
+//   "(admin)/(.*)"
+// ]);
+// // const isPublicRoute = createRouteMatcher(["/chatbot(.*)","/sign-in(.*)", "/sign-up(.*)"]);
+// const isPublicRoute = createRouteMatcher([
+//   "/chatbot(.*)",
+//   "/sign-in(.*)",
+//   "/sign-up(.*)",
+//   "/api/(.*)"
+// ]);
+
+// // export default clerkMiddleware();
+// export default clerkMiddleware((auth, req) => {
+//   if (isProtectedRoute(req)) auth().protect();
+//   if (!isPublicRoute(req)) {
+//     auth().protect()
+//   }
+//   if (req.url.includes('/chatbot')) {
+//     const response = NextResponse.next();
+//     response.headers.set('Content-Security-Policy', "frame-ancestors 'self' *");
+//     response.headers.set('X-Frame-Options', 'ALLOW-FROM *');
+//     return response;
+//   }
+// });
+
+// export const config = {
+//   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+// };

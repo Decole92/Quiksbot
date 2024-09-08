@@ -14,6 +14,7 @@ import Avatar from "@/components/Avatar";
 import General from "@/components/TabContent/General";
 import Source from "@/components/TabContent/Source";
 import Connect from "@/components/TabContent/Connect";
+import SettingsPage from "@/components/TabContent/Settings";
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
   const [bot, setBot] = useGlobalStore((state) => [state.bot, state.setBot]);
@@ -24,11 +25,7 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
     async () => await getBot(id!)
   );
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setBot(data);
-  //   }
-  // }, [data, id]);
+
 
   useEffect(() => {
     mutate();
@@ -132,7 +129,9 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
         <TabsContent value='connect'>
           <Connect chatbot={data} />
         </TabsContent>
-        <TabsContent value='setting'>Setting content goes here.</TabsContent>
+        <TabsContent value='setting'>
+          <SettingsPage chatbot={data} />
+        </TabsContent>
       </Tabs>
     </div>
   );

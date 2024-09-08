@@ -13,10 +13,12 @@ function ChatbotInput({
   userDetails,
   chatRoomId,
   chatbot,
+  type,
 }: {
   userDetails: { name: string; email: string };
   chatRoomId: string;
   chatbot: ChatBot;
+  type: string
 }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
@@ -38,7 +40,10 @@ function ChatbotInput({
 
   const handleAskQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("chatMessage", chatMessages);
+
+console.warn("user, name, email", user, name, email)
+    
+
     if (!name || !email) {
       setIsOpen(true);
       return;
@@ -51,7 +56,7 @@ function ChatbotInput({
       message: passedMessage,
       createdAt: new Date().toISOString(),
       chatRoomId: chatRoomId,
-      role: user?.id ? "ai" : "user",
+      role: user && user?.id ? "ai" : "user",
       seen: true,
     };
 
@@ -85,16 +90,19 @@ function ChatbotInput({
         revalidate: false,
       });
     }
+  
     startTransition(async () => {
+     
       try {
         const result = await sendMessage(
           passedMessage,
           chatRoomId,
           chatbot,
-          user ? user?.id : name
-        );
+          type === "assistant" ? "ai" : name,
+        
+        )
+        console.log("Message sent:", result);
 
-        // Replace the loading message with the actual response
         mutate(getChatMessages(chatRoomId), {
           optimisticData: (messages: any) =>
             messages!.map((msg: ChatMessage) =>
@@ -128,7 +136,7 @@ function ChatbotInput({
         <Button
           disabled={isPending || !message}
           type='submit'
-          className='p-2 bg-transparent rounded-md group hover:bg-black'
+          className='p-2 bg-transparent rounded-md group hover:bg-black '
         >
           <Send className='text-black group-hover:text-white' />
         </Button>

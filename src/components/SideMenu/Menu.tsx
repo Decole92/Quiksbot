@@ -36,7 +36,7 @@ export const SIDE_BAR_MENU: MenuTypes[] = [
   {
     label: "Analytics",
     icon: <ActivitySquare />,
-    path: "/analytics",
+    path: "/analytic",
   },
   {
     label: "Email",
@@ -56,11 +56,11 @@ type TABS_MENU_PROPS = {
 
 export const TABS_MENU: TABS_MENU_PROPS[] = [
   {
-    label: "active message",
+    label: "active messages",
     icon: <Mail />,
   },
   {
-    label: "all message",
+    label: "all messages",
     icon: <Inbox />,
   },
   // {

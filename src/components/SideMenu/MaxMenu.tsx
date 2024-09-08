@@ -26,7 +26,7 @@ function MaxMenu() {
       </ul>
       <ul className='absolute bottom-28  space-y-8 '>
         <li className='flex items-center gap-7'>
-          <Zap /> <h3>Upgrage</h3>
+          <Zap /> <h3>Upgrade</h3>
         </li>
         <li
           className='cursor-pointer'

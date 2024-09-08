@@ -106,7 +106,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
               {chatbot?.Source?.pdfFile &&
               chatbot?.Source?.pdfFile?.length > 0 ? (
                 <div className='space-y-3'>
-                  {chatbot?.Source?.pdfFile.map((file) => (
+                  {chatbot?.Source?.pdfFile.map((file: any) => (
                     <div
                       key={file?.id}
                       className='flex items-center justify-between border p-3 rounded-md'

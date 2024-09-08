@@ -85,7 +85,7 @@ const ConversationMenu = () => {
         >
           Export <Download className='h-5 w-5' />
         </Button>
-        <TabsContent value='active message' className='w-full flex-1'>
+        <TabsContent value='active messages' className='w-full flex-1'>
           <div className=' bg-gray-100  '>
             <Separator orientation='horizontal' className='mt-3' />
             <ConversationSearch
@@ -96,7 +96,7 @@ const ConversationMenu = () => {
           </div>
           <MessageComponent data={filteredChats as any} />
         </TabsContent>
-        <TabsContent value='all message' className=''>
+        <TabsContent value='all messages' className=''>
           <div className=' bg-gray-100 '>
             <Separator orientation='horizontal' className='mt-3' />
             <ConversationSearch

@@ -22,6 +22,7 @@ interface ChatBot {
   Source?: Source[] | null;
   botIcon: string?;
   iconPosition: string?;
+  customer?: Customer[]
 }
 
 interface FirstQuestion {
@@ -106,9 +107,9 @@ interface pdfFile {
   file: Buffer;
   sourceId: string | null;
 }
-// interface Role {
-//   role: "user" | "ai";
-// }
+interface Role {
+  role: "user" | "ai";
+}
 
 // interface Message {
 //   id: string;

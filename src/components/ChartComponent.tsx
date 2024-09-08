@@ -25,7 +25,7 @@ const ChartComponent = () => {
   const total = useMemo(() => {
     if (!chartData) return {};
   
-    return chartData.reduce((acc: any, curr) => {
+    return chartData.reduce((acc: any, curr: any) => {
       Object.keys(curr).forEach((key) => {
         if (key !== "date") {
           acc[key] = (acc[key] || 0) + (curr[key] || 0);
@@ -120,4 +120,3 @@ const ChartComponent = () => {
 };
 
 export default ChartComponent;
-    

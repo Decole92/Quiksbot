@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "../../../../prisma/client";
-import { Prisma } from "@prisma/client";
 import { getBot } from "@/actions/bot";
 import { revalidatePath } from "next/cache";
 import { generateEmbeddingsInPineconeVectorStore } from "@/lib/langchain";
@@ -9,7 +8,7 @@ import { BASE_URL } from "../../../../constant/url";
 
 export const config = {
   api: {
-    bodyParser: false, // Disables Next.js body parsing so we can use formidable
+    bodyParser: false,
   },
 };
 
@@ -85,16 +84,12 @@ export async function POST(req: Request) {
     revalidatePath(`${BASE_URL}/edit-chatbot/${chatbotId}`);
     return NextResponse.json({ message: "File uploaded successfully", newPdf });
   } catch (err: any) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      if (err.code === "P2002") {
-        console.log(
-          "There is a unique constraint violation, a new user cannot be created with this email"
-        );
-        return NextResponse.json(
-          { error: "Unique constraint violation" },
-          { status: 409 }
-        );
-      }
-    }
+    console.log(
+      "There is a unique constraint violation, a new user cannot be created with this email"
+    );
+    return NextResponse.json(
+      { error: "Unique constraint violation" },
+      { status: 409 }
+    );
   }
 }

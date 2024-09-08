@@ -92,7 +92,7 @@ async function ViewChatbot() {
                         {chatbot?.Source?.pdfFile?.length > 0 ? (
                           <>
                             {chatbot?.Source?.pdfFile?.map((pdf: pdfFile) => (
-                              <h5 className='py-1'>{pdf?.fileName}</h5>
+                              <h5 key={pdf?.id} className='py-1'>{pdf?.fileName}</h5>
                             ))}
                           </>
                         ) : (
