@@ -3,6 +3,7 @@ import React from "react";
 import { SIDE_BAR_MENU } from "./Menu";
 import { useRouter } from "next/navigation";
 import { useGlobalStore } from "@/store/globalStore";
+import Link from "next/link";
 
 function MaxMenu() {
   const router = useRouter();
@@ -25,9 +26,12 @@ function MaxMenu() {
         ))}
       </ul>
       <ul className='absolute bottom-28  space-y-8 '>
-        <li className='flex items-center gap-7'>
-          <Zap /> <h3>Upgrade</h3>
-        </li>
+        <Link href={"/pricing"}>
+          <li className='flex items-center gap-7'>
+            <Zap /> <h3>Upgrade</h3>
+          </li>
+        </Link>
+
         <li
           className='cursor-pointer'
           onClick={() => setIsExtended(!isExtended)}

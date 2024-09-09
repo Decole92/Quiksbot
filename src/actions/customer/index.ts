@@ -5,7 +5,6 @@ import { auth } from "@clerk/nextjs/server";
 import { Chat } from "openai/resources/beta/chat/chat.mjs";
 import { AnyPtrRecord } from "dns";
 
-
 type ChartDataEntry = {
   date: string;
   [botName: string]: number | string; // botName is dynamic, with the date being a string
@@ -100,13 +99,13 @@ export const getAllActiveChats = async (userId: string) => {
       activeChats.ChatBot.flatMap((chatBot: any) =>
         chatBot.customer
           .filter((customer: any) => customer.chatRoom.length > 0)
-          .map((customer:any) => ({
+          .map((customer: any) => ({
             ...customer,
             ...chatBot,
           }))
       ) || [];
 
-    return customers.sort((a: any, b:any) => {
+    return customers.sort((a: any, b: any) => {
       const dateA = new Date(a.chatRoom[0]?.createdAt || 0);
       const dateB = new Date(b.chatRoom[0]?.createdAt || 0);
       return dateB.getTime() - dateA.getTime();
@@ -180,7 +179,7 @@ export const onMailer = (email: string) => {
   });
 };
 
-export const chartBarData = async() => {
+export const chartBarData = async () => {
   try {
     const chatbots = await prisma.chatBot.findMany({
       include: {
@@ -191,36 +190,35 @@ export const chartBarData = async() => {
                 createdAt: true,
               },
             },
-          
           },
         },
       },
     });
-console.log("this is chatbots from server", chatbots)
+    console.log("this is chatbots from server", chatbots);
 
     // Process the data to match the chart format
-    const chartData =  chatbots?.reduce((acc:any, chatbot:ChatBot) => {
-      chatbot?.customer?.forEach((customer:Customer) => {
+    const chartData = chatbots?.reduce((acc: any, chatbot: any) => {
+      chatbot?.customer?.forEach((customer: Customer) => {
         customer.chatRoom.forEach((chatRoom) => {
           const month = chatRoom.createdAt.toISOString().slice(0, 7); // Get YYYY-MM format
           const botName = chatbot.name;
-    
+
           // Find or create the month entry
           let monthEntry = acc.find((entry: any) => entry.date === month);
           if (!monthEntry) {
             monthEntry = { date: month };
             acc.push(monthEntry);
           }
-    
+
           // Increment the count for the specific chatbot
-          monthEntry[botName as string] = (monthEntry[botName as string] || 0) as number + 1;
+          monthEntry[botName as string] =
+            ((monthEntry[botName as string] || 0) as number) + 1;
         });
       });
-    
+
       return acc;
-    }, [])
-    
-   
+    }, []);
+
     const heatmapData = chatbots.flatMap((chatbot: any) =>
       chatbot.customer
         .filter((customer: Customer) => customer.lat && customer.lng) // Ensure lat/lng are present
@@ -233,20 +231,13 @@ console.log("this is chatbots from server", chatbots)
     console.log("this is chartbar from server", chartData);
     console.log("this is heatmap data from server", heatmapData);
 
+    // console.log("this is heatmap data from server", heatmapData);
 
+    // console.log("this is chartbar from server & heatmapData", chartData, heatmapData)
 
-  // console.log("this is heatmap data from server", heatmapData);
-
-  // console.log("this is chartbar from server & heatmapData", chartData, heatmapData)
-
-  //return  chartData; // Return
-  return { chartData, heatmapData };
-
-
-
+    //return  chartData; // Return
+    return { chartData, heatmapData };
   } catch (error) {
     console.error("Error fetching chart data:", error);
-
   }
-}
-
+};

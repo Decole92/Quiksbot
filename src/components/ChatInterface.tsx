@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Avatar from "./Avatar";
+import { Separator } from "./ui/separator";
 import { useGlobalStore } from "@/store/globalStore";
 import ChatbotMessages from "./ChatbotMessages";
 import ChatbotHeader from "./ChatbotComponent/ChatbotHeader";
@@ -12,7 +12,7 @@ import logo from "../../public/golden.png";
 import Image from "next/image";
 import { clientPusher } from "@/lib/pusher";
 import { getChatMessages, getChatRoom } from "@/actions/chat";
-
+import { ScrollArea } from "./ui/scroll-area";
 
 function ChatInterface() {
   const selectedChatRoomId = useGlobalStore(
@@ -56,7 +56,7 @@ function ChatInterface() {
   const lastAIMessage = chatRoom?.message
     ?.filter((msg: any) => msg.role === "ai")
     ?.sort(
-      (a:any, b:any) =>
+      (a: any, b: any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )[0];
   let isTimeExceeded;
@@ -122,7 +122,7 @@ function ChatInterface() {
             alt='logo'
             height={100}
             width={100}
-            className='animate-spin'
+            className='animate-spin rounded-full'
           />
         </div>
       </div>
@@ -130,10 +130,10 @@ function ChatInterface() {
   }
   if (bot && chatRoom) {
     return (
-      <div className='border rounded-md w-full bg-white flex flex-col  h-full'>
+      <div className='border rounded-md w-full bg-white flex flex-col max-h-screen  relative'>
         <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
-
-        <div className='flex flex-1 overflow-y-auto   '>
+        {/* bottom-0 z-30 sticky */}
+        {/* <div className='flex flex-1 overflow-y-auto   '>
           {hasMessages ? (
             <ChatbotMessages
               chatbot={bot as ChatBot}
@@ -144,28 +144,44 @@ function ChatInterface() {
               No messages yet.
             </div>
           )}
-        </div>
-        <div className='bottom-0 z-30 sticky bg-white w-full  '>
+
+
+        </div> */}
+
+        <ScrollArea className='h-[calc(100vh-400px)] p-5'>
+          {hasMessages ? (
+            <ChatbotMessages
+              chatbot={bot as ChatBot}
+              messages={chatMessages as ChatMessage[]}
+            />
+          ) : (
+            <div className='flex items-center justify-center h-full'>
+              No messages yet.
+            </div>
+          )}
+        </ScrollArea>
+        <div className=' bg-white w-full  '>
           {!chatRoom?.live ? (
-            <div className='p-5 text-center border border-gray-600 rounded-full m-4'>
-              <h5> Customer might not be  active you can reach your customer via
-              email
-                </h5>
-                <div className="">
-      <div className="grid grid-cols-2">
-
-
-        <div className="font-bold p-2 col-span-1">Email Address:</div>
-        <div className=" p-2">{chatRoom?.Customer?.email}</div>
-      </div>
-    </div>
+            <div className='p-5 text-center m-5 '>
+              <Separator className='mb-5' />
+              <h5>
+                {" "}
+                Customer might not be active you can reach your customer via
+                email
+              </h5>
+              <div className=''>
+                <div className='grid grid-cols-2'>
+                  <div className='font-bold p-2 col-span-1'>Email Address:</div>
+                  <div className=' p-2'>{chatRoom?.Customer?.email}</div>
+                </div>
+              </div>
             </div>
           ) : (
             <ChatbotInput
               userDetails={userDetails as any}
               chatRoomId={chatRoom?.id!}
               chatbot={bot as ChatBot}
-              type="assistant"
+              type='assistant'
             />
           )}
         </div>
@@ -174,10 +190,10 @@ function ChatInterface() {
   }
 
   return (
-    <div className='flex items-center justify-center h-screen'>
-      <div>
-        <h3>There is no chatroom selected yet!!!</h3>
-      </div>
+    <div className='h-full flex items-center justify-center'>
+      <p className='text-muted-foreground'>
+        Select a chat to view the message.
+      </p>
     </div>
   );
 }

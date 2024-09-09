@@ -11,6 +11,7 @@ import { getBot } from "@/actions/bot";
 import UrgentIcon from "../../constant/icons/urgentIcon";
 import useSWR, { mutate } from "swr";
 import { getChatRoom } from "@/actions/chat";
+import { useRouter } from "next/navigation";
 
 type ChatMessage = {
   id: string;
@@ -38,7 +39,7 @@ const ChatCard = ({ customer }: Props) => {
   const [selectedChatRoomId, setSelectedChatRoomId] = useGlobalStore(
     (state) => [state?.selectedChatRoomId, state.setSelectedChatRoomId]
   );
-  const [urgent, setUrgent] = useState(false);
+  const router = useRouter();
   const lastChatRoomEntry = customer?.chatRoom?.[customer.chatRoom.length - 1];
 
   const lastMessage =
@@ -53,54 +54,105 @@ const ChatCard = ({ customer }: Props) => {
 
     setSelectedChatRoomId(id!);
   };
+  const handleNextScreen = async (id: string) => {
+    if (!id) {
+      console.error("Chatbot ID is not available.");
+      return;
+    }
+
+    setSelectedChatRoomId(id!);
+    router.push("/view-chatmessage");
+  };
   const { data: chatRoom } = useSWR(
     selectedChatRoomId ? `/api/chatRoom/${selectedChatRoomId}` : null,
     () => getChatRoom(selectedChatRoomId!)
   );
 
-  console.log("this is chatRoomId", chatRoom?.id);
-  console.log("this is selectedChatRoomId", selectedChatRoomId);
   return (
-    <Card
-      className={`${
-        chatRoom && selectedChatRoomId === id ? "bg-gray-100" : "bg-white"
-      } rounded-none border-r-0  cursor-pointer transition duration-150 ease-in-out relative `}
-    >
-      <CardContent
+    <>
+      <Card
+        // className='group flex flex-row gap-4 p-4 rounded-lg hover:bg-muted transition-colors'
+        className={`mb-4 group w-full hidden md:flex lg:flex flex-row items-center  gap-4 cursor-pointer rounded-lg border p-7 transition-all hover:border-b hover:border-t hover:border-t-[#E1B177]  hover:border-b-[#E1B177] relative ${
+          selectedChatRoomId === id
+            ? "bg-gray-100  border-t border-b  border-t-[#E1B177]  border-b-[#E1B177]"
+            : "bg-white"
+        }`}
         onClick={() => handleViewChatroom(id)}
-        className='py-4 flex items-center gap-5'
       >
-        <div className=''>
+        {/* Bot Icon or Avatar on the left */}
+        <div className='flex-shrink-0'>
           {customer?.botIcon ? (
             <Image
               src={customer?.botIcon}
               alt='chatbotIcon'
               width={100}
               height={100}
-              className='md:h-20 lg:h-20 lg:w-24 h-14 rounded-full'
+              className='rounded-full h-16 w-16'
             />
           ) : (
-            <Avatar seed={customer?.name} />
+            <Avatar seed={customer?.name} className='h-16 w-16' />
           )}
         </div>
-        <div className='w-full  md:space-y-1 lg:space-y-2'>
-          <div className='flex gap-5 items-center'>
-            <CardDescription className='font-bold text-md leading-none text-gray-600'>
-              {customer?.name}
-            </CardDescription>
+        <div className='flex flex-col flex-1 gap-1'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2 text-sm font-medium py-1'>
+              <div> {customer?.name}</div>
+              {chatRoom?.live && (
+                <div className='bg-primary px-2 py-0.5 rounded-full text-primary-foreground text-xs font-medium'>
+                  Active
+                </div>
+              )}
+            </div>
+            <div className='text-xs text-muted-foreground absolute top-2 right-2'>
+              {new Date(lastChatRoomEntry?.createdAt).toLocaleString()}
+            </div>
           </div>
-          <div>
-            <CardDescription className='clamp line-clamp-2 text-sm'>
-              {lastMessage ? `${lastMessage}` : "No messages yet"}
-            </CardDescription>
+          <div className='text-sm text-muted-foreground line-clamp-2'>
+            {lastMessage ? `${lastMessage}` : "No messages yet"}
           </div>
-          <div>{urgent ? <UrgentIcon /> : null}</div>
-          <p className='absolute md:top-0 top-2 right-5 text-xs text-gray-400'>
-            Created: {new Date(lastChatRoomEntry?.createdAt).toLocaleString()}
-          </p>
         </div>
-      </CardContent>
-    </Card>
+      </Card>
+      <Card
+        // className='group flex flex-row gap-4 p-4 rounded-lg hover:bg-muted transition-colors'
+        className={`mb-4 md:hidden w-full lg:hidden inline-flex group  flex-row items-center  gap-4 cursor-pointer rounded-lg border p-7 transition-all hover:bg-gray-100 relative ${
+          selectedChatRoomId === id ? "bg-gray-100" : "bg-white"
+        }`}
+        onClick={() => handleNextScreen(id)}
+      >
+        {/* Bot Icon or Avatar on the left */}
+        <div className='flex-shrink-0'>
+          {customer?.botIcon ? (
+            <Image
+              src={customer?.botIcon}
+              alt='chatbotIcon'
+              width={100}
+              height={100}
+              className='rounded-full h-16 w-16'
+            />
+          ) : (
+            <Avatar seed={customer?.name} className='h-16 w-16' />
+          )}
+        </div>
+        <div className='flex flex-col flex-1 gap-1'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2 text-sm font-medium py-1'>
+              <div> {customer?.name}</div>
+              {chatRoom?.live && (
+                <div className='bg-primary px-2 py-0.5 rounded-full text-primary-foreground text-xs font-medium'>
+                  Active
+                </div>
+              )}
+            </div>
+            <div className='text-xs text-muted-foreground absolute top-2 right-2'>
+              {new Date(lastChatRoomEntry?.createdAt).toLocaleString()}
+            </div>
+          </div>
+          <div className='text-sm text-muted-foreground line-clamp-2'>
+            {lastMessage ? `${lastMessage}` : "No messages yet"}
+          </div>
+        </div>
+      </Card>
+    </>
   );
 };
 

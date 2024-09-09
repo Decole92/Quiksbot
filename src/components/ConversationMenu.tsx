@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import logo from "../../public/golden.png";
 import { TABS_MENU } from "./SideMenu/Menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "./ui/separator";
 import TabsMenu from "./TabsMenu";
 import MessageComponent from "./MessageTab/MessageComponent";
@@ -30,7 +31,7 @@ type Props = {
 const ConversationMenu = () => {
   const { user } = useUser();
   const [selectedBotId, setSelectedBotId] = React.useState<string>("");
-
+  const [activeTab, setActiveTab] = useState("active");
   const { data: chatbots } = useSWR(
     "/api/fetchBot",
     user ? async () => await getChatBotByUser(user?.id) : null
@@ -76,38 +77,51 @@ const ConversationMenu = () => {
       </div>
     );
   }
+
+  const filteredData =
+    activeTab === "expired" ? filteredCustomers : filteredChats;
   return (
-    <div className='w-full md:max-w-md mx-auto flex items-center h-full mt-24'>
-      <TabsMenu triggers={TABS_MENU} className=''>
+    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-muted '>
+      <div className='p-5'>
+        <div className='flex md:items-center justify-between border-b p-4 items-start lg:items-center'>
+          <h2 className='text-lg font-medium'>Inbox</h2>
+
+          <div className='flex flex-col md:flex-row md:items-center gap-2'>
+            <Tabs
+              defaultValue='active'
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className='flex'
+            >
+              <TabsList>
+                <TabsTrigger value='active'>Active</TabsTrigger>
+                <TabsTrigger value='expired'>Expired</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <Button
+              variant={"ghost"}
+              className='gap-2 border bg-gray-200 text-black hidden md:inline-flex md:w-[100px] lg:w-[100px]   '
+            >
+              Export <Download className='h-5 w-5' />
+            </Button>
+          </div>
+        </div>
         <Button
           variant={"ghost"}
-          className='gap-2 border bg-gray-200 text-black w-full md:w-[100px] '
+          className='gap-2 border bg-gray-200 text-black w-full inline-flex md:hidden lg:hidden  '
         >
           Export <Download className='h-5 w-5' />
         </Button>
-        <TabsContent value='active messages' className='w-full flex-1'>
-          <div className=' bg-gray-100  '>
-            <Separator orientation='horizontal' className='mt-3' />
-            <ConversationSearch
-              chatbots={chatbots as ChatBot[]}
-              onSelectBot={setSelectedBotId}
-              defaultSelect={selectedBotId}
-            />
-          </div>
-          <MessageComponent data={filteredChats as any} />
-        </TabsContent>
-        <TabsContent value='all messages' className=''>
-          <div className=' bg-gray-100 '>
-            <Separator orientation='horizontal' className='mt-3' />
-            <ConversationSearch
-              chatbots={chatbots as ChatBot[]}
-              onSelectBot={setSelectedBotId}
-              defaultSelect={selectedBotId}
-            />
-          </div>
-          <MessageComponent data={filteredCustomers as any} />
-        </TabsContent>
-      </TabsMenu>
+
+        <ConversationSearch
+          chatbots={chatbots as any}
+          onSelectBot={setSelectedBotId}
+          defaultSelect={selectedBotId}
+        />
+      </div>
+
+      <MessageComponent data={filteredData as any} />
     </div>
   );
 };

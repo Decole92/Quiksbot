@@ -8,6 +8,9 @@ import { usePathname } from "next/navigation";
   /* <Avatar seed={bot?.name as string} /> */
 }
 
+// z-30 sticky
+// ${chatlog ? "top-20" : "top-0"}
+
 export default function ChatbotHeader({
   bot,
   live,
@@ -17,11 +20,12 @@ export default function ChatbotHeader({
 }) {
   const pathname = usePathname();
   const chatlog = pathname.includes("chatlog");
+
   return (
     <header
-      className={`flex items-center bg-background justify-between p-5 shadow-sm rounded-t-md h-24 z-30 sticky  ${
-        chatlog ? "top-20" : "top-0"
-      }`}
+      className={`flex items-center bg-background justify-between p-5 shadow-sm rounded-t-md h-24 
+   
+      `}
     >
       <div className='flex items-center gap-3'>
         <div className='flex h-12 w-12 items-center justify-center rounded-full '>

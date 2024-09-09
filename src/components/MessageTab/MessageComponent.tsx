@@ -6,12 +6,13 @@ import useSWR from "swr";
 import { useUser } from "@clerk/nextjs";
 import { getAllActiveChats, getUserCustomers } from "@/actions/customer";
 import { transformData } from "@/lib/transformData";
+import { ScrollArea } from "../ui/scroll-area";
 // md:max-h-[800px] lg:max-h-[800px] md:min-h-[800px] lg:min-h-[800px]
 function MessageComponent({ data }: { data: any[] }) {
-  const { user } = useUser();
+  // const { user } = useUser();
 
   return (
-    <div className='p-4 bg-white/50  md:max-h-[800px] lg:max-h-[800px] md:min-h-[800px] lg:min-h-[800px] h-full  overflow-y-auto'>
+    <ScrollArea className='h-[calc(100vh-120px)] p-4'>
       {data && data?.length > 0 ? (
         <div>
           {data?.map((customer: any) => (
@@ -21,7 +22,7 @@ function MessageComponent({ data }: { data: any[] }) {
       ) : (
         "There is no active lead customer yet!!"
       )}
-    </div>
+    </ScrollArea>
   );
 }
 
