@@ -18,7 +18,7 @@ function ChatbotInput({
   userDetails: { name: string; email: string };
   chatRoomId: string;
   chatbot: ChatBot;
-  type: string
+  type: string;
 }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
@@ -41,8 +41,7 @@ function ChatbotInput({
   const handleAskQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
 
-console.warn("user, name, email", user, name, email)
-    
+    console.warn("user, name, email", user, name, email);
 
     if (!name || !email) {
       setIsOpen(true);
@@ -56,7 +55,7 @@ console.warn("user, name, email", user, name, email)
       message: passedMessage,
       createdAt: new Date().toISOString(),
       chatRoomId: chatRoomId,
-      role: user && user?.id ? "ai" : "user",
+      role: type === "assistant" ? "ai" : "user",
       seen: true,
     };
 
@@ -90,17 +89,15 @@ console.warn("user, name, email", user, name, email)
         revalidate: false,
       });
     }
-  
+
     startTransition(async () => {
-     
       try {
         const result = await sendMessage(
           passedMessage,
           chatRoomId,
           chatbot,
-          type === "assistant" ? "ai" : name,
-        
-        )
+          type === "assistant" ? "ai" : name
+        );
         console.log("Message sent:", result);
 
         mutate(getChatMessages(chatRoomId), {

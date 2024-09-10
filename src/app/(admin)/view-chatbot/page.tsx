@@ -5,6 +5,8 @@ import { auth } from "@clerk/nextjs/server";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { characteristic } from "../../../../typing";
+import { PdfFile } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -91,7 +93,7 @@ async function ViewChatbot() {
                       <div>
                         {chatbot?.Source?.pdfFile?.length > 0 ? (
                           <>
-                            {chatbot?.Source?.pdfFile?.map((pdf: pdfFile) => (
+                            {chatbot?.Source?.pdfFile?.map((pdf: PdfFile) => (
                               <h5 key={pdf?.id} className='py-1'>
                                 {pdf?.fileName}
                               </h5>

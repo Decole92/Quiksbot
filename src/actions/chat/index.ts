@@ -6,11 +6,17 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import pineconeClient from "@/lib/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
 import { onMailer } from "../customer";
-import {  User, auth, clerkClient, currentUser, getAuth } from "@clerk/nextjs/server";
+import {
+  User,
+  auth,
+  clerkClient,
+  currentUser,
+  getAuth,
+} from "@clerk/nextjs/server";
 import { serverPusher } from "@/lib/pusher";
 
 import { BASE_URL } from "../../../constant/url";
-
+import { ChatBot, PdfFile } from "@prisma/client";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_KEY!,
@@ -141,10 +147,9 @@ export const sendMessage = async (
   message: string,
   chatRoomId: string,
   chatbot: ChatBot,
-  name: string,
- 
+  name: string
 ) => {
-  // const { userId } = auth(); 
+  // const { userId } = auth();
 
   console.log(
     `Recieved message from chat session ${chatRoomId}: ${message} from this bot ${chatbot?.name} and client Name ${name}`
@@ -176,7 +181,7 @@ export const sendMessage = async (
       },
     });
 
-    const fileIds = bot?.Source?.pdfFile?.map((pdf: pdfFile) => pdf.id);
+    const fileIds = bot?.Source?.pdfFile?.map((pdf: PdfFile) => pdf.id);
     if (!fileIds || fileIds.length === 0) {
       console.log("No PDF files found for this chatbot.");
       //return;
@@ -258,7 +263,7 @@ export const sendMessage = async (
         seen: true,
         name,
         message,
-        role: name ===  "ai" ? "ai" : "user",
+        role: name === "ai" ? "ai" : "user",
         createdAt: newMessage.createdAt,
         updatedAt: newMessage.createdAt,
       });

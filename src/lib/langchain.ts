@@ -9,7 +9,6 @@ import { PineconeStore } from "@langchain/pinecone";
 import { Index, RecordMetadata } from "@pinecone-database/pinecone";
 import { auth } from "@clerk/nextjs/server";
 
-
 export const donotdisturb = PDFLoader;
 export const donotdisturb1 = ChatOpenAI;
 export const donotdisturb2 = RecursiveCharacterTextSplitter;
@@ -17,16 +16,22 @@ export const donotdisturb3 = OpenAIEmbeddings;
 export const donotdisturb4 = PineconeStore;
 export const donotdisturb5 = getEncoding;
 
-const model = new ChatOpenAI({
-  model: "gpt-4o-mini",
-  apiKey: process.env.OPENAI_KEY,
-  temperature: 0,
-});
+// const model = new ChatOpenAI({
+//   model: "gpt-4o-mini",
+//   apiKey: process.env.OPENAI_KEY,
+//   temperature: 0,
+// });
 
 export const indexName = "quiksbot";
 
-
-console.log(donotdisturb,donotdisturb1,donotdisturb3,donotdisturb4,donotdisturb2, donotdisturb5)
+console.log(
+  donotdisturb,
+  donotdisturb1,
+  donotdisturb3,
+  donotdisturb4,
+  donotdisturb2,
+  donotdisturb5
+);
 const namespaceExists = async (
   index: Index<RecordMetadata>,
   namespace: string
@@ -65,7 +70,6 @@ export const generateEmbeddingsInPineconeVectorStore = async (
     throw new Error("User not found");
   }
 
-  
   let pineconeVictorStore;
 
   console.log("-- Generate embeddings... ---");

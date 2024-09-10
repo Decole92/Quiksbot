@@ -15,17 +15,17 @@ import General from "@/components/TabContent/General";
 import Source from "@/components/TabContent/Source";
 import Connect from "@/components/TabContent/Connect";
 import SettingsPage from "@/components/TabContent/Settings";
+import { ChatBot } from "@prisma/client";
+import { BASE_URL } from "../../../../../constant/url";
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
   const [bot, setBot] = useGlobalStore((state) => [state.bot, state.setBot]);
-  const [activeTab, setActiveTab] = useState("general");
+  const [activeTab, setActiveTab] = useState("setting");
 
   const { data, error, isLoading, mutate } = useSWR<ChatBot | any>(
     "/api/getBot",
     async () => await getBot(id!)
   );
-
-
 
   useEffect(() => {
     mutate();
@@ -49,7 +49,7 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
 
   if (!data) {
     console.error("No data found for the provided ID.");
-    return redirect(`/view-chatbot`);
+    return redirect(`${BASE_URL}/view-chatbot`);
   }
 
   return (

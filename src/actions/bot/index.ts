@@ -7,6 +7,10 @@ import { BASE_URL } from "../../../constant/url";
 
 import pineconeClient from "@/lib/pinecone";
 import { indexName } from "@/lib/langchain";
+import { ChatBot, PdfFile, botType } from "@prisma/client";
+import { redirect } from "next/navigation";
+
+import { backendClient } from "@/app/api/edgestore/[...edgestore]/route";
 
 export const updateBotName = async (
   id: string,
@@ -17,8 +21,8 @@ export const updateBotName = async (
   // const { userId } = await auth();
   // const {userId} =
   // if (!userId) return;
-// const user = currentUser()
-// if (!user) return;
+  // const user = currentUser()
+  // if (!user) return;
   try {
     const update = await prisma.chatBot.update({
       where: {
@@ -91,7 +95,7 @@ export const getBot = async (id: string) => {
 };
 export const RemoveSuggestionId = async (id: string) => {
   // const { userId } = await auth();
-  if ( !id) return;
+  if (!id) return;
 
   try {
     const remove = await prisma.firstQuestion.delete({
@@ -107,7 +111,7 @@ export const RemoveSuggestionId = async (id: string) => {
 
 export const RemoveCharacteristicId = async (id: string) => {
   // const { userId } = await getAuth();
-  if ( !id) return;
+  if (!id) return;
 
   try {
     const remove = await prisma.characteristic.delete({
@@ -124,7 +128,7 @@ export const RemoveCharacteristicId = async (id: string) => {
 
 export const updateGreetings = async (id: string, greetings: string) => {
   // const { userId } = await auth();
-  if ( !id) return;
+  if (!id) return;
 
   try {
     const updated = await prisma.chatBot.update({
@@ -143,7 +147,7 @@ export const updateGreetings = async (id: string, greetings: string) => {
 
 export const updateColor = async (id: string, color: string) => {
   // const { userId } = await auth();
-  if ( !id) return;
+  if (!id) return;
 
   try {
     const updated = await prisma.chatBot.update({
@@ -162,7 +166,7 @@ export const updateColor = async (id: string, color: string) => {
 
 export const updateTheme = async (id: string, theme: string) => {
   // const { userId } = await auth();
-  if ( !id) return;
+  if (!id) return;
   const themeEnum = theme as any;
   try {
     const updated = await prisma.chatBot.update({
@@ -294,14 +298,10 @@ export const createNewChatbot = async (botName: string, fullName: string) => {
       completed: true,
     };
   } catch (err: any) {
-    
-        console.log(
-          "There is a unique constraint violation, a new user cannot be created with this email"
-        );
-     
-    
+    console.log(
+      "There is a unique constraint violation, a new user cannot be created with this email"
+    );
 
-  
     return { err, status: 500 };
   }
 };
@@ -372,5 +372,59 @@ export const deletePdf = async (id: string, chatbotId: string) => {
     revalidatePath(`/edit-chatbot/${chatbotId}`);
   } catch (err) {
     console.log("error has occur while trying to delete pdfFile", err);
+  }
+};
+
+export const deleteBot = async (sourceId: string, chatbot: ChatBot) => {
+  const { userId } = await auth();
+
+  if (!userId || !sourceId || !chatbot?.id) {
+    console.error("Invalid parameters provided");
+  }
+
+  try {
+    const index = await pineconeClient.index(indexName);
+
+    const pdfFiles = await prisma.pdfFile.findMany({
+      where: { sourceId },
+    });
+
+    for (const pdf of pdfFiles) {
+      try {
+        await index.namespace(pdf.id).deleteAll();
+        console.log(`Successfully deleted all vectors for PDF: ${pdf.id}`);
+      } catch (deleteError) {
+        console.error(
+          `Failed to delete vectors for PDF: ${pdf.id}`,
+          deleteError
+        );
+      }
+    }
+
+    await prisma.pdfFile.deleteMany({
+      where: { sourceId },
+    });
+
+    if (chatbot?.botIcon) {
+      await backendClient.myPublicImages.deleteFile({
+        url: chatbot?.botIcon,
+      });
+    }
+    if (chatbot?.icon) {
+      await backendClient.myPublicImages.deleteFile({
+        url: chatbot?.icon,
+      });
+    }
+
+    await prisma.chatBot.delete({
+      where: { id: chatbot?.id },
+    });
+    // // Trigger revalidation for the chatbot view page
+    redirect(`${BASE_URL}/view-chatbot`);
+
+    // return { deleted, completed: true };
+  } catch (err) {
+    console.error("Error occurred while deleting bot", err);
+    return { completed: false, error: "Failed to delete bot" };
   }
 };

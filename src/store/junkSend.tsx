@@ -490,3 +490,44 @@
 //     </div>
 //   )
 // }
+
+{
+  /* Switch button for using own OpenAI key */
+}
+//   <div className='pb-2 hidden'>
+//   <h3 className='font-bold text-lg'>Use Your Own OpenAI Key</h3>
+//   <h5 className='pb-2'>
+//     Do you want to use your own OpenAI key for this chatbot?
+//   </h5>
+
+//   <div className='flex items-center justify-between space-x-4 border p-3 rounded-md '>
+//     <Label htmlFor='use-own-key'>
+//       Use Own API Key to enjoy our features with any limitation or
+//       restriction
+//     </Label>
+
+//     <Switch
+//       id='use-own-key'
+//       checked={useOwnKey}
+//       onCheckedChange={setUseOwnKey}
+//     />
+//   </div>
+
+//   {useOwnKey && (
+//     <div className='mt-4 hidden'>
+//       <Label
+//         htmlFor='openai-key'
+//         className='block text-sm font-medium text-gray-700'
+//       >
+//         Enter your OpenAI API Key:
+//       </Label>
+//       <Input
+//         id='openai-key'
+//         name='openai-key'
+//         type='password'
+//         placeholder='sk-xxxxxxx'
+//         className='mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+//       />
+//     </div>
+//   )}
+// </div>

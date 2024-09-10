@@ -5,6 +5,7 @@ import logo from "../../public/golden.png";
 import { Inter, Montserrat } from "next/font/google";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
+import CreditBar from "./CreditBar";
 
 const inter = Montserrat({ weight: "600", subsets: ["latin"] });
 function Header() {
@@ -26,12 +27,14 @@ function Header() {
           </h4> */}
         </div>
       </Link>
+
+      <CreditBar />
       <div>
         <SignedOut>
           <SignInButton />
         </SignedOut>
         <SignedIn>
-          <UserButton showName />
+          <UserButton />
         </SignedIn>
       </div>
     </header>

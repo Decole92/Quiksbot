@@ -28,21 +28,21 @@ export const SIDE_BAR_MENU: MenuTypes[] = [
     icon: <MessageSquareMore />,
     path: "/chatlogs",
   },
-  {
-    label: "Integrations",
-    icon: <Settings2 />,
-    path: "/integration",
-  },
+  // {
+  //   label: "Integrations",
+  //   icon: <Settings2 />,
+  //   path: "/integration",
+  // },
   {
     label: "Analytics",
     icon: <ActivitySquare />,
     path: "/analytic",
   },
-  {
-    label: "Email",
-    icon: <Mail />,
-    path: "/email_compaign",
-  },
+  // {
+  //   label: "Email",
+  //   icon: <Mail />,
+  //   path: "/email_compaign",
+  // },
   {
     label: "Settings",
     icon: <Settings />,

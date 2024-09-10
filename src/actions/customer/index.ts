@@ -2,8 +2,8 @@
 import nodemailer from "nodemailer";
 import prisma from "../../../prisma/client";
 import { auth } from "@clerk/nextjs/server";
-import { Chat } from "openai/resources/beta/chat/chat.mjs";
-import { AnyPtrRecord } from "dns";
+import { Customer, botType } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 type ChartDataEntry = {
   date: string;
@@ -198,8 +198,8 @@ export const chartBarData = async () => {
 
     // Process the data to match the chart format
     const chartData = chatbots?.reduce((acc: any, chatbot: any) => {
-      chatbot?.customer?.forEach((customer: Customer) => {
-        customer.chatRoom.forEach((chatRoom) => {
+      chatbot?.customer?.forEach((customer: any) => {
+        customer.chatRoom.forEach((chatRoom: any) => {
           const month = chatRoom.createdAt.toISOString().slice(0, 7); // Get YYYY-MM format
           const botName = chatbot.name;
 
@@ -239,5 +239,40 @@ export const chartBarData = async () => {
     return { chartData, heatmapData };
   } catch (error) {
     console.error("Error fetching chart data:", error);
+  }
+};
+
+export const updateBotSettings = async (
+  botType: botType,
+  selectedModel: any,
+  getInfoBeforeChat: boolean,
+  id: string,
+  prompt?: string
+) => {
+  const { userId } = await auth();
+
+  if (!userId)
+    throw new Error(
+      "can't find a userId in the server side for updateBotsettings"
+    );
+
+  try {
+    const updateSettings = await prisma.chatBot.update({
+      where: { id: id },
+      data: {
+        botType: botType,
+        chatModel: selectedModel,
+        getDetails: getInfoBeforeChat,
+        prompt: prompt ? prompt : "",
+      },
+    });
+
+    revalidatePath(`/edit-chatbot/${id}`);
+    return { updateSettings, completed: true };
+  } catch (err) {
+    console.log(
+      "error has occur while trying to update updateBotsettings from server side",
+      err
+    );
   }
 };

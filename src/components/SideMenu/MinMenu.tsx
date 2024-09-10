@@ -13,7 +13,7 @@ function MinMenu() {
   return (
     <div className='text-black space-y-20 pt-24 '>
       <ul className=' space-y-8'>
-        {SIDE_BAR_MENU.map((menu: MenuTypes) => (
+        {SIDE_BAR_MENU.map((menu: any) => (
           <li
             className='cursor-pointer'
             onClick={() => router.push(`${menu.path}`)}

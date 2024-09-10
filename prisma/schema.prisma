@@ -23,9 +23,9 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   stripeId  String?
-
+  openAIkey String?
   //domains Domain[]
-
+  credits      String? 
   ChatBot      ChatBot[]
   subscription Billings?
   Campaign     Campaign[]
@@ -81,6 +81,8 @@ model ChatBot {
   theme              Theme    @default(light)
   userMessageBgColor String?  @default("#E1B177")
   chatModel          String   @default("gpt-3.5-turbo")
+  botType            botType  @default(SalesBot)
+  getDetails         Boolean  @default(false)
   prompt             String?
   role               String?
   name               String
@@ -114,7 +116,7 @@ model FirstQuestion {
 model Billings {
   id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   plan    Plans   @default(STANDARD)
-  credits Int     @default(10)
+ 
   User    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String? @unique @db.Uuid
 }
@@ -200,6 +202,12 @@ enum Plans {
   STANDARD
   PRO
   ULTIMATE
+}
+
+enum botType {
+  SalesBot
+  ChatPdf
+  Custom
 }
 
 enum Role {

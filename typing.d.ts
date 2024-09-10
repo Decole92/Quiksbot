@@ -1,3 +1,5 @@
+import { botType } from "@prisma/client";
+
 interface MenuTypes {
   label: string;
   icon: RefAttributes<SVGSVGElement>;
@@ -18,11 +20,11 @@ interface ChatBot {
   name: String;
   firstQuestion: FirstQuestion[];
   User: null;
-
+  botType: botType;
   Source?: Source[] | null;
   botIcon: string?;
   iconPosition: string?;
-  customer?: Customer[]
+  customer?: Customer[];
 }
 
 interface FirstQuestion {
@@ -54,6 +56,7 @@ interface User {
   createdAt: Date;
   updatedAt: Date;
   stripeId: string | null;
+  openAiKey: string?;
 }
 
 interface CustomerResponses {
@@ -72,10 +75,10 @@ interface Customer {
   chatRoom: ChatRoom[];
   Chatbot: ChatBot | null;
   chatbotId: string | null;
-  country?: string,
-  city?: string,
-  lat?:string,
-  lng?: string,
+  country?: string;
+  city?: string;
+  lat?: string;
+  lng?: string;
 }
 
 interface ChatRoom {
@@ -110,19 +113,11 @@ interface pdfFile {
 interface Role {
   role: "user" | "ai";
 }
+interface Plans {
+  plans: "STANDARD" | "PRO" | "ULTIMATE";
+}
 
-// interface Message {
-//   id: string;
-//   chat_session_id: string;
-//   content: string;
-//   createdAt: Date;
-//   sender: "ai" | "user";
-//   chat_session: chat_session;
-// }
-
-// interface chat_session {
-//   id: string;
-//   chatbotId: string;
-//   guestId: string;
-//   createdAt: Date;
-//}
+interface userDetails {
+  name: string;
+  email: string;
+}

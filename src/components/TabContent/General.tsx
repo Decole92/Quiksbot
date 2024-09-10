@@ -34,8 +34,9 @@ import Image from "next/image";
 import useSWR from "swr";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Progress } from "../ui/progress";
+import { ChatBot, FirstQuestion } from "@prisma/client";
 
-function General({ chatbot }: { chatbot: ChatBot }) {
+function General({ chatbot }: { chatbot: any }) {
   const { mutate } = useSWR("/api/getBot");
   const { edgestore } = useEdgeStore();
   const [chatIcon, setChatIcon] = useState<File | null>(null);
@@ -71,7 +72,6 @@ function General({ chatbot }: { chatbot: ChatBot }) {
         error: "an error has occurred while adding question",
       });
 
-     
       await mutate(() => getBot(chatbot?.id));
     });
   };
