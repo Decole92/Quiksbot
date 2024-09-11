@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import { addCharacteristic, deletePdf, getBot } from "@/actions/bot";
 import Characteristic from "../Characteristic";
+import { PdfFile } from "@prisma/client";
 
 function Source({ chatbotId }: { chatbotId: string }) {
   const [isPending, startTransition] = useTransition();
@@ -18,8 +19,8 @@ function Source({ chatbotId }: { chatbotId: string }) {
 
   const handleAddCharacteristics = async (e: React.FormEvent) => {
     e.preventDefault();
-     const feature = characteristic;
-     setCharacteristic("");
+    const feature = characteristic;
+    setCharacteristic("");
     startTransition(async () => {
       const promise = addCharacteristic(chatbotId, feature);
       toast.promise(promise, {
@@ -28,12 +29,11 @@ function Source({ chatbotId }: { chatbotId: string }) {
         error: "an error has occurred while adding characteristics",
       });
 
-     
       await mutate(() => getBot(chatbotId));
     });
   };
 
-  const handleDeletePdf = async (file: pdfFile) => {
+  const handleDeletePdf = async (file: PdfFile) => {
     const promise = deletePdf(file?.id, chatbotId);
     toast.promise(promise, {
       loading: `Deleting ${file?.fileName} ...`,

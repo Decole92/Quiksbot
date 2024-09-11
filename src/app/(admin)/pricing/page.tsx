@@ -11,6 +11,10 @@ import { createCheckoutSession, createStripePortal } from "@/actions/stripe";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 
+type userDetails = {
+  name: string;
+  email: string;
+};
 export default function Pricing() {
   const [isPending, startTransition] = useTransition();
   const { isOverFileLimit, hasActiveMembership } = useSubcription();
@@ -44,7 +48,7 @@ export default function Pricing() {
   return (
     <div className='bg-gray-100 min-h-screen py-12 mt-20'>
       <div className='md:max-w-5xl md:mx-auto lg:max-w-6xl lg:mx-auto w-full text-center px-4'>
-        <h1 className='text-4xl font-extrabold text-gray-900'>Pricing Plans</h1>
+        <h1 className='text-4xl font-thin text-gray-900'>Pricing Plans</h1>
         <p className='mt-4 text-lg text-gray-600'>
           Choose the plan that's right for your business. Our flexible pricing
           options make it easy to get started and scale as you grow.

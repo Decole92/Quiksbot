@@ -355,3 +355,20 @@ export const sendMessage = async (
     console.log("error occurs while trying to send message", err);
   }
 };
+
+export const getUserById = async (id: string) => {
+  auth().protect();
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: id,
+      },
+    });
+    return { openAikey: user?.openAIkey };
+  } catch (err) {
+    console.log(
+      "err occurs while getting getUserById from the server action",
+      err
+    );
+  }
+};

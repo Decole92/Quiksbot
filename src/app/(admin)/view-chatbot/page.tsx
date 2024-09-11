@@ -25,7 +25,7 @@ async function ViewChatbot() {
   return (
     <div className='mt-14  w-full md:max-w-5xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
       <div className='flex justify-between items-center mb-5 md:mt-5 p-5  shadow-md w-full'>
-        <h1 className='text-xl lg:text-3xl font-semibold '>Chatbots List</h1>
+        <h1 className='text-xl lg:text-3xl font-thin '>Chatbots List</h1>
         <Button className='flex ml-auto right-1 bg-transparent text-black hover:bg-black hover:text-gray-100'>
           <Link href={`/create-chatbot`} className='flex items-center'>
             <Plus /> Create

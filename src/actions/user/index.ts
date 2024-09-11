@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import prisma from "../../../prisma/client";
 import { getBot } from "../bot";
 
@@ -60,12 +61,55 @@ export const getUserPdfFiles = async (userId: string) => {
   }
 };
 
+export const getUserById = async (id: string) => {
+  auth().protect();
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: id,
+      },
+    });
+    return { openAikey: user?.openAIkey };
+  } catch (err) {
+    console.log(
+      "err occurs while getting getUserById from the server action",
+      err
+    );
+  }
+};
+
 export const getUserByCustomer = async (customerId: string) => {
-  const find = await prisma.user?.findFirst({
-    where: {
-      stripeId: customerId,
-    },
-  });
-  console.log("userByStripeId", find);
-  return find;
+  try {
+    const find = await prisma.user?.findFirst({
+      where: {
+        stripeId: customerId,
+      },
+    });
+    console.log("userByStripeId", find);
+    return find;
+  } catch (err) {
+    console.log(
+      "error occurs while trying to get userByStripeId in user server action",
+      err
+    );
+  }
+};
+
+export const updateOpenAiKey = async (key: string, useCustomKey: boolean) => {
+  auth().protect();
+  const { userId } = await auth();
+  try {
+    const updateKey = await prisma.user.update({
+      where: {
+        clerkId: userId!,
+      },
+      data: {
+        openAIkey: useCustomKey ? key : null,
+      },
+    });
+
+    return updateKey;
+  } catch (err) {
+    console.log("error has occur while trying to update openai key", err);
+  }
 };
