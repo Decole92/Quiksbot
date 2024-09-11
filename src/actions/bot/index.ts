@@ -8,7 +8,6 @@ import { BASE_URL } from "../../../constant/url";
 import pineconeClient from "@/lib/pinecone";
 import { indexName } from "@/lib/langchain";
 import { ChatBot, PdfFile, botType } from "@prisma/client";
-import { redirect } from "next/navigation";
 
 import { backendClient } from "@/app/api/edgestore/[...edgestore]/route";
 
@@ -291,7 +290,7 @@ export const createNewChatbot = async (botName: string, fullName: string) => {
         role: "Customer support agent", // Associating the chatbot with the created/found user
       },
     });
-    revalidatePath("/dashboard");
+    revalidatePath("/view-chatbot");
 
     return {
       chatbot,
@@ -302,7 +301,7 @@ export const createNewChatbot = async (botName: string, fullName: string) => {
       "There is a unique constraint violation, a new user cannot be created with this email"
     );
 
-    return { err, status: 500 };
+    return { err, status: 500, completed: false };
   }
 };
 
@@ -420,9 +419,9 @@ export const deleteBot = async (sourceId: string, chatbot: ChatBot) => {
       where: { id: chatbot?.id },
     });
     // // Trigger revalidation for the chatbot view page
-    redirect(`${BASE_URL}/view-chatbot`);
+    revalidatePath("/view-chatbot");
 
-    // return { deleted, completed: true };
+    return { chatbot, completed: true };
   } catch (err) {
     console.error("Error occurred while deleting bot", err);
     return { completed: false, error: "Failed to delete bot" };

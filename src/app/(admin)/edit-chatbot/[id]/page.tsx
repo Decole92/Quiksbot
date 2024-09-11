@@ -19,7 +19,6 @@ import { ChatBot } from "@prisma/client";
 import { BASE_URL } from "../../../../../constant/url";
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
-  const [bot, setBot] = useGlobalStore((state) => [state.bot, state.setBot]);
   const [activeTab, setActiveTab] = useState("setting");
 
   const { data, error, isLoading, mutate } = useSWR<ChatBot | any>(

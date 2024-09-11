@@ -24,8 +24,17 @@ import { botTypeData } from "../../../constant/Features";
 import { toast } from "sonner";
 import { updateBotSettings } from "@/actions/customer";
 import { deleteBot } from "@/actions/bot";
-import { useEdgeStore } from "@/lib/edgestore";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
   const [getInfoBeforeChat, setGetInfoBeforeChat] = useState<boolean>(
@@ -40,7 +49,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
   const router = useRouter();
   const { hasActiveMembership } = useSubcription();
   const [isPending, startTransiton] = useTransition();
-
+  const [openModel, setOpenModel] = useState(false);
   const handleUpdateForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -61,14 +70,20 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
     });
   };
   const handleDropBot = async () => {
-    const promise = deleteBot(chatbot?.sourceId!, chatbot);
+    const fetch = deleteBot(chatbot?.sourceId!, chatbot);
 
-    toast.promise(promise, {
+    toast.promise(fetch, {
       loading: `Deleting ${chatbot?.name}...`,
       success: `${chatbot?.name}  Deleted.`,
       error: "error has occur while trying to delete bot",
     });
-    router.push("/view-chatbot");
+    setOpenModel(false);
+
+    const result = await fetch;
+
+    if (result.completed) {
+      router.push("/view-chatbot");
+    }
   };
   useEffect(() => {
     const fetchModels = async () => {
@@ -87,187 +102,220 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
   }, [chatbot, hasActiveMembership]);
 
   return (
-    <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white'>
-      <h3 className='text-2xl pb-4 font-thin'>Bot Settings</h3>
-      <div className='grid lg:grid-cols-5 h-full rounded-lg gap-5'>
-        <form
-          onSubmit={handleUpdateForm}
-          className='col-span-5 lg:col-span-5 space-y-4'
-        >
-          <div className='pb-2'>
-            <h3 className='font-bold text-lg'>Select ChatGPT Model</h3>
-            <h5 className='pb-2'>
-              Choose the ChatGPT model that best fits your chatbot's purpose.
-              Each model offers different capabilities.
-            </h5>
-            <div className='bg-gray-200/50 p-3 rounded-md'>
-              <Select
-                defaultValue={selectedModel}
-                onValueChange={(model) => {
-                  if (
-                    hasActiveMembership === "STANDARD" &&
-                    model.includes("gpt-4")
-                  ) {
-                    alert("GPT-4 models are not allowed for basic users.");
-                    return;
-                  } else {
-                    setSelectedModel(model);
-                  }
-                }}
-              >
-                <SelectTrigger className='p-3 w-full'>
-                  <SelectValue placeholder='Choose a model' />
-                </SelectTrigger>
-                <SelectContent>
-                  {models && models?.length > 0 ? (
-                    <>
-                      {models.map((model: any) => (
-                        <SelectItem
-                          disabled={
-                            hasActiveMembership === "STANDARD" &&
-                            model?.value?.includes("gpt-4")
-                          }
-                          className={`${
-                            (hasActiveMembership === "STANDARD" &&
-                              model.label.includes("gpt-4")) ||
-                            model.label.includes("chat-4")
-                              ? "text-gray-500"
-                              : ""
-                          }`}
-                          key={model?.value}
-                          value={model?.value}
-                        >
-                          {model?.label}
-                        </SelectItem>
-                      ))}
-                    </>
-                  ) : null}
-                </SelectContent>
-              </Select>
-            </div>
+    <div>
+      <Dialog open={openModel} onOpenChange={(open) => setOpenModel(open)}>
+        <DialogContent className='sm:max-w-md bg-white'>
+          <DialogHeader className='text-[#E1B177]'>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. Are you sure you want to permanently
+              delete this {chatbot?.name}?
+            </DialogDescription>
+          </DialogHeader>
+          <div className='flex items-center space-x-2'>
+            <Button
+              className=' w-full text-gray-500 bg-gray-100 hover:bg-black hover:text-white  '
+              onClick={() => setOpenModel(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleDropBot()}
+              // variant='destructive'
+              className='px-3 w-full bg-red-500 hover:bg-red-300 '
+            >
+              Delete
+            </Button>
           </div>
-
-          <div>
-            <h3 className='font-bold text-lg'>Choose Your Bot Type</h3>
-            <h5 className='pb-2'>
-              Select the most suitable bot for your needs. Whether you're
-              setting up a Sales Bot to engage with customers or a Chatbot that
-              interacts via PDF documents, this choice will determine how your
-              chatbot will serve your clients.
-            </h5>
-            <div className='bg-gray-200/50 p-3 rounded-md'>
-              <Select
-                defaultValue={botType}
-                onValueChange={(bot) => {
-                  if (
-                    (hasActiveMembership === "STANDARD" ||
-                      hasActiveMembership === "PRO") &&
-                    bot === "Custom"
-                  ) {
-                    alert("Customize prompt is not allowed for basic users.");
-                    return;
-                  }
-                  setBotType(bot as botType);
-                }}
-              >
-                <SelectTrigger className='p-3 w-full'>
-                  <SelectValue placeholder='Choose a bot type that fits your needs' />
-                </SelectTrigger>
-                <SelectContent>
-                  {botTypeData?.map((bot) => (
-                    <SelectItem
-                      key={bot?.value}
-                      value={bot?.value}
-                      disabled={
-                        (hasActiveMembership === "STANDARD" ||
-                          hasActiveMembership === "PRO") &&
-                        bot.value === "Custom"
-                      }
-                      className={`${
-                        (hasActiveMembership === "STANDARD" ||
-                          hasActiveMembership === "PRO") &&
-                        bot.value === "Custom"
-                          ? "text-gray-500 cursor-not-allowed"
-                          : ""
-                      }`}
-                    >
-                      {bot?.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {botType === "Custom" && (
-            <div>
-              <h3 className='font-bold text-lg'>Customize GPT Prompt</h3>
+        </DialogContent>
+      </Dialog>
+      <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white'>
+        <h3 className='text-2xl pb-4 font-thin'>Bot Settings</h3>
+        <div className='grid lg:grid-cols-5 h-full rounded-lg gap-5'>
+          <form
+            onSubmit={handleUpdateForm}
+            className='col-span-5 lg:col-span-5 space-y-4'
+          >
+            <div className='pb-2'>
+              <h3 className='font-bold text-lg'>Select ChatGPT Model</h3>
+              <h5 className='pb-2'>
+                Choose the ChatGPT model that best fits your chatbot's purpose.
+                Each model offers different capabilities.
+              </h5>
               <div className='bg-gray-200/50 p-3 rounded-md'>
-                <Textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder='Enter your customization...'
-                  className='w-full h-24 p-3 rounded-md border-gray-300'
+                <Select
+                  defaultValue={selectedModel}
+                  onValueChange={(model) => {
+                    if (
+                      hasActiveMembership === "STANDARD" &&
+                      model.includes("gpt-4")
+                    ) {
+                      alert("GPT-4 models are not allowed for basic users.");
+                      return;
+                    } else {
+                      setSelectedModel(model);
+                    }
+                  }}
+                >
+                  <SelectTrigger className='p-3 w-full'>
+                    <SelectValue placeholder='Choose a model' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {models && models?.length > 0 ? (
+                      <>
+                        {models.map((model: any) => (
+                          <SelectItem
+                            disabled={
+                              hasActiveMembership === "STANDARD" &&
+                              model?.value?.includes("gpt-4")
+                            }
+                            className={`${
+                              (hasActiveMembership === "STANDARD" &&
+                                model.label.includes("gpt-4")) ||
+                              model.label.includes("chat-4")
+                                ? "text-gray-500"
+                                : ""
+                            }`}
+                            key={model?.value}
+                            value={model?.value}
+                          >
+                            {model?.label}
+                          </SelectItem>
+                        ))}
+                      </>
+                    ) : null}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <h3 className='font-bold text-lg'>Choose Your Bot Type</h3>
+              <h5 className='pb-2'>
+                Select the most suitable bot for your needs. Whether you're
+                setting up a Sales Bot to engage with customers or a Chatbot
+                that interacts via PDF documents, this choice will determine how
+                your chatbot will serve your clients.
+              </h5>
+              <div className='bg-gray-200/50 p-3 rounded-md'>
+                <Select
+                  defaultValue={botType}
+                  onValueChange={(bot) => {
+                    if (
+                      (hasActiveMembership === "STANDARD" ||
+                        hasActiveMembership === "PRO") &&
+                      bot === "Custom"
+                    ) {
+                      alert("Customize prompt is not allowed for basic users.");
+                      return;
+                    }
+                    setBotType(bot as botType);
+                    if (botType === "ChatPdf") setGetInfoBeforeChat(false);
+                  }}
+                >
+                  <SelectTrigger className='p-3 w-full'>
+                    <SelectValue placeholder='Choose a bot type that fits your needs' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {botTypeData?.map((bot) => (
+                      <SelectItem
+                        key={bot?.value}
+                        value={bot?.value}
+                        disabled={
+                          (hasActiveMembership === "STANDARD" ||
+                            hasActiveMembership === "PRO") &&
+                          bot.value === "Custom"
+                        }
+                        className={`${
+                          (hasActiveMembership === "STANDARD" ||
+                            hasActiveMembership === "PRO") &&
+                          bot.value === "Custom"
+                            ? "text-gray-500 cursor-not-allowed"
+                            : ""
+                        }`}
+                      >
+                        {bot?.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {botType === "Custom" && (
+              <div>
+                <h3 className='font-bold text-lg'>Customize GPT Prompt</h3>
+                <div className='bg-gray-200/50 p-3 rounded-md'>
+                  <Textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder='Enter your customization...'
+                    className='w-full h-24 p-3 rounded-md border-gray-300'
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className='pb-2'>
+              <h3 className='font-bold text-lg'>Collect Client Information</h3>
+              <h5 className='pb-2'>
+                Would you like to gather client details before starting the
+                chat?
+              </h5>
+
+              <div className='flex items-center justify-between space-x-4 border p-3 rounded-md '>
+                <Label htmlFor='use-own-key'>
+                  Enable a dialog to request client information before
+                  initiating the conversation.
+                </Label>
+
+                <Switch
+                  disabled={
+                    hasActiveMembership === "STANDARD" || botType === "ChatPdf"
+                  }
+                  id='get-info-before-chat'
+                  checked={getInfoBeforeChat}
+                  onCheckedChange={setGetInfoBeforeChat}
                 />
               </div>
             </div>
-          )}
 
-          <div className='pb-2'>
-            <h3 className='font-bold text-lg'>Collect Client Information</h3>
-            <h5 className='pb-2'>
-              Would you like to gather client details before starting the chat?
-            </h5>
-
-            <div className='flex items-center justify-between space-x-4 border p-3 rounded-md '>
-              <Label htmlFor='use-own-key'>
-                Enable a dialog to request client information before initiating
-                the conversation.
-              </Label>
-
-              <Switch
-                disabled={hasActiveMembership === "STANDARD"}
-                id='get-info-before-chat'
-                checked={getInfoBeforeChat}
-                onCheckedChange={setGetInfoBeforeChat}
-              />
+            <div className=' bg-gray-200/50 p-3 rounded-md'>
+              <Card
+                onClick={() => {
+                  if (hasActiveMembership !== "STANDARD") {
+                    setOpenModel(true);
+                  }
+                }}
+                className={`${
+                  hasActiveMembership === "STANDARD"
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+                } border border-red-500 hover:bg-gray-200/50 hover:border-red-500  group`}
+              >
+                <CardHeader>
+                  <CardTitle className='text-black font-bold group-hover:text-red-500'>
+                    Delete Chatbot
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className='text-gray-500'>
+                    Deleting this chatbot is an irreversible action. All
+                    associated data and conversations will be permanently
+                    removed.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-
-          <div className=' bg-gray-200/50 p-3 rounded-md'>
-            <Card
-              onClick={() => {
-                if (hasActiveMembership !== "STANDARD") {
-                  handleDropBot();
-                }
-              }}
-              className={`${
-                hasActiveMembership === "STANDARD"
-                  ? "cursor-not-allowed"
-                  : "cursor-pointer"
-              } border border-red-500 hover:bg-gray-200/50 hover:border-red-500  group`}
+            <Button
+              disabled={isPending}
+              type='submit'
+              className='w-full items-center justify-center bg-gray-200/50 text-black hover:text-white hover:bg-black'
             >
-              <CardHeader>
-                <CardTitle className='text-black font-bold group-hover:text-red-500'>
-                  Delete Chatbot
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className='text-gray-500'>
-                  Deleting this chatbot is an irreversible action. All
-                  associated data and conversations will be permanently removed.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-          <Button
-            disabled={isPending}
-            type='submit'
-            className='w-full items-center justify-center bg-gray-200/50 text-black hover:text-white hover:bg-black'
-          >
-            Save Changes
-          </Button>
-        </form>
+              Save Changes
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
