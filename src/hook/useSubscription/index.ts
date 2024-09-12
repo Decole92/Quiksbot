@@ -9,11 +9,12 @@ export const PRO_LIMIT = 22;
 export const ULTIMATE_LIMIT = 50;
 
 function useSubcription() {
-  const [hasActiveMembership, setHasActiveMembership] =
-    useState<Plans>("STANDARD");
+  const [hasActiveMembership, setHasActiveMembership] = useState<Plans>();
   const [isOverFileLimit, setIsOverFileLimit] = useState(false);
   const { user } = useUser();
-
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
+  const [usersLimit, setUsersLimit] = useState<number>();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!user) return;
     const findUserSubcription = async () => {
@@ -26,22 +27,38 @@ function useSubcription() {
 
   useEffect(() => {
     const getPdfFiles = async () => {
-      const files: number | undefined = await getUserPdfFiles(user?.id!);
-      const usersLimit =
+      if (!user) return;
+      setLoading(true);
+      const files: number | undefined = await getUserPdfFiles(user.id);
+      console.log("User PDF files:", files);
+
+      const limit =
         hasActiveMembership === "STANDARD"
           ? STANDARD_LIMIT
           : hasActiveMembership === "PRO"
           ? PRO_LIMIT
           : ULTIMATE_LIMIT;
-      setIsOverFileLimit((files as number) >= usersLimit);
+
+      console.log("Calculated limit:", limit);
+      setUsersLimit(limit);
+
+      if (typeof files === "number") {
+        setIsOverFileLimit(files >= limit);
+      }
+      setLoading(false);
     };
 
     getPdfFiles();
-  }, [isOverFileLimit, user, STANDARD_LIMIT, PRO_LIMIT, ULTIMATE_LIMIT]);
+  }, [user, hasActiveMembership, isFileUploaded]);
 
+  const handleNewPdfUpload = () => {
+    setIsFileUploaded((prev) => !prev);
+  };
   return {
     hasActiveMembership,
     isOverFileLimit,
+    handleNewPdfUpload,
+    loading,
   };
 }
 export default useSubcription;

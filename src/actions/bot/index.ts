@@ -360,17 +360,22 @@ export const deletePdf = async (id: string, chatbotId: string) => {
   if (!id) return;
 
   try {
-    const index = await pineconeClient.index(indexName);
-    await index.namespace(id).deleteAll();
+    const Id = id;
 
     await prisma.pdfFile.delete({
       where: {
         id: id,
       },
     });
+    const index = await pineconeClient.index(indexName);
+    await index.namespace(Id).deleteAll();
     revalidatePath(`/edit-chatbot/${chatbotId}`);
+    return {
+      completed: true,
+    };
   } catch (err) {
     console.log("error has occur while trying to delete pdfFile", err);
+    return { completed: false };
   }
 };
 

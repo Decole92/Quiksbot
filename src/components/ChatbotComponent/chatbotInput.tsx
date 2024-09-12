@@ -4,21 +4,26 @@ import { Button } from "../ui/button";
 import { Send } from "lucide-react";
 import { useGlobalStore } from "@/store/globalStore";
 import useSWR from "swr";
-import { getChatMessages, getChatRoom, sendMessage } from "@/actions/chat";
+import { getChatMessages, getChatRoom } from "@/actions/chat";
 import { getBot } from "@/actions/bot";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
+import { ChatBot, ChatMessage, botType } from "@prisma/client";
+import useSubcription from "@/hook/useSubscription";
+import { sendMessage } from "@/actions/chat/sendMessage";
 
 function ChatbotInput({
   userDetails,
   chatRoomId,
   chatbot,
   type,
+  isPageLoading,
 }: {
   userDetails: { name: string; email: string };
   chatRoomId: string;
   chatbot: ChatBot;
   type: string;
+  isPageLoading?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
@@ -26,7 +31,7 @@ function ChatbotInput({
     state.isOpen,
     state.setIsOpen,
   ]);
-
+  const { hasActiveMembership } = useSubcription();
   const { data: chatMessages, mutate } = useSWR(
     "/getMessages",
     async () => await getChatMessages(chatRoomId)
@@ -43,7 +48,11 @@ function ChatbotInput({
 
     console.warn("user, name, email", user, name, email);
 
-    if (!name || !email) {
+    if (
+      (!name || !email) &&
+      chatbot?.getDetails
+      // hasActiveMembership !== "STANDARD"
+    ) {
       setIsOpen(true);
       return;
     }
@@ -53,6 +62,7 @@ function ChatbotInput({
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       message: passedMessage,
+      // @ts-ignore
       createdAt: new Date().toISOString(),
       chatRoomId: chatRoomId,
       role: type === "assistant" ? "ai" : "user",
@@ -62,6 +72,7 @@ function ChatbotInput({
     const loadingMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
       message: "Thinking...",
+      // @ts-ignore
       createdAt: new Date().toISOString(),
       chatRoomId: chatRoomId,
       role: "ai",
@@ -83,7 +94,7 @@ function ChatbotInput({
       });
     } else {
       mutate(getChatMessages(chatRoomId), {
-        optimisticData: [...(chatMessages as any[]), userMessage],
+        optimisticData: [...(chatMessages as ChatMessage[]), userMessage],
         rollbackOnError: true,
         populateCache: false,
         revalidate: false,
@@ -115,7 +126,8 @@ function ChatbotInput({
       }
     });
   };
-
+  const isCheck = chatbot?.getDetails ? isPageLoading : false;
+  console.log("this is isCheck", isCheck);
   return (
     <div className=''>
       <hr />
@@ -131,7 +143,7 @@ function ChatbotInput({
           placeholder='Ask your question ?'
         />
         <Button
-          disabled={isPending || !message}
+          disabled={isPending || !message || isCheck}
           type='submit'
           className='p-2 bg-transparent rounded-md group hover:bg-black '
         >

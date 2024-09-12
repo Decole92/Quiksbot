@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { useGlobalStore } from "@/store/globalStore";
 import { getBot } from "@/actions/bot";
 import { redirect } from "next/navigation";
 import useSWR from "swr";
@@ -19,7 +18,7 @@ import { ChatBot } from "@prisma/client";
 import { BASE_URL } from "../../../../../constant/url";
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
-  const [activeTab, setActiveTab] = useState("setting");
+  const [activeTab, setActiveTab] = useState("general");
 
   const { data, error, isLoading, mutate } = useSWR<ChatBot | any>(
     "/api/getBot",

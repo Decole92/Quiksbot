@@ -25,7 +25,7 @@ model User {
   stripeId  String?
   openAIkey String?
   //domains Domain[]
-  credits      String? 
+  credits      Int? @default(0) 
   ChatBot      ChatBot[]
   subscription Billings?
   Campaign     Campaign[]

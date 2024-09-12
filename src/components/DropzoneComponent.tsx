@@ -1,12 +1,21 @@
 import { getBot } from "@/actions/bot";
+import useSubcription from "@/hook/useSubscription";
 import { cn } from "@/lib/utils";
 import { CheckCheckIcon, HammerIcon, RocketIcon, Upload } from "lucide-react";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState, useTransition } from "react";
 import Dropzone from "react-dropzone";
 import { toast } from "sonner";
 import useSWR from "swr";
 
 function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
+  const {
+    isOverFileLimit,
+    handleNewPdfUpload,
+    loading: setter,
+  } = useSubcription();
+  const [isUploading, startUploading] = useTransition();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const maxSize = 5000000;
   const acceptedFileTypes = {
@@ -14,29 +23,31 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
   };
   const { mutate } = useSWR("/api/getBot", async () => await getBot(chatbotId));
   const uploadFile = async (selectedFile: File) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("chatbotId", chatbotId);
-
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("chatbotId", chatbotId);
+    startUploading(async () => {
       const response = fetch("/api/uploadPdf", {
         method: "POST",
         body: formData,
       });
 
-      // if (!response.ok) {
-      //   throw new Error("File upload failed");
-      // }
-
       toast.promise(response, {
         loading: "Uploading Pdf file",
         success: `${selectedFile?.name} uploaded successfully`,
-        error: "error occurs while uploading pdf file",
+        error:
+          "Error while uploading pdf file, Upgrade your plan to enable you upload more pdf files.",
       });
       await mutate(() => getBot(chatbotId));
-    } catch (err) {
-      console.log("Error has occurred", err);
-    }
+
+      const result = await response;
+      const data = await result.json();
+
+      if (data?.completed) {
+        router.push(`/edit-chatbot/${chatbotId}`);
+      }
+      handleNewPdfUpload();
+    });
   };
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -53,8 +64,10 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
       reader.readAsArrayBuffer(file);
     });
   };
+
   return (
     <Dropzone
+      disabled={isOverFileLimit || isUploading || loading}
       minSize={0}
       onDrop={onDrop}
       maxFiles={1}
@@ -87,15 +100,20 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
               {isDragActive && !isDragReject && "Drop to upload this file!"}
               {isDragReject && "File type not accepted, sorry!"}
               {/* {isFileTooLarge && (
-            <p className="text-red-500 px-5">File is too big</p>
-          )} */}
+        <p className="text-red-500 px-5">File is too big</p>
+      )} */}
             </div>
 
-            <div className='flex p-4 items-center justify-center text-gray-500 text-sm'>
+            <div className='flex p-4  flex-col items-center justify-center text-gray-500 text-sm'>
               <p>
                 If you are uploading a PDF, make sure you can select/highlight
                 the text.
               </p>
+              {setter ? null : isOverFileLimit ? (
+                <p className='text-red-500'>
+                  Upgrade your plan to upload more pdf files.
+                </p>
+              ) : null}
             </div>
           </section>
         );

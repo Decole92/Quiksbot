@@ -1,3 +1,4 @@
+import { ChatBot, ChatRoom } from "@prisma/client";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -50,7 +51,7 @@ export const useGlobalStore = create<BoardState>()(
     bot: null,
     setBot: (bot) => set({ bot }),
 
-    isOpen: true,
+    isOpen: false,
     setIsOpen: (isOpen) => set({ isOpen }),
 
     chatRoom: null,

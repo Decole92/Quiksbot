@@ -9,8 +9,10 @@ import useSWR from "swr";
 import { addCharacteristic, deletePdf, getBot } from "@/actions/bot";
 import Characteristic from "../Characteristic";
 import { PdfFile } from "@prisma/client";
+import useSubcription from "@/hook/useSubscription";
 
 function Source({ chatbotId }: { chatbotId: string }) {
+  const { isOverFileLimit, handleNewPdfUpload } = useSubcription();
   const [isPending, startTransition] = useTransition();
   const { data: chatbot, mutate } = useSWR("/api/getBot", async () =>
     getBot(chatbotId)
@@ -41,8 +43,13 @@ function Source({ chatbotId }: { chatbotId: string }) {
       error: "error has occur while trying to delete pdf file",
     });
     await mutate(() => getBot(chatbotId));
+
+    const fetch = await promise;
+    if (fetch?.completed) {
+      handleNewPdfUpload();
+    }
   };
-  // console.log("pdf length", chatbot?.Source?.pdfFile?.length);
+
   return (
     <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white  '>
       <h3 className='text-2xl pb-4 font-thin'>Bot Training Sources</h3>
@@ -129,7 +136,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
           </div>
         </div>
 
-        <div className='space-y-5 '>
+        <div className='space-y-5 hidden'>
           <div className=''>
             <h3 className='font-bold text-lg'>Crawl Website</h3>
             <h5 className=' pb-2 '>

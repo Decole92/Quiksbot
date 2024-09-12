@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "../../../prisma/client";
 import stripe from "@/lib/stripe";
 import { BASE_URL } from "../../../constant/url";
+import { userDetails } from "../../../typing";
 
 export const createCheckoutSession = async (
   userDetails: userDetails,

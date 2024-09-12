@@ -257,12 +257,25 @@ export const updateBotSettings = async (
     );
 
   try {
+    const getInfo = await prisma.user?.findFirst({
+      where: {
+        clerkId: userId,
+      },
+      include: {
+        subscription: true,
+      },
+    });
+
     const updateSettings = await prisma.chatBot.update({
       where: { id: id },
       data: {
         botType: botType,
         chatModel: selectedModel,
-        getDetails: getInfoBeforeChat,
+        getDetails:
+          getInfo?.subscription?.plan === "ULTIMATE" ||
+          getInfo?.subscription?.plan === "PRO"
+            ? getInfoBeforeChat
+            : false,
         prompt: prompt ? prompt : "",
       },
     });
