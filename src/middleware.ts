@@ -4,14 +4,16 @@ import type { NextRequest } from "next/server";
 
 // Define route matchers for protected and public routes
 const isProtectedRoute = createRouteMatcher([
+  "(admin)/(.*)",
   "/create-chatbot(.*)",
   "/dashboard(.*)",
   "/edit-chatbot(.*)",
   "/review-session(.*)",
   "/view-chatbot(.*)",
-  "/analytic",
-  "/chatlogs",
-
+  "/analytic(.*)",
+  "/chatlogs(.*)",
+  "/pricing(.*)",
+  "/settings(.*)",
 ]);
 
 const isPublicRoute = createRouteMatcher([
@@ -34,7 +36,6 @@ async function middleware(request: NextRequest, event: any) {
     return response;
   }
 
-  
   return clerkMiddleware((auth) => {
     if (isProtectedRoute(request)) {
       auth().protect();
@@ -42,8 +43,6 @@ async function middleware(request: NextRequest, event: any) {
       auth().protect();
     }
   })(request, event); // Pass both `request` and `event` here
-
-
 }
 
 export default middleware;

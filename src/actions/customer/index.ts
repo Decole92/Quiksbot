@@ -228,14 +228,6 @@ export const chartBarData = async () => {
         }))
     );
 
-    console.log("this is chartbar from server", chartData);
-    console.log("this is heatmap data from server", heatmapData);
-
-    // console.log("this is heatmap data from server", heatmapData);
-
-    // console.log("this is chartbar from server & heatmapData", chartData, heatmapData)
-
-    //return  chartData; // Return
     return { chartData, heatmapData };
   } catch (error) {
     console.error("Error fetching chart data:", error);
@@ -280,6 +272,17 @@ export const updateBotSettings = async (
       },
     });
 
+    await prisma.chatBot.update({
+      where: { id: id },
+      data: {
+        role:
+          (getInfo?.subscription?.plan === "ULTIMATE" ||
+            getInfo?.subscription?.plan === "PRO") &&
+          getInfoBeforeChat
+            ? "Chat with your pdf file."
+            : updateSettings.role,
+      },
+    });
     revalidatePath(`/edit-chatbot/${id}`);
     return { updateSettings, completed: true };
   } catch (err) {

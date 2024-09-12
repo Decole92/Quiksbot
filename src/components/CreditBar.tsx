@@ -1,44 +1,55 @@
 "use client";
-import { useState } from "react";
+import { Progress } from "@/components/ui/progress";
+import useSubcription from "@/hook/useSubscription";
+import { Zap } from "lucide-react";
+
+interface AICreditBarProps {
+  totalCredits: number;
+  usedCredits: number;
+}
 
 export default function CreditBar() {
-  const [score, setScore] = useState(10);
+  const {
+    hasActiveMembership,
+    isOverFileLimit,
+    loading,
+    usedCredits,
+    totalCredits,
+    isOverCreditLimit,
+  } = useSubcription();
 
-  const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setScore(Number(e.target.value));
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  const getScoreColor = (score: number) => {
-    if (score <= 4) return "bg-emerald-500"; // Highest score, use green
-    if (score <= 8) return "bg-green-500"; // Slightly lower, use lighter green
-    if (score <= 12) return "bg-yellow-500"; // Mid range, use yellow
-    if (score <= 16) return "bg-orange-500"; // Lower range, use orange
-    return "bg-red-500"; // Lowest range, use red
-  };
-
-  const getScoreLabel = (score: number) => {
-    if (score <= 4) return "Excellent";
-    if (score <= 8) return "Very Good";
-    if (score <= 12) return "Good";
-    if (score <= 16) return "Fair";
-    return "Poor";
-  };
+  const remainingCredits = totalCredits - usedCredits;
+  const percentageUsed = (usedCredits / totalCredits) * 100;
 
   return (
-    <div className='w-full md:max-w-[200px] lg:max-w-[200px] md:mx-auto p-2 space-y-4'>
-      <div className='relative h-3 rounded-full overflow-hidden'>
-        <div className='absolute inset-0 flex'>
-          <div className='flex-1 bg-emerald-500'></div> {/* Highest */}
-          <div className='flex-1 bg-green-500'></div>
-          <div className='flex-1 bg-yellow-500'></div>
-          <div className='flex-1 bg-orange-500'></div>
-          <div className='flex-1 bg-red-500'></div> {/* Lowest */}
+    <div className='md:col-span-3 lg:col-span-3 col-span-5 '>
+      <div className='hidden md:inline-flex lg:inline-flex items-center justify-between  gap-5'>
+        <div className='flex items-center space-x-2 '>
+          <Zap className='w-4 h-4 text-yellow-400' />
+          <span className='font-semibold text-sm text-gray-700'>
+            AI Credits
+          </span>
         </div>
-        <div
-          className='absolute top-0 bottom-0 w-1 bg-white'
-          style={{ left: `calc(${(score / 22) * 100}% - 2px)` }}
-        ></div>
+        <span className='text-sm font-medium text-gray-600'>
+          {usedCredits} / {totalCredits}
+        </span>
       </div>
+      <Progress
+        value={percentageUsed}
+        className='hidden  md:inline-block lg:inline-block h-2 bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200'
+      >
+        <div
+          className='h-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full transition-all duration-500 ease-in-out'
+          style={{ width: `${percentageUsed}%` }}
+        />
+      </Progress>
+      <p className=' text-xs text-gray-500 text-center'>
+        {remainingCredits} credits remaining
+      </p>
     </div>
   );
 }

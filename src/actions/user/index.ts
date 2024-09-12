@@ -113,3 +113,20 @@ export const updateOpenAiKey = async (key: string, useCustomKey: boolean) => {
     console.log("error has occur while trying to update openai key", err);
   }
 };
+
+export const getUserCredits = async (id: string) => {
+  // auth().protect();
+  if (!id) return;
+
+  try {
+    const credits = await prisma.user.findFirst({
+      where: {
+        clerkId: id!,
+      },
+    });
+
+    return credits?.credits;
+  } catch (err) {
+    console.log("error has occur while trying to get users get credit", err);
+  }
+};

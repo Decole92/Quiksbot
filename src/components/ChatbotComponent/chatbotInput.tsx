@@ -31,7 +31,7 @@ function ChatbotInput({
     state.isOpen,
     state.setIsOpen,
   ]);
-  const { hasActiveMembership } = useSubcription();
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const { data: chatMessages, mutate } = useSWR(
     "/getMessages",
     async () => await getChatMessages(chatRoomId)
@@ -46,14 +46,9 @@ function ChatbotInput({
   const handleAskQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.warn("user, name, email", user, name, email);
-
-    if (
-      (!name || !email) &&
-      chatbot?.getDetails
-      // hasActiveMembership !== "STANDARD"
-    ) {
+    if (!formSubmitted && (!name || !email) && chatbot?.getDetails) {
       setIsOpen(true);
+      console.log("isOpen from first if", isOpen);
       return;
     }
     const passedMessage = message;
@@ -84,7 +79,7 @@ function ChatbotInput({
     if (!chatRoom?.live) {
       mutate(getChatMessages(chatRoomId), {
         optimisticData: [
-          ...(chatMessages as any[]),
+          ...(chatMessages ? chatMessages : []),
           userMessage,
           loadingMessage,
         ],
@@ -127,7 +122,7 @@ function ChatbotInput({
     });
   };
   const isCheck = chatbot?.getDetails ? isPageLoading : false;
-  console.log("this is isCheck", isCheck);
+
   return (
     <div className=''>
       <hr />

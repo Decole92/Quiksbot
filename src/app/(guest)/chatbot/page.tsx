@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { postToParent } from "@/lib/parseToParent";
 import { clientPusher } from "@/lib/pusher";
 import { XCircleIcon } from "lucide-react";
-import { ChatBot, ChatMessage } from "@prisma/client";
+import { ChatBot, ChatMessage, ChatRoom } from "@prisma/client";
 
 type Props = {};
 
@@ -159,6 +159,8 @@ const ChatBot = (props: Props) => {
 
     startChatAutomatically(); // Start chat on component mount
   }, [botId, bot]);
+
+  console.log("this is userDetails", userDetails);
   return (
     <div className='h-screen flex flex-col justify-end items-end gap-4 bg-white'>
       {botOpened && isOpen && (
@@ -220,7 +222,6 @@ const ChatBot = (props: Props) => {
 
       {botOpened && (
         <div className='h-screen w-[400px] flex flex-col bg-white rounded-xl border-[1px] overflow-hidden shadow-md'>
-          {/* // <div className="flex flex-col h-screen max-w-3xl mx-auto bg-white md:rounded-t-lg shadow-md md:mt-10 "> */}
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
           <div className='flex-1 overflow-y-auto'>
             <ChatbotMessages
@@ -229,7 +230,12 @@ const ChatBot = (props: Props) => {
             />
           </div>
           <div className='sticky bottom-0 z-30 bg-white'>
-            <SuggestItems firstQuestion={bot?.firstQuestion as any} />
+            <SuggestItems
+              firstQuestion={bot?.firstQuestion as any}
+              userDetails={userDetails}
+              chatbot={bot!}
+              chatId={chatId!}
+            />
             <ChatbotInput
               userDetails={userDetails}
               chatRoomId={chatId!}

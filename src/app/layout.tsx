@@ -6,6 +6,7 @@ import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -31,8 +32,15 @@ export default async function RootLayout({
       /> */}
       <html lang='en'>
         <body className={`${inter.className}   bg-gray-100 `}>
-          <EdgeStoreProvider>{children}</EdgeStoreProvider>
-          <Toaster position='bottom-center' />
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <Toaster position='bottom-center' />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

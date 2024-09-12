@@ -12,17 +12,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CreditCard, Key, Settings } from "lucide-react";
+import { CreditCard, Key, Moon, Settings, Sun, SunMoon } from "lucide-react";
 import Link from "next/link";
 import useSubcription from "@/hook/useSubscription";
 import { createStripePortal } from "@/actions/stripe";
 import { useRouter } from "next/navigation";
-import useSWR from "swr";
-import { ChatBot } from "@prisma/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useUser } from "@clerk/nextjs";
 
 import { toast } from "sonner";
 import { getUserById, updateOpenAiKey } from "@/actions/user";
+import { useTheme } from "next-themes";
 
 export default function SettingsPage() {
   const [openAIKey, setOpenAIKey] = useState("");
@@ -31,6 +36,8 @@ export default function SettingsPage() {
   const [isPending, startTransition] = useTransition();
   const { user } = useUser();
   const router = useRouter();
+  const { setTheme } = useTheme();
+
   const handleUpgrade = async () => {
     if (!user) return;
     if (hasActiveMembership === "PRO" || hasActiveMembership === "ULTIMATE") {
@@ -197,9 +204,44 @@ export default function SettingsPage() {
           <CardContent className='space-y-4'>
             <div className='flex items-center justify-between'>
               <Label htmlFor='dark-mode' className='flex items-center gap-2'>
-                Theme mode
+                Theme interface mode
               </Label>
-              <Switch id='dark-mode' />
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant='outline' size='icon'>
+                    <Sun
+                      className={`h-[1.2rem] w-[1.2rem] ${
+                        "light" ? "rotate-0 scale-100" : "rotate-90 scale-0"
+                      } transition-all`}
+                    />
+                    <Moon
+                      className={`absolute h-[1.2rem] w-[1.2rem] ${
+                        "dark" ? "rotate-0 scale-100" : "rotate-90 scale-0"
+                      } transition-all`}
+                    />
+                    <SunMoon
+                      className={`absolute h-[1.2rem] w-[1.2rem] ${
+                        "system" ? "rotate-0 scale-100" : "rotate-90 scale-0"
+                      } transition-all`}
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align='end'>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    //  onClick={() => handleTheme("dark")}
+                    onClick={() => setTheme("dark")}
+                  >
+                    Dark
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                    System
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </CardContent>
         </Card>

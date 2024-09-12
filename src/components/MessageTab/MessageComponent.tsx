@@ -16,7 +16,7 @@ function MessageComponent({ data }: { data: any[] }) {
       {data && data?.length > 0 ? (
         <div>
           {data?.map((customer: any) => (
-            <ChatCard key={customer?.chatRoom[0].id} customer={customer} />
+            <ChatCard key={customer?.chatRoom[0]?.id} customer={customer} />
           ))}
         </div>
       ) : (

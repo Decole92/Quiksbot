@@ -5,6 +5,8 @@ import prisma from "../../../prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
 import { BASE_URL } from "../../../constant/url";
+import { Kufam } from "next/font/google";
+import { revalidatePath } from "next/cache";
 
 type userDetails = {
   name: string;
@@ -173,5 +175,33 @@ export const getUserById = async (id: string) => {
       "err occurs while getting getUserById from the server action",
       err
     );
+  }
+};
+
+export const deleteChatRoomById = async (id: string) => {
+  auth().protect();
+  if (!id) throw new Error("there's no selectedChatroomId");
+  try {
+    const del = await prisma.chatRoom.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    const delCustomer = await prisma.customer.delete({
+      where: {
+        id: del?.customerId!,
+      },
+    });
+    revalidatePath("/chatlogs");
+
+    return {
+      delCustomer,
+      completed: true,
+    };
+  } catch (err) {
+    console.log("err has occur while trying to delete chatroom..");
+    return {
+      completed: false,
+    };
   }
 };

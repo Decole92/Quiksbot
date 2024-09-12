@@ -424,12 +424,6 @@ function General({ chatbot }: { chatbot: any }) {
             </form>
           </div>
         </div>
-
-        {/* <div className='col-span-5 lg:col-span-2 h-full space-y-5'>
-          <ChatInterface />
-          <hr />
-          {/* <div>{chatbot && <Avatar seed={bot?.name?.toString()} />}</div> 
-        </div> */}
       </div>
     </div>
   );

@@ -190,7 +190,12 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
           </div>
 
           <div className='sticky bottom-0 z-30 bg-white'>
-            <SuggestItems firstQuestion={bot?.firstQuestion as any} />
+            <SuggestItems
+              firstQuestion={bot?.firstQuestion as any}
+              userDetails={userDetails}
+              chatbot={bot!}
+              chatId={chatId!}
+            />
             <ChatbotInput
               userDetails={userDetails}
               chatRoomId={chatId}
