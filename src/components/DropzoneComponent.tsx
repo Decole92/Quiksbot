@@ -91,7 +91,7 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
                 "border border-dashed w-full h-52 flex justify-center items-center p-5 rounded-md",
                 isDragActive
                   ? "bg-gray-500 text-white animate-pulse"
-                  : "bg-gray-200/50 text-black"
+                  : "bg-gray-200/50 text-black dark:bg-gray-950 dark:text-gray-400"
               )}
             >
               <input disabled={loading} {...getInputProps()} />

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Avatar from "../Avatar";
 import botIcon from "../../../public/golden.png";
 import { usePathname } from "next/navigation";
+import { ChatBot } from "@prisma/client";
 //bg-primary text-primary-foreground
 {
   /* <Avatar seed={bot?.name as string} /> */

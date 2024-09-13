@@ -184,9 +184,9 @@ function ChatInterface() {
   }
   if (bot && chatRoom) {
     return (
-      <div>
+      <div className=''>
         <Dialog open={openModel} onOpenChange={(open) => setOpenModel(open)}>
-          <DialogContent className='sm:max-w-md bg-white'>
+          <DialogContent className='sm:max-w-md bg-white  dark:bg-gray-900'>
             <DialogHeader className='text-[#E1B177]'>
               <DialogTitle>Are you absolutely sure?</DialogTitle>
               <DialogDescription>
@@ -196,7 +196,8 @@ function ChatInterface() {
             </DialogHeader>
             <div className='flex items-center space-x-2'>
               <Button
-                className=' w-full text-gray-500 bg-gray-100 hover:bg-black hover:text-white  '
+                // className=' w-full text-gray-500 bg-gray-100 hover:bg-black hover:text-white  '
+                className=' w-full text-gray-500 bg-gray-100 dark:bg-transparent hover:bg-black hover:text-white  '
                 onClick={() => setOpenModel(false)}
               >
                 Cancel
@@ -211,10 +212,10 @@ function ChatInterface() {
             </div>
           </DialogContent>
         </Dialog>
-        <div className='border rounded-md w-full bg-white flex flex-col max-h-screen  relative'>
+        <div className='border rounded-md w-full bg-white flex flex-col max-h-screen  relative dark:bg-gray-900'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
 
-          <ScrollArea className='h-[calc(100vh-400px)] p-5'>
+          <ScrollArea className='h-[calc(100vh-400px)] p-5 '>
             {hasMessages ? (
               <ChatbotMessages
                 chatbot={bot as ChatBot}
@@ -226,7 +227,7 @@ function ChatInterface() {
               </div>
             )}
           </ScrollArea>
-          <div className=' bg-white w-full  '>
+          <div className=' bg-white w-full dark:bg-gray-900 dark:text-gray-400 '>
             {!chatRoom?.live ? (
               <div className='p-5 text-center m-5 '>
                 <Separator className='mb-5' />
@@ -253,7 +254,7 @@ function ChatInterface() {
                   <Button
                     disabled={isDeleting}
                     onClick={() => setOpenModel(true)}
-                    className='w-full bg-gray-200/50 text-black hover:bg-black hover:text-white'
+                    className='w-full bg-gray-200/50 dark:bg-gray-950 dark:text-gray-400 text-black hover:bg-[#E1B177] hover:text-white dark:hover:bg-[#E1B177] dark:hover:text-gray-100'
                   >
                     Delete Chat
                   </Button>

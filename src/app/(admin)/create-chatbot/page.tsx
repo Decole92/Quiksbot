@@ -28,10 +28,10 @@ function CreatePage() {
 
   return (
     <div className='flex items-center justify-center min-h-screen'>
-      <div className='bg-white text-black p-10 m-10 flex flex-col md:flex-row items-center   md:space-x-5 rounded-md'>
+      <div className='bg-white dark:bg-gray-900 dark:text-gray-400 text-black p-10 m-10 flex flex-col md:flex-row items-center   md:space-x-5 rounded-md'>
         <Avatar seed='Create new chatbot' />
         <div className=''>
-          <h2 className='text-black text-xl'>Create </h2>
+          <h2 className='text-black text-xl dark:text-gray-100'>Create </h2>
           <p className='font-thin text-sm'>
             Create a new chatbot to assist you in your conversation with your
             clients.
@@ -44,11 +44,15 @@ function CreatePage() {
               type='text'
               value={botName}
               onChange={(e) => setBotName(e.target.value)}
-              className='max-w-lg'
+              className='max-w-lg dark:bg-gray-950'
               placeholder='Chatbot Name...'
               required
             />
-            <Button disabled={isPending} type='submit' className='bg-black'>
+            <Button
+              disabled={isPending || !botName}
+              type='submit'
+              className='bg-gray-900 dark:bg-gray-950 dark:text-gray-400 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:hover:text-gray-200'
+            >
               Create bot
             </Button>
           </form>

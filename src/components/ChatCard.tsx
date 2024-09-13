@@ -74,8 +74,8 @@ const ChatCard = ({ customer }: Props) => {
         // className='group flex flex-row gap-4 p-4 rounded-lg hover:bg-muted transition-colors'
         className={`mb-4 group w-full hidden md:flex lg:flex flex-row items-center  gap-4 cursor-pointer rounded-lg border p-7 transition-all hover:border-b hover:border-t hover:border-t-[#E1B177]  hover:border-b-[#E1B177] relative ${
           selectedChatRoomId === id
-            ? "bg-gray-100  border-t border-b  border-t-[#E1B177]  border-b-[#E1B177]"
-            : "bg-white"
+            ? "bg-gray-100 dark:bg-gray-900  border-t border-b  border-t-[#E1B177]  border-b-[#E1B177]  "
+            : "dark:bg-gray-950 bg-white "
         }`}
         onClick={() => handleViewChatroom(id)}
       >
@@ -115,7 +115,9 @@ const ChatCard = ({ customer }: Props) => {
       <Card
         // className='group flex flex-row gap-4 p-4 rounded-lg hover:bg-muted transition-colors'
         className={`mb-4 md:hidden w-full lg:hidden inline-flex group  flex-row items-center  gap-4 cursor-pointer rounded-lg border p-7 transition-all hover:bg-gray-100 relative ${
-          selectedChatRoomId === id ? "bg-gray-100" : "bg-white"
+          selectedChatRoomId === id
+            ? "bg-gray-100 dark:bg-gray-900  "
+            : "bg-white dark:bg-gray-950"
         }`}
         onClick={() => handleNextScreen(id)}
       >

@@ -1,7 +1,7 @@
 "use client";
 import SideHeader from "@/components/SideHeader";
 import { Button } from "@/components/ui/button";
-
+import logo from "../../../../../public/golden.png";
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -16,6 +16,7 @@ import Connect from "@/components/TabContent/Connect";
 import SettingsPage from "@/components/TabContent/Settings";
 import { ChatBot } from "@prisma/client";
 import { BASE_URL } from "../../../../../constant/url";
+import Image from "next/image";
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
   const [activeTab, setActiveTab] = useState("general");
@@ -32,7 +33,13 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
   if (isLoading) {
     return (
       <div className='w-full flex justify-center items-center mt-20'>
-        <Avatar className='animate-spin' seed='loading' />
+        <Image
+          src={logo}
+          alt='logo'
+          width={100}
+          height={100}
+          className='rounded-full animate-spin'
+        />
       </div>
     );
   }
@@ -54,11 +61,11 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
     <div className='mt-20 space-y-12 w-full md:max-w-5xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
       {data && <SideHeader data={data} />}
 
-      <div className='flex items-center justify-between border-b'>
+      <div className='flex items-center justify-between border-b '>
         <div className='flex w-full justify-evenly'>
           <Button
             variant='ghost'
-            className='relative h-10 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+            className='relative h-10 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground  focus:outline-none focus-visible:ring-1 focus-visible:ring-ring'
             onClick={() => setActiveTab("general")}
           >
             <span>General</span>

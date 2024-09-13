@@ -175,7 +175,7 @@ function General({ chatbot }: { chatbot: any }) {
   };
 
   return (
-    <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white  '>
+    <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white dark:bg-gray-900 '>
       <h3 className='text-2xl pb-4 font-thin'>Chat Interface Settings</h3>
       <div className='grid lg:grid-cols-5  h-full  rounded-lg gap-5 '>
         <div className='col-span-5 lg:col-span-5 space-y-4'>
@@ -188,7 +188,7 @@ function General({ chatbot }: { chatbot: any }) {
               this.
             </h5>
 
-            <div className='bg-gray-200/50 p-3 rounded-md space-y-3'>
+            <div className='bg-gray-200/50 p-3 rounded-md space-y-3 dark:bg-gray-950'>
               <form
                 onSubmit={handleAddQuestions}
                 className='flex items-center md:flex-row flex-col md:gap-4'
@@ -200,7 +200,7 @@ function General({ chatbot }: { chatbot: any }) {
                   onChange={(e) =>
                     setData((value) => ({ ...value, question: e.target.value }))
                   }
-                  className='flex-1'
+                  className='flex-1 dark:bg-gray-900'
                   placeholder={`${
                     limitQuestion
                       ? " You can only suggest 4 questions to your client!"
@@ -212,7 +212,7 @@ function General({ chatbot }: { chatbot: any }) {
                     !user || !data.question || isPending || limitQuestion
                   }
                   type='submit'
-                  className='bg-black/70 w-auto'
+                  className='bg-black/70 w-auto dark:bg-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'
                 >
                   Add
                 </Button>
@@ -243,10 +243,10 @@ function General({ chatbot }: { chatbot: any }) {
             <div>
               <form
                 onSubmit={handleWelcomeGreetings}
-                className='flex items-center md:flex-row flex-col md:gap-4 bg-gray-200/50 p-3 rounded-md'
+                className='flex items-center md:flex-row flex-col md:gap-4 bg-gray-200/50  p-3 rounded-md dark:bg-gray-950'
               >
                 <Input
-                  className='flex-1'
+                  className='flex-1 dark:bg-gray-900 dark:text-gray-400'
                   placeholder='Hey! How can we assist you today ?'
                   defaultValue={chatbot?.greetings!}
                   onChange={(e) =>
@@ -259,7 +259,7 @@ function General({ chatbot }: { chatbot: any }) {
                 <Button
                   type='submit'
                   disabled={isLoading || disableGreetings}
-                  className='bg-black/70 '
+                  className='bg-black/70 dark:bg-gray-900 dark:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]  '
                 >
                   Update
                 </Button>
@@ -327,7 +327,7 @@ function General({ chatbot }: { chatbot: any }) {
               <Button
                 disabled={isHex || chatbot?.userMessageBgColor === hex}
                 type='submit'
-                className='flex flex-col items-center justify-center w-full md:w-[180px] bg-black/70 hover:bg-black text-white  '
+                className='flex flex-col items-center justify-center w-full md:w-[180px] bg-black/70 hover:bg-[#E1B177] text-white  dark:hover:bg-[#E1B177] dark:text-gray-200 '
               >
                 Save color
               </Button>
@@ -385,19 +385,19 @@ function General({ chatbot }: { chatbot: any }) {
                       onClick={() => {
                         refIcon.current?.click();
                       }}
-                      className='absolute group bg-white justify-center items-center bottom-5 md:left-5 left-5  border-gray-200 border   '
+                      className='absolute group bg-white  dark:bg-gray-950 justify-center items-center bottom-5 md:left-5 left-5  border-gray-200 border dark:hover:bg-[#E1B177]  '
                     >
-                      <Upload className='text-black group-hover:text-white' />
+                      <Upload className='text-black group-hover:text-white dark:text-gray-400  ' />
                     </Button>
                   </div>
                 </div>
 
-                <div className='flex  items-center  flex-col gap-2 bg-gray-200/50 p-3 rounded-md '>
+                <div className='flex  items-center  flex-col gap-2 bg-gray-200/50 dark:bg-gray-950 p-3 rounded-md '>
                   <Select
                     defaultValue={chatbot?.iconPosition!}
                     onValueChange={(e) => setIconPosition(e)}
                   >
-                    <SelectTrigger className='md:w-[220px] w-full'>
+                    <SelectTrigger className='md:w-[220px] w-full dark:bg-gray-900'>
                       <SelectValue placeholder='Select position for Chatbot Icon' />
                     </SelectTrigger>
                     <SelectContent>
@@ -409,7 +409,7 @@ function General({ chatbot }: { chatbot: any }) {
                   <Button
                     type='submit'
                     disabled={isHolding || disabledPosition}
-                    className='bg-black/70 w-full hover:bg-black text-white '
+                    className='bg-black/70 w-full  text-white dark:bg-gray-900  dark:hover:bg-[#E1B177] hover:bg-[#E1B177] '
                   >
                     Update Changes
                   </Button>

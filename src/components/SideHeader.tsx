@@ -105,7 +105,7 @@ function SideHeader({ data }: { data: any }) {
   return (
     <form
       onSubmit={handleBotName}
-      className=' sm:max-w-md ml-auto space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-white'
+      className=' sm:max-w-md ml-auto space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-white dark:bg-gray-900'
     >
       <input
         ref={refIcon}
@@ -154,23 +154,25 @@ function SideHeader({ data }: { data: any }) {
             onClick={() => {
               refIcon.current?.click();
             }}
-            className='absolute group bg-white justify-center items-center bottom-5 left-5 border-gray-200 border'
+            className='absolute group bg-white justify-center items-center bottom-5 left-5 border-gray-200 border dark:bg-gray-950 '
           >
-            <Upload className='text-black group-hover:text-white ' />
+            <Upload className='text-black group-hover:text-white  dark:text-gray-400' />
           </Button>
         </div>
         <div className='space-y-2 flex-1'>
           {/* <form onSubmit={handleBotName}> */}
           <Input
             //value={name}
+
             defaultValue={botHeader.name}
             onChange={(e) =>
               setBotHeader((values) => ({ ...values, name: e.target.value }))
             }
-            className=''
+            className='dark:bg-gray-950'
           />
 
           <Input
+            className='dark:bg-gray-950'
             defaultValue={data && data?.role}
             onChange={(e) =>
               setBotHeader((values) => ({ ...values, role: e.target.value }))
@@ -182,7 +184,7 @@ function SideHeader({ data }: { data: any }) {
       {isUploading && <Progress value={progress} className='w-full h-2' />}
       <Button
         //flex
-        className='flex flex-col ml-auto text-white bg-black hover:text-white hover:bg-black   '
+        className='flex flex-col ml-auto text-white bg-black hover:text-white hover:bg-[#E1B177] dark:bg-gray-950 dark:hover:bg-[#E1B177] '
         type='submit'
         disabled={!user || !botHeader || isPending || isUploading || disabled}
       >

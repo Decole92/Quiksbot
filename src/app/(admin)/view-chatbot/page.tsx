@@ -24,9 +24,11 @@ async function ViewChatbot() {
 
   return (
     <div className='mt-14  w-full md:max-w-5xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
-      <div className='flex justify-between items-center mb-5 md:mt-5 p-5  shadow-md w-full'>
-        <h1 className='text-xl lg:text-3xl font-thin '>Chatbots List</h1>
-        <Button className='flex ml-auto right-1 bg-transparent text-black hover:bg-black hover:text-gray-100'>
+      <div className='flex justify-between items-center mb-5 md:mt-5 p-5  shadow-md shadow-white w-full dark:shadow-gray-900'>
+        <h1 className='text-xl lg:text-3xl font-thin text-[#E1B177]'>
+          Chatbots List
+        </h1>
+        <Button className='flex ml-auto right-1 bg-gray-200/50 dark:hover:bg-[#E1B177] hover:bg-[#E1B177] dark:bg-gray-900 text-gray-400  hover:text-white '>
           <Link href={`/create-chatbot`} className='flex items-center'>
             <Plus /> Create
           </Link>
@@ -43,8 +45,12 @@ async function ViewChatbot() {
       )}
       <ul className='grid md:grid-cols-2 grid-cols-1 gap-5'>
         {sortedBots.map((chatbot: any) => (
-          <Link key={chatbot?.id} href={`/edit-chatbot/${chatbot?.id}`}>
-            <li className='relative md:p-10 p-5  border rounded-md max-w-2xl bg-white'>
+          <Link
+            className='dark:bg-gray-900'
+            key={chatbot?.id}
+            href={`/edit-chatbot/${chatbot?.id}`}
+          >
+            <li className='relative md:p-10 p-5  border rounded-md max-w-2xl dark:bg-gray-900 bg-white dark:text-gray-400 '>
               <div>
                 <div className='flex items-center space-x-4'>
                   {chatbot?.botIcon ? (

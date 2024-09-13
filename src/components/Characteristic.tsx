@@ -4,6 +4,7 @@ import {
   getBot,
 } from "@/actions/bot";
 import { useGlobalStore } from "@/store/globalStore";
+import { Characteristic, FirstQuestion } from "@prisma/client";
 import { OctagonX } from "lucide-react";
 import { toast } from "sonner";
 import useSWR from "swr";
@@ -14,7 +15,7 @@ function Characteristic({
   type,
 }: {
   question?: FirstQuestion;
-  characteristic?: characteristic;
+  characteristic?: Characteristic;
   type: string;
 }) {
   const { mutate } = useSWR("/api/getBot");
@@ -50,7 +51,7 @@ function Characteristic({
   };
 
   return (
-    <li className='relative bg-white border p-7 rounded-md text-black'>
+    <li className='relative bg-white border p-7 rounded-md text-black dark:bg-gray-900 dark:text-gray-400'>
       {type === "suggestion"
         ? question?.question
         : characteristic?.characteristic}

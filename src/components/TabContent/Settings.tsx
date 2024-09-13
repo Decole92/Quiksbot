@@ -104,7 +104,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
   return (
     <div>
       <Dialog open={openModel} onOpenChange={(open) => setOpenModel(open)}>
-        <DialogContent className='sm:max-w-md bg-white'>
+        <DialogContent className='sm:max-w-md bg-white dark:bg-gray-900'>
           <DialogHeader className='text-[#E1B177]'>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
@@ -114,7 +114,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
           </DialogHeader>
           <div className='flex items-center space-x-2'>
             <Button
-              className=' w-full text-gray-500 bg-gray-100 hover:bg-black hover:text-white  '
+              className=' w-full text-gray-500 bg-gray-100 dark:bg-transparent hover:bg-black hover:text-white  '
               onClick={() => setOpenModel(false)}
             >
               Cancel
@@ -129,7 +129,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
           </div>
         </DialogContent>
       </Dialog>
-      <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white'>
+      <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white dark:bg-gray-900'>
         <h3 className='text-2xl pb-4 font-thin'>Bot Settings</h3>
         <div className='grid lg:grid-cols-5 h-full rounded-lg gap-5'>
           <form
@@ -142,7 +142,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
                 Choose the ChatGPT model that best fits your chatbot's purpose.
                 Each model offers different capabilities.
               </h5>
-              <div className='bg-gray-200/50 p-3 rounded-md'>
+              <div className='bg-gray-200/50 p-3 rounded-md dark:bg-gray-950'>
                 <Select
                   defaultValue={selectedModel}
                   onValueChange={(model) => {
@@ -157,7 +157,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
                     }
                   }}
                 >
-                  <SelectTrigger className='p-3 w-full'>
+                  <SelectTrigger className='p-3 w-full dark:bg-gray-900'>
                     <SelectValue placeholder='Choose a model' />
                   </SelectTrigger>
                   <SelectContent>
@@ -197,7 +197,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
                 that interacts via PDF documents, this choice will determine how
                 your chatbot will serve your clients.
               </h5>
-              <div className='bg-gray-200/50 p-3 rounded-md'>
+              <div className='bg-gray-200/50 p-3 rounded-md dark:bg-gray-950'>
                 <Select
                   defaultValue={botType}
                   onValueChange={(bot) => {
@@ -213,7 +213,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
                     if (botType === "ChatPdf") setGetInfoBeforeChat(false);
                   }}
                 >
-                  <SelectTrigger className='p-3 w-full'>
+                  <SelectTrigger className='p-3 w-full dark:bg-gray-900'>
                     <SelectValue placeholder='Choose a bot type that fits your needs' />
                   </SelectTrigger>
                   <SelectContent>
@@ -245,25 +245,25 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
             {botType === "Custom" && (
               <div>
                 <h3 className='font-bold text-lg'>Customize GPT Prompt</h3>
-                <div className='bg-gray-200/50 p-3 rounded-md'>
+                <div className='bg-gray-200/50 p-3 rounded-md dark:bg-gray-900'>
                   <Textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder='Enter your customization...'
-                    className='w-full h-24 p-3 rounded-md border-gray-300'
+                    className='w-full h-24 p-3 rounded-md border-gray-300 dark:bg-gray-900 '
                   />
                 </div>
               </div>
             )}
 
-            <div className='pb-2'>
+            <div className='pb-2 '>
               <h3 className='font-bold text-lg'>Collect Client Information</h3>
               <h5 className='pb-2'>
                 Would you like to gather client details before starting the
                 chat?
               </h5>
 
-              <div className='flex items-center justify-between space-x-4 border p-3 rounded-md '>
+              <div className='flex items-center justify-between space-x-4 border p-3 rounded-md dark:bg-gray-900'>
                 <Label htmlFor='use-own-key'>
                   Enable a dialog to request client information before
                   initiating the conversation.
@@ -280,7 +280,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
               </div>
             </div>
 
-            <div className=' bg-gray-200/50 p-3 rounded-md'>
+            <div className=' bg-gray-200/50 p-3 rounded-md dark:bg-gray-900 '>
               <Card
                 onClick={() => {
                   if (hasActiveMembership !== "STANDARD") {
@@ -291,15 +291,15 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
                   hasActiveMembership === "STANDARD"
                     ? "cursor-not-allowed"
                     : "cursor-pointer"
-                } border border-red-500 hover:bg-gray-200/50 hover:border-red-500  group`}
+                } border border-red-500  hover:bg-gray-200/50 hover:border-red-500 group dark:bg-gray-950 dark:hover:text-red-500 dark:text-gray-400`}
               >
                 <CardHeader>
-                  <CardTitle className='text-black font-bold group-hover:text-red-500'>
+                  <CardTitle className='text-black font-bold group-hover:text-red-500 dark:text-gray-400'>
                     Delete Chatbot
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className='text-gray-500'>
+                  <p className='text-gray-500 '>
                     Deleting this chatbot is an irreversible action. All
                     associated data and conversations will be permanently
                     removed.
@@ -310,7 +310,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
             <Button
               disabled={isPending}
               type='submit'
-              className='w-full items-center justify-center bg-gray-200/50 text-black hover:text-white hover:bg-black'
+              className='w-full dark:hover:bg-[#E1B177] hover:bg-[#E1B177] items-center justify-center bg-gray-200/50 text-black hover:text-white dark:bg-gray-950 dark:text-gray-400 dark:hover:text-gray-200'
             >
               Save Changes
             </Button>

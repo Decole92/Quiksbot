@@ -8,18 +8,29 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import CreditBar from "./CreditBar";
 import useSubcription from "@/hook/useSubscription";
-import { Button } from "./ui/button";
+
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 const inter = Montserrat({ weight: "600", subsets: ["latin"] });
 
 function Header() {
   const { hasActiveMembership } = useSubcription();
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+  const { setTheme } = useTheme();
   return (
-    <header className='fixed z-50 w-full justify-between flex flex-row p-5  bg-white items-center md:drop-shadow-sm h-20'>
+    <header className='fixed z-50 w-full justify-between flex flex-row p-5 dark:bg-gray-900  bg-white items-center md:drop-shadow-sm h-20'>
       <Link href='/' className='flex flex-row items-center space-x-2'>
         <Image
           src={logo}
@@ -29,13 +40,35 @@ function Header() {
           className='rounded-full h-24 p-4'
         />
         <div className='space-y-1'>
-          <h1 className='font-thin text-black text-2xl'>Quiks Bot</h1>
+          <h1 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
+            Quiks Bot
+          </h1>
           {/* <h4 className={`${inter} text-xs text-black`}>
             Your customisable chatbot
           </h4> */}
         </div>
       </Link>
       <div className='flex flex-col md:flex-row items-center gap-2 md:gap-5 lg:gap-5 '>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='outline' size='icon'>
+              <Sun className='h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
+              <Moon className='absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+              <span className='sr-only'>Toggle theme</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuItem onClick={() => setTheme("light")}>
+              Light
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("dark")}>
+              Dark
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("system")}>
+              System
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         {hasActiveMembership === "STANDARD" ? (
           <div className='m-3'>
             <CreditBar />
@@ -102,7 +135,7 @@ function Header() {
             <SignInButton />
           </SignedOut>
           <SignedIn>
-            <UserButton showName />
+            <UserButton />
           </SignedIn>
         </div>
       </div>

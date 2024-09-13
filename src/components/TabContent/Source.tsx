@@ -51,7 +51,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
   };
 
   return (
-    <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white  '>
+    <div className='border border-gray-300 rounded-md p-5 md:p-7 lg:p-7 h-full max-w-5xl mx-auto bg-white dark:bg-gray-900 '>
       <h3 className='text-2xl pb-4 font-thin'>Bot Training Sources</h3>
 
       <div className='space-y-5'>
@@ -62,7 +62,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
             you in your conversations with your clients.
           </h5>
 
-          <div className='bg-gray-200/50 p-3 rounded-md space-y-3'>
+          <div className='bg-gray-200/50 dark:bg-gray-950 p-3 rounded-md space-y-3'>
             <form
               onSubmit={handleAddCharacteristics}
               className='flex items-center md:flex-row flex-col md:gap-4'
@@ -71,13 +71,13 @@ function Source({ chatbotId }: { chatbotId: string }) {
                 minLength={2}
                 value={characteristic}
                 onChange={(e) => setCharacteristic(e?.target?.value)}
-                className='flex-1'
+                className='flex-1 dark:bg-gray-900'
                 placeholder='Example: If customer asks for prices, provide pricing page: www.example.com/pricing '
               />
               <Button
                 disabled={isPending || !characteristic}
                 type='submit'
-                className='bg-black/70 w-auto'
+                className='bg-black/70 w-auto dark:bg-gray-900 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:text-gray-200'
               >
                 Add
               </Button>

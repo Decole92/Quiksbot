@@ -31,10 +31,10 @@ export default async function RootLayout({
         defer
       /> */}
       <html lang='en'>
-        <body className={`${inter.className}   bg-gray-100 `}>
+        <body className={`${inter.className}   bg-gray-100 dark:bg-gray-950 `}>
           <ThemeProvider
             attribute='class'
-            defaultTheme='system'
+            defaultTheme='light'
             enableSystem
             disableTransitionOnChange
           >

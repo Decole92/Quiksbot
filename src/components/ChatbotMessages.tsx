@@ -5,6 +5,7 @@ import ReactMarkDown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
 import botIcon from "@/../../public/golden.png";
+import { ChatBot, ChatMessage } from "@prisma/client";
 // [#b48143]
 
 const ChatbotMessages = ({
@@ -31,7 +32,7 @@ const ChatbotMessages = ({
             key={message?.id!}
             className={`chat ${
               isSender ? "chat-start" : "chat-end"
-            } relative py-5`}
+            } relative py-5 dark:text-gray-200`}
           >
             <p className='absolute -bottom-2 text-xs text-gray-300'>
               Sent {new Date(message?.createdAt).toLocaleString()}
@@ -57,7 +58,7 @@ const ChatbotMessages = ({
                     alt='chatbotIcon'
                     height={100}
                     width={100}
-                    className='bg-gray-100 rounded-full p-2 h-12 w-12 '
+                    className='bg-gray-100 dark:bg-gray-950 rounded-full p-2 h-12 w-12 '
                   />
                 )
               ) : (
@@ -70,7 +71,7 @@ const ChatbotMessages = ({
             <p
               className={`chat-bubble  ${
                 chatbot && isSender
-                  ? `chat-bubble-primary  bg-gray-200 text-gray-700 `
+                  ? `chat-bubble-primary  bg-gray-200 text-gray-700 dark:bg-gray-950 `
                   : `chat-bubble-secondary text-white `
               }`}
               style={{

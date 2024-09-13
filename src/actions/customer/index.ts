@@ -180,8 +180,18 @@ export const onMailer = (email: string) => {
 };
 
 export const chartBarData = async () => {
+  const { userId } = await auth();
+  if (!userId) return;
   try {
+    const user = await prisma.user.findFirst({
+      where: {
+        clerkId: userId,
+      },
+    });
     const chatbots = await prisma.chatBot.findMany({
+      where: {
+        userId: user?.id,
+      },
       include: {
         customer: {
           include: {

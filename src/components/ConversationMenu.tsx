@@ -81,7 +81,7 @@ const ConversationMenu = () => {
   const filteredData =
     activeTab === "expired" ? filteredCustomers : filteredChats;
   return (
-    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-muted '>
+    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-muted dark:bg-transparent dark:text-gray-400'>
       <div className='p-5'>
         <div className='flex md:items-center justify-between border-b p-4 items-start lg:items-center'>
           <h2 className='text-lg font-medium'>Inbox</h2>
@@ -101,7 +101,7 @@ const ConversationMenu = () => {
 
             <Button
               variant={"ghost"}
-              className='gap-2 border bg-gray-200 text-black hidden md:inline-flex md:w-[100px] lg:w-[100px]   '
+              className='gap-2 border bg-gray-200/50 dark:bg-gray-950 dark:text-gray-400 dark:hover:bg-[#E1B177] dark:hover:text-gray-100 text-black hidden md:inline-flex md:w-[100px] lg:w-[100px]   '
             >
               Export <Download className='h-5 w-5' />
             </Button>
@@ -109,7 +109,7 @@ const ConversationMenu = () => {
         </div>
         <Button
           variant={"ghost"}
-          className='gap-2 border bg-gray-200 text-black w-full inline-flex md:hidden lg:hidden  '
+          className='gap-2 border bg-gray-200/50 text-black w-full inline-flex md:hidden lg:hidden dark:bg-gray-950 dark:text-gray-400 dark:hover:bg-[#E1B177] dark:hover:text-gray-100 '
         >
           Export <Download className='h-5 w-5' />
         </Button>

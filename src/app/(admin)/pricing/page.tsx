@@ -46,10 +46,10 @@ export default function Pricing() {
   };
 
   return (
-    <div className='bg-gray-100 min-h-screen py-12 mt-20'>
+    <div className='bg-gray-100 min-h-screen py-12 mt-20 dark:bg-gray-950'>
       <div className='md:max-w-5xl md:mx-auto lg:max-w-6xl lg:mx-auto w-full text-center px-4'>
-        <h1 className='text-4xl font-thin text-gray-900'>Pricing Plans</h1>
-        <p className='mt-4 text-lg text-gray-600'>
+        <h1 className='text-4xl font-thin text-[#E1B177]'>Pricing Plans</h1>
+        <p className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
           Choose the plan that's right for your business. Our flexible pricing
           options make it easy to get started and scale as you grow.
         </p>
@@ -58,7 +58,7 @@ export default function Pricing() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative bg-white rounded-lg shadow-lg p-5 ${
+              className={`relative bg-white rounded-lg shadow-lg p-5 dark:text-gray-400 dark:bg-gray-950 dark:shadow-gray-900 ${
                 plan.isMostPopular ? "ring-2 ring-[#E1B177]" : ""
               }`}
             >
@@ -70,7 +70,7 @@ export default function Pricing() {
               <h2 className='text-xl font-semibold text-gray-800'>
                 {plan.name} Plan
               </h2>
-              <h2 className='mt-4 text-gray-900 text-3xl font-bold'>
+              <h2 className='mt-4 text-gray-900 dark:text-gray-200 text-3xl font-bold'>
                 {plan.price}
                 {plan.name !== "Basic" && (
                   <span className='text-sm font-semibold leading-6 text-gray-600'>
@@ -91,7 +91,7 @@ export default function Pricing() {
                 <Button
                   disabled={isPending}
                   onClick={() => handleUpgrade(plan?.name?.toUpperCase())}
-                  className={`mt-6 block text-center py-2 px-4 rounded-md text-white w-full ${
+                  className={`mt-6 block text-center py-2 px-4 rounded-md text-white w-full dark:hover:bg-[#E1B177]/70 ${
                     plan.isMostPopular
                       ? "bg-[#E1B177] hover:bg-[#E1B177]"
                       : "bg-black/50 hover:bg-black"
