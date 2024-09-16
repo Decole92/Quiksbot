@@ -1,3 +1,16 @@
+import {
+  FileTextIcon,
+  Bot,
+  SettingsIcon,
+  BarChartIcon,
+  UsersIcon,
+  KeyIcon,
+  CodeIcon,
+  BotIcon,
+  GlobeIcon,
+  Cpu,
+} from "lucide-react";
+
 export const plans = [
   {
     name: "Basic",
@@ -66,5 +79,68 @@ export const botTypeData = [
   {
     value: "Custom",
     label: "Customize your own prompt",
+  },
+];
+
+export const features = [
+  {
+    name: "Store your PDF Document",
+    description:
+      "Keep all your important PDF files securely stored and easily accessed.",
+    icon: FileTextIcon,
+  },
+  {
+    name: "AI Chat with PDF",
+    description:
+      "Interact with your PDF documents using AI-powered chat, answering queries and extracting information.",
+    icon: Bot,
+  },
+  {
+    name: "Embed Chatbot on Website",
+    description:
+      "Easily embed customizable chatbots on your website to engage visitors and capture leads.",
+    icon: GlobeIcon,
+  },
+  {
+    name: "Chatbot Analytics",
+    description:
+      "Gain valuable insights from detailed chatbot analytics and performance tracking.",
+    icon: BarChartIcon,
+  },
+  {
+    name: "Switch Between AI Models",
+    description:
+      "Switch between different AI models like ChatGPT to get the most suitable responses for your needs.",
+    icon: SettingsIcon,
+  },
+  {
+    name: "Client-to-Live Agent Transition",
+    description:
+      "Allow customers to switch from chatting with the bot to live agents when needed.",
+    icon: UsersIcon,
+  },
+  {
+    name: "Custom OpenAI API Keys",
+    description:
+      "Use your own OpenAI API keys for full control and customization over chatbot behavior.",
+    icon: KeyIcon,
+  },
+  {
+    name: "Chat with Memory Record",
+    description:
+      "Maintain a chat memory record, allowing for more personalized conversations with the bot.",
+    icon: Cpu,
+  },
+  {
+    name: "Customize AI Prompts",
+    description:
+      "Tailor the AI's responses by customizing its prompts to fit your business needs.",
+    icon: CodeIcon,
+  },
+  {
+    name: "SalesBot for Lead Generation",
+    description:
+      "Deploy a SalesBot to engage visitors, generate leads, and convert them into customers.",
+    icon: BotIcon,
   },
 ];

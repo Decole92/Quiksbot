@@ -34,7 +34,7 @@ import Image from "next/image";
 import useSWR from "swr";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Progress } from "../ui/progress";
-import { ChatBot, FirstQuestion } from "@prisma/client";
+import type { ChatBot, FirstQuestion } from "@prisma/client";
 
 function General({ chatbot }: { chatbot: any }) {
   const { mutate } = useSWR("/api/getBot");
@@ -191,7 +191,7 @@ function General({ chatbot }: { chatbot: any }) {
             <div className='bg-gray-200/50 p-3 rounded-md space-y-3 dark:bg-gray-950'>
               <form
                 onSubmit={handleAddQuestions}
-                className='flex items-center md:flex-row flex-col md:gap-4'
+                className='flex items-center md:flex-row flex-col md:gap-4 gap-2'
               >
                 <Input
                   minLength={2}
@@ -212,7 +212,7 @@ function General({ chatbot }: { chatbot: any }) {
                     !user || !data.question || isPending || limitQuestion
                   }
                   type='submit'
-                  className='bg-black/70 w-auto dark:bg-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'
+                  className='bg-black/70 w-full md:w-[100px] lg:w-[100px] dark:bg-gray-900 dark:text-gray-400 dark:hover:text-gray-100 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'
                 >
                   Add
                 </Button>
@@ -243,7 +243,7 @@ function General({ chatbot }: { chatbot: any }) {
             <div>
               <form
                 onSubmit={handleWelcomeGreetings}
-                className='flex items-center md:flex-row flex-col md:gap-4 bg-gray-200/50  p-3 rounded-md dark:bg-gray-950'
+                className='flex items-center md:flex-row flex-col md:gap-4 lg:gap-4 gap-2 bg-gray-200/50  p-3 rounded-md dark:bg-gray-950'
               >
                 <Input
                   className='flex-1 dark:bg-gray-900 dark:text-gray-400'
@@ -259,7 +259,7 @@ function General({ chatbot }: { chatbot: any }) {
                 <Button
                   type='submit'
                   disabled={isLoading || disableGreetings}
-                  className='bg-black/70 dark:bg-gray-900 dark:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]  '
+                  className='bg-black/70 dark:bg-gray-900 dark:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] w-full md:w-[100px] lg:w-[100px]  '
                 >
                   Update
                 </Button>

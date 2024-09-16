@@ -151,7 +151,7 @@ const AnalyticsPage = () => {
   if (!isLoaded || !data) return <div>Loading...</div>;
 
   return (
-    <div className='w-full mt-16 h-full md:max-w-5xl md:mx-auto lg:max-w-6xl lg:mx-auto p-5'>
+    <div className='w-full mt-16 h-full md:max-w-3xl md:mx-auto lg:max-w-6xl lg:mx-auto p-5 -z-10'>
       <div className='bg-white shadow-md dark:bg-gray-900 rounded p-4 mb-8'>
         <ChartComponent />
       </div>

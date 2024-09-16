@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-import defaultLogo from "../../../../public/golden.png";
+import defaultLogo from "../../../public/golden.png";
 
 const ChatBot: React.FC = () => {
   const [botOpened, setBotOpened] = useState(false);
@@ -157,129 +157,127 @@ const ChatBot: React.FC = () => {
     startChatAutomatically();
   }, [bot, botId, userDetails, startChatting]);
 
+  console.log("this is botId", botId);
   return (
-    <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>
-      <div
-        className={`fixed bottom-3 right-3 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500 ${
-          botOpened ? "scale-90" : "scale-100"
-        }`}
-        style={{ transformOrigin: "bottom right" }} // Zoom effect origin
-      >
-        {/* <div
+    <div
+      className={`fixed bottom-3 right-3 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500 ${
+        botOpened ? "scale-90" : "scale-100"
+      }`}
+      style={{ transformOrigin: "bottom right" }} // Zoom effect origin
+    >
+      {/* <div
     //   className='z-50 fixed bottom-3 right-2 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end'
 
        // className='fixed bottom-3 right-3 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end  '
      > */}
-        {botOpened && (
-          <div className='mb-2 w-full max-w-[350px] h-[80vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
-            <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
-            <div className='flex-1 overflow-y-auto'>
-              <ChatbotMessages
-                chatbot={bot as ChatBot}
-                messages={chatMessages as ChatMessage[]}
-              />
-            </div>
-            <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900 '>
-              <SuggestItems
-                firstQuestion={bot?.firstQuestion as any}
-                userDetails={userDetails}
-                chatbot={bot!}
-                chatId={chatId!}
-              />
-
-              <ChatbotInput
-                userDetails={userDetails}
-                chatRoomId={chatId!}
-                chatbot={bot as ChatBot}
-                type='user'
-                isPageLoading={isPending}
-              />
-            </div>
+      {botOpened && (
+        <div className='mb-2 w-full max-w-[350px] h-[80vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
+          <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
+          <div className='flex-1 overflow-y-auto'>
+            <ChatbotMessages
+              chatbot={bot as ChatBot}
+              messages={chatMessages as ChatMessage[]}
+            />
           </div>
+          <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900 '>
+            <SuggestItems
+              firstQuestion={bot?.firstQuestion as any}
+              userDetails={userDetails}
+              chatbot={bot!}
+              chatId={chatId!}
+            />
+
+            <ChatbotInput
+              userDetails={userDetails}
+              chatRoomId={chatId!}
+              chatbot={bot as ChatBot}
+              type='user'
+              isPageLoading={isPending}
+            />
+          </div>
+        </div>
+      )}
+
+      <button
+        onClick={handleOpenChatBot}
+        className='relative w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
+        // className='relative w-20 h-20 rounded-full bg-white  dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
+      >
+        {botOpened ? (
+          <XCircle
+            className='w-8 h-8 md:w-10 md:h-10 text-gray-600'
+            // className='w-10 h-10 text-gray-600'
+          />
+        ) : (
+          <Image
+            src={bot?.icon || defaultLogo}
+            alt='ChatBot'
+            // width={60}
+            // height={60}
+            width={48}
+            height={48}
+            // className='rounded-full'
+            className='rounded-full w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16'
+          />
         )}
+      </button>
 
-        <button
-          id='chatbot-icon'
-          onClick={handleOpenChatBot}
-          className='relative w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
-          // className='relative w-20 h-20 rounded-full bg-white  dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
-        >
-          {botOpened ? (
-            <XCircle
-              className='w-8 h-8 md:w-10 md:h-10 text-gray-600'
-              // className='w-10 h-10 text-gray-600'
-            />
-          ) : (
-            <Image
-              src={bot?.icon || defaultLogo}
-              alt='ChatBot'
-              // width={60}
-              // height={60}
-              width={48}
-              height={48}
-              // className='rounded-full'
-              className='rounded-full w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16'
-            />
-          )}
-        </button>
-
-        <Dialog open={isOpen && botOpened} onOpenChange={setIsOpen}>
-          <DialogContent className='sm:max-w-[425px]'>
-            <form onSubmit={handleInformationSubmit}>
-              <DialogHeader>
-                <DialogTitle>Let&#39;s help you out!</DialogTitle>
-                <DialogDescription>
-                  We just need a few details to get started.
-                </DialogDescription>
-              </DialogHeader>
-              <div className='grid gap-4 py-4'>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='name' className='text-right'>
-                    Name
-                  </Label>
-                  <Input
-                    id='name'
-                    required
-                    placeholder='John Doe'
-                    className='col-span-3'
-                    value={userDetails.name}
-                    onChange={(e) =>
-                      setUserDetails((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='email' className='text-right'>
-                    Email
-                  </Label>
-                  <Input
-                    id='email'
-                    required
-                    type='email'
-                    placeholder='john@example.com'
-                    className='col-span-3'
-                    value={userDetails.email}
-                    onChange={(e) =>
-                      setUserDetails((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
+      <Dialog open={isOpen && botOpened} onOpenChange={setIsOpen}>
+        <DialogContent className='sm:max-w-[425px]'>
+          <form onSubmit={handleInformationSubmit}>
+            <DialogHeader>
+              <DialogTitle>Let&#39;s help you out!</DialogTitle>
+              <DialogDescription>
+                We just need a few details to get started.
+              </DialogDescription>
+            </DialogHeader>
+            <div className='grid gap-4 py-4'>
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='name' className='text-right'>
+                  Name
+                </Label>
+                <Input
+                  id='name'
+                  required
+                  placeholder='John Doe'
+                  className='col-span-3'
+                  value={userDetails.name}
+                  onChange={(e) =>
+                    setUserDetails((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
+                />
               </div>
-              <DialogFooter>
-                <Button type='submit' disabled={isLoading}>
-                  {isLoading ? "Loading..." : "Continue"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
+              <div className='grid grid-cols-4 items-center gap-4'>
+                <Label htmlFor='email' className='text-right'>
+                  Email
+                </Label>
+                <Input
+                  id='email'
+                  required
+                  type='email'
+                  placeholder='john@example.com'
+                  className='col-span-3'
+                  value={userDetails.email}
+                  onChange={(e) =>
+                    setUserDetails((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type='submit' disabled={isLoading}>
+                {isLoading ? "Loading..." : "Continue"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

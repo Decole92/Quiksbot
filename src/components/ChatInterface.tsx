@@ -22,7 +22,7 @@ import {
   getChatRoom,
 } from "@/actions/chat";
 import { ScrollArea } from "./ui/scroll-area";
-import { ChatBot, ChatMessage } from "@prisma/client";
+import type { ChatBot, ChatMessage } from "@prisma/client";
 import {
   Dialog,
   DialogClose,

@@ -1,4 +1,4 @@
-import { ChatBot, ChatRoom } from "@prisma/client";
+import type { ChatBot, ChatRoom } from "@prisma/client";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -33,6 +33,9 @@ interface BoardState {
   setChatRoom: (chatRoom: ChatRoom) => void;
   selectedChatRoomId: string | null;
   setSelectedChatRoomId: (id: string | null) => void;
+
+  formStatus: boolean;
+  setFormStatus: (formStatus: boolean) => void;
 }
 
 export const useGlobalStore = create<BoardState>()(
@@ -59,6 +62,9 @@ export const useGlobalStore = create<BoardState>()(
 
     selectedChatRoomId: null,
     setSelectedChatRoomId: (id) => set({ selectedChatRoomId: id }),
+
+    formStatus: false,
+    setFormStatus: (formStatus) => set({ formStatus }),
   })
   //     {
   //       name: "tem-storage",

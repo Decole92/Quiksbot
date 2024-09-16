@@ -8,7 +8,7 @@ import { getChatMessages, getChatRoom } from "@/actions/chat";
 import { getBot } from "@/actions/bot";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
-import { ChatBot, ChatMessage, botType } from "@prisma/client";
+import type { ChatBot, ChatMessage, botType } from "@prisma/client";
 import useSubcription from "@/hook/useSubscription";
 import { sendMessage } from "@/actions/chat/sendMessage";
 
@@ -27,11 +27,12 @@ function ChatbotInput({
 }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
-  const [isOpen, setIsOpen] = useGlobalStore((state) => [
+  const [isOpen, setIsOpen, formStatus] = useGlobalStore((state) => [
     state.isOpen,
     state.setIsOpen,
+    state.formStatus,
   ]);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+
   const { data: chatMessages, mutate } = useSWR(
     "/getMessages",
     async () => await getChatMessages(chatRoomId)
@@ -40,13 +41,13 @@ function ChatbotInput({
     "/getChatRoom",
     async () => (chatRoomId !== null ? await getChatRoom(chatRoomId) : null)
   );
-  const { user } = useUser();
+
   const { name, email } = userDetails;
 
   const handleAskQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formSubmitted && (!name || !email) && chatbot?.getDetails) {
+    console.log("formStatus", formStatus);
+    if (!formStatus && chatbot?.getDetails) {
       setIsOpen(true);
       console.log("isOpen from first if", isOpen);
       return;
@@ -134,13 +135,13 @@ function ChatbotInput({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           minLength={3}
-          className='py-3 px-5 bg-white w-full rounded-full border border-gray-300 focus:outline-none'
+          className='py-3 px-5 bg-white dark:bg-gray-950 w-full rounded-full border border-gray-300 dark:border-gray-700 dark:text-gray-400 focus:outline-none'
           placeholder='Ask your question ?'
         />
         <Button
           disabled={isPending || !message || isCheck}
           type='submit'
-          className='p-2 bg-transparent rounded-md group hover:bg-black '
+          className={`p-2 bg-transparent rounded-md group hover:bg-{} dark:text-gray-950 dark:hover:bg-[${chatbot?.userMessageBgColor}] hover:bg-[${chatbot?.userMessageBgColor}]`}
         >
           <Send className='text-black group-hover:text-white' />
         </Button>

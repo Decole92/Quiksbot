@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Avatar from "./Avatar";
 import logo from "../../public/golden.png";
-import { Inter, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import CreditBar from "./CreditBar";
@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-const inter = Montserrat({ weight: "600", subsets: ["latin"] });
+const Inter = Montserrat({ weight: "600", subsets: ["latin"] });
 
 function Header() {
   const { hasActiveMembership } = useSubcription();
@@ -37,18 +37,18 @@ function Header() {
           alt='logo'
           width={100}
           height={100}
-          className='rounded-full h-24 p-4'
+          className='h-16 w-16 rounded-full'
         />
         <div className='space-y-1'>
           <h1 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
             Quiks Bot
           </h1>
-          {/* <h4 className={`${inter} text-xs text-black`}>
-            Your customisable chatbot
-          </h4> */}
+          <h4 className={`${Inter} text-xs text-black dark:text-gray-400`}>
+            Chat smarter, not harder.
+          </h4>
         </div>
       </Link>
-      <div className='flex flex-col md:flex-row items-center gap-2 md:gap-5 lg:gap-5 '>
+      <div className='flex flex-row items-center gap-2 md:gap-5 lg:gap-5 '>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline' size='icon'>
@@ -74,7 +74,7 @@ function Header() {
             <CreditBar />
           </div>
         ) : (
-          <>
+          <div className='hidden md:block lg:block'>
             {hasActiveMembership === "PRO" ? (
               <Button
                 className='
@@ -128,7 +128,7 @@ function Header() {
                 />
               </Button>
             )}
-          </>
+          </div>
         )}
         <div className='md:col-span-2 lg:col-span-2 col-span-5'>
           <SignedOut>

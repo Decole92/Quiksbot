@@ -2,7 +2,7 @@
 import nodemailer from "nodemailer";
 import prisma from "../../../prisma/client";
 import { auth } from "@clerk/nextjs/server";
-import { Customer, botType } from "@prisma/client";
+import type { Customer, botType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 type ChartDataEntry = {
@@ -167,7 +167,7 @@ export const onMailer = (email: string) => {
   const mailOptions = {
     to: email,
     subject: "Realtime Support",
-    text: "One of your customers on Quiks bot, just switched on realtime mode",
+    text: "One of your customers on Quiksbot, just switched on realtime mode.",
   };
 
   transporter.sendMail(mailOptions, function (error, info) {

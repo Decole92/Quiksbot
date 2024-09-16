@@ -3,14 +3,7 @@ import Image from "next/image";
 import Avatar from "../Avatar";
 import botIcon from "../../../public/golden.png";
 import { usePathname } from "next/navigation";
-import { ChatBot } from "@prisma/client";
-//bg-primary text-primary-foreground
-{
-  /* <Avatar seed={bot?.name as string} /> */
-}
-
-// z-30 sticky
-// ${chatlog ? "top-20" : "top-0"}
+import type { ChatBot } from "@prisma/client";
 
 export default function ChatbotHeader({
   bot,
@@ -24,33 +17,47 @@ export default function ChatbotHeader({
 
   return (
     <header
-      className={`flex items-center bg-background justify-between p-5 shadow-sm rounded-t-md h-24 
-   
-      `}
+      className='flex items-center bg-background dark:bg-gray-900 justify-between p-3 md:p-4 lg:p-5 shadow-sm rounded-t-md'
+      // className={`flex items-center  bg-background dark:bg-gray-900  justify-between p-5  shadow-sm rounded-t-md h-24
+
+      // `}
     >
       <div className='flex items-center gap-3'>
-        <div className='flex h-12 w-12 items-center justify-center rounded-full '>
+        <div
+          // className='flex h-12 w-12 items-center justify-center rounded-full '
+          className='flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full overflow-hidden'
+        >
           {bot && bot?.botIcon ? (
             <Image
               src={bot?.botIcon}
               alt={bot?.botIcon}
-              width='100'
-              height='100'
-              className='rounded-full h-12 '
+              width='48'
+              height='48'
+              // className='rounded-full h-12 '
+              className='rounded-full w-full h-full object-cover'
             />
           ) : (
             <Image
               src={botIcon}
               alt='botIcon'
-              width='100'
-              height='100'
-              className='rounded-full h-12'
+              width='48'
+              height='48'
+              className='rounded-full w-full h-full object-cover'
+              // className='rounded-full h-12'
             />
           )}
         </div>
         <div>
-          <h3 className='text-sm font-medium'>{bot?.name}</h3>
-          <p className='text-xs text-muted-foreground'>
+          <h3
+            // className='text-sm font-medium'
+            className='text-sm md:text-base font-medium'
+          >
+            {bot?.name}
+          </h3>
+          <p
+            //  className='text-xs text-muted-foreground'
+            className='text-xs md:text-sm text-muted-foreground'
+          >
             {bot?.role ? bot?.role : "We're here to help 24/7"}
           </p>
         </div>

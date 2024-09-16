@@ -1,6 +1,6 @@
 import { getUserCredits, getUserPdfFiles, getUserSub } from "@/actions/user";
 import { useUser } from "@clerk/nextjs";
-import { Plans } from "@prisma/client";
+import type { Plans } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 //file docs

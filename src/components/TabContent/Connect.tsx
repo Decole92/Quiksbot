@@ -4,60 +4,22 @@ import { BASE_URL } from "../../../constant/url";
 import { Button } from "../ui/button";
 import { CheckCheck, Copy } from "lucide-react";
 import { toast } from "sonner";
-import { ChatBot } from "@prisma/client";
+import type { ChatBot } from "@prisma/client";
 
 function Connect({ chatbot }: { chatbot: ChatBot }) {
   const InputValue = `${BASE_URL}/chatbot/${chatbot?.id}`;
   const [toggle, setToggle] = useState(false);
   const [toggle2, setToggle2] = useState(false);
-  let snippet = `
-      const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-      const chatbotUrl = isProduction ? 'https://quiksbot.com/chatbot' : 'http://localhost:3000/chatbot';
-      
-      const iframeStyles = (styleString) => {
-        const style = document.createElement('style');
-        style.textContent = styleString;
-        document.head.append(style);
-      };
-      
-     
-      iframeStyles(\`
-        .chat-frame {
-          position: fixed;
-          bottom: 50px;
-          right: 50px;
-          border: none;
-          width: 50px; 
-          height: 50px; 
-          transition: width 0.3s ease, height 0.3s ease;
-        }
-      \`);
-      
-      const iframe = document.createElement("iframe");
-      iframe.src = chatbotUrl;
-      iframe.classList.add("chat-frame");
-      document.body.appendChild(iframe);
-      
-      window.addEventListener("message", (e) => {
-       
-        if (e.origin !== new URL(chatbotUrl).origin) return;
-      
-        try {
-          const dimensions = JSON.parse(e.data);
-          
-          iframe.style.width = \`\${dimensions.width}px\`;
-          iframe.style.height = \`\${dimensions.height}px\`;
-      
-          iframe.contentWindow.postMessage(
-            "${chatbot?.id}",
-            chatbotUrl
-          );
-        } catch (error) {
-          console.error("Error parsing message data:", error);
-        }
-      });
-      `;
 
+  let snippet = `<script
+  src="${BASE_URL}/api/chatbotWidget"
+  data-name='quiksbot'
+  data-address="${BASE_URL}"
+  data-id='${chatbot?.id}'
+  data-widget-size='normal'
+  data-widget-button-size='normal'
+  defer
+></script>`;
   return (
     <div className='border border-gray-300 rounded-md p-5 h-full max-w-5xl mx-auto bg-white md:p-7 lg:p-7 dark:bg-gray-900'>
       <h3 className='text-2xl pb-4 font-thin'>Connect Bot</h3>
@@ -76,7 +38,7 @@ function Connect({ chatbot }: { chatbot: ChatBot }) {
                 className='flex-1 dark:bg-gray-900'
               />
               <Button
-                className='bg-black h-full dark:bg-gray-900 dark:text-gray-400 transition-all duration-75 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:hover:text-gray-200'
+                className='bg-black/50 h-full dark:bg-gray-900 dark:text-gray-400 transition-all duration-75 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:hover:text-gray-200'
                 onClick={() => {
                   navigator.clipboard.writeText(InputValue);
                   toast.success("Copied to clipboard");

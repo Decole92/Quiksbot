@@ -17,7 +17,7 @@ export const SIDE_BAR_MENU: MenuTypes[] = [
   {
     label: "Dashboard",
     icon: <LayoutDashboard />,
-    path: "/view-chatbot",
+    path: "/dashboard",
   },
   {
     label: "Create",

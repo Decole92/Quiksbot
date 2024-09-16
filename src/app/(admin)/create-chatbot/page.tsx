@@ -19,7 +19,7 @@ function CreatePage() {
     startTransition(async () => {
       const name = JSON.parse(JSON.stringify(fullName));
       // console.log("this is chatbot data && chatbot id", data, data.chatbot);
-      const bot = await createNewChatbot(botName, fullName!);
+      const bot = await createNewChatbot(botName, name!);
       //  return later
       // @ts-ignore
       router.push(`/edit-chatbot/${bot?.chatbot?.id!}`);

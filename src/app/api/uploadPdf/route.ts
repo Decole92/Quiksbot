@@ -7,15 +7,15 @@ import { generateEmbeddingsInPineconeVectorStore } from "@/lib/langchain";
 import { BASE_URL } from "../../../../constant/url";
 import { getUserPdfFiles } from "@/actions/user";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
-export const STANDARD_LIMIT = 2;
-export const PRO_LIMIT = 22;
-export const ULTIMATE_LIMIT = 50;
+const STANDARD_LIMIT = 2;
+const PRO_LIMIT = 22;
+const ULTIMATE_LIMIT = 50;
 
 export async function POST(req: Request) {
   auth().protect();

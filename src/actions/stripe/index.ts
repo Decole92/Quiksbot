@@ -63,7 +63,7 @@ export const createCheckoutSession = async (
       line_items: [planType],
       mode: "subscription",
       customer: stripeId,
-      success_url: `${BASE_URL}/view-chatbot?upgrade=true`,
+      success_url: `${BASE_URL}/dashboard?upgrade=true`,
       cancel_url: `${BASE_URL}/pricing`,
     });
     return session?.id;

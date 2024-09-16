@@ -22,11 +22,12 @@ import SuggestItems from "@/components/ChatbotComponent/SuggestItems";
 import { useGlobalStore } from "@/store/globalStore";
 import axios from "axios";
 import { clientPusher } from "@/lib/pusher";
-import { ChatBot, ChatMessage } from "@prisma/client";
+import type { ChatBot, ChatMessage } from "@prisma/client";
 
 function ChatbotPage({ params: { id } }: { params: { id: string } }) {
   const [isLoading, startTransition] = useTransition();
   const [isPending, startChatting] = useTransition();
+
   const { data: bot } = useSWR(
     "/getbot",
     id ? async () => await getBot(id) : null
@@ -35,14 +36,18 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
     name: "",
     email: "",
   });
-  const [isOpen, setIsOpen] = useGlobalStore((state) => [
-    state.isOpen,
-    state.setIsOpen,
-  ]);
+  const [isOpen, setIsOpen, formStatus, setFormStatus] = useGlobalStore(
+    (state) => [
+      state.isOpen,
+      state.setIsOpen,
+      state.formStatus,
+      state.setFormStatus,
+    ]
+  );
 
   useEffect(() => {
     const startChatAutomatically = async () => {
-      if (bot && !bot?.getDetails) {
+      if (bot && !formStatus) {
         startChatting(async () => {
           const chatRoomId = await startNewChat({ userDetails, id });
           setChatId(chatRoomId!);
@@ -77,7 +82,9 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
       const chatRoomId = await startNewChat({ userDetails, id });
       setChatId(chatRoomId!);
       setIsOpen(false);
+      setFormStatus(true);
     });
+    console.log("formStatus from startautomatically", formStatus);
   };
 
   useEffect(() => {
@@ -179,7 +186,7 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
         </DialogContent>
       </Dialog>
       {bot && (
-        <div className='flex flex-col h-screen max-w-3xl mx-auto bg-white md:rounded-t-lg shadow-2xl md:mt-10'>
+        <div className='flex flex-col h-screen max-w-3xl mx-auto bg-white md:rounded-t-lg shadow-2xl md:mt-10 dark:bg-gray-900'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
 
           <div className='flex-1 overflow-y-auto'>
@@ -189,7 +196,7 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
             />
           </div>
 
-          <div className='sticky bottom-0 z-30 bg-white'>
+          <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900'>
             <SuggestItems
               firstQuestion={bot?.firstQuestion as any}
               userDetails={userDetails}

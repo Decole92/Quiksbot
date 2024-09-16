@@ -9,7 +9,6 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/edit-chatbot(.*)",
   "/review-session(.*)",
-  "/view-chatbot(.*)",
   "/analytic(.*)",
   "/chatlogs(.*)",
   "/pricing(.*)",
@@ -22,6 +21,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/(.*)",
   "/chatbot/(.*)",
   "/",
+  "/api/webhook",
 ]);
 
 // Custom middleware function

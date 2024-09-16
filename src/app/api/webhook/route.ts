@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-import { Plans } from "@prisma/client";
+import type { Plans } from "@prisma/client";
 import { getUserByCustomer } from "@/actions/user";
 import prisma from "../../../../prisma/client";
 
@@ -28,17 +28,18 @@ export async function POST(req: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_KEY!
     );
-    // console.log("event", event);
+    console.log("event", event);
     // return NextResponse.json("Webhook resceived", { status: 200 });
   } catch (err) {
     console.log("error occur while assessing the webhook", err);
     return new NextResponse(`err ocurr on webhook ${err}`, { status: 400 });
   }
-  // console.log("this is event", event);
+  console.log("this is event", event);
   switch (event.type) {
     case "checkout.session.completed":
     case "payment_intent.succeeded": {
       //   const invoice = event.data?.object;
+      console.log("payment_intent.succeeded called");
       const session = event.data.object as Stripe.Checkout.Session;
       const customerId = session.customer;
 

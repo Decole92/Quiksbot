@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import { addCharacteristic, deletePdf, getBot } from "@/actions/bot";
 import Characteristic from "../Characteristic";
-import { PdfFile } from "@prisma/client";
+import type { PdfFile } from "@prisma/client";
 import useSubcription from "@/hook/useSubscription";
 
 function Source({ chatbotId }: { chatbotId: string }) {
@@ -65,7 +65,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
           <div className='bg-gray-200/50 dark:bg-gray-950 p-3 rounded-md space-y-3'>
             <form
               onSubmit={handleAddCharacteristics}
-              className='flex items-center md:flex-row flex-col md:gap-4'
+              className='flex items-center md:flex-row flex-col md:gap-4 lg:gap-4 gap-2'
             >
               <Input
                 minLength={2}
@@ -77,13 +77,13 @@ function Source({ chatbotId }: { chatbotId: string }) {
               <Button
                 disabled={isPending || !characteristic}
                 type='submit'
-                className='bg-black/70 w-auto dark:bg-gray-900 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:text-gray-200'
+                className='bg-black/70  dark:bg-gray-900 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:text-gray-200  w-full md:w-[100px] lg:w-[100px] '
               >
                 Add
               </Button>
             </form>
             {chatbot?.Source?.characteristic?.length !== 0 && (
-              <ul className='flex flex-wrap-reverse gap-3'>
+              <ul className='flex flex-wrap-reverse gap-2 md:gap-3'>
                 {chatbot?.Source?.characteristic?.map((characteristic: any) => (
                   <Characteristic
                     key={characteristic?.id}

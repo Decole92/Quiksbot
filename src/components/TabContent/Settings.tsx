@@ -19,7 +19,7 @@ import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import useSubcription from "@/hook/useSubscription";
-import { ChatBot, botType } from "@prisma/client";
+import type { ChatBot, botType } from "@prisma/client";
 import { botTypeData } from "../../../constant/Features";
 import { toast } from "sonner";
 import { updateBotSettings } from "@/actions/customer";
@@ -82,7 +82,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
     const result = await fetch;
 
     if (result.completed) {
-      router.push("/view-chatbot");
+      router.push("/dashboard");
     }
   };
   useEffect(() => {
@@ -139,8 +139,8 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
             <div className='pb-2'>
               <h3 className='font-bold text-lg'>Select ChatGPT Model</h3>
               <h5 className='pb-2'>
-                Choose the ChatGPT model that best fits your chatbot's purpose.
-                Each model offers different capabilities.
+                Choose the ChatGPT model that best fits your chatbot&#39;s
+                purpose. Each model offers different capabilities.
               </h5>
               <div className='bg-gray-200/50 p-3 rounded-md dark:bg-gray-950'>
                 <Select
@@ -192,7 +192,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
             <div>
               <h3 className='font-bold text-lg'>Choose Your Bot Type</h3>
               <h5 className='pb-2'>
-                Select the most suitable bot for your needs. Whether you're
+                Select the most suitable bot for your needs. Whether you&#39;re
                 setting up a Sales Bot to engage with customers or a Chatbot
                 that interacts via PDF documents, this choice will determine how
                 your chatbot will serve your clients.

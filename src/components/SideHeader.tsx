@@ -105,7 +105,7 @@ function SideHeader({ data }: { data: any }) {
   return (
     <form
       onSubmit={handleBotName}
-      className=' sm:max-w-md ml-auto space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-white dark:bg-gray-900'
+      className=' sm:max-w-md ml-auto space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-white dark:bg-gray-900 gap-2 md:gap-4 lg:gap-4'
     >
       <input
         ref={refIcon}
@@ -184,7 +184,7 @@ function SideHeader({ data }: { data: any }) {
       {isUploading && <Progress value={progress} className='w-full h-2' />}
       <Button
         //flex
-        className='flex flex-col ml-auto text-white bg-black hover:text-white hover:bg-[#E1B177] dark:bg-gray-950 dark:hover:bg-[#E1B177] '
+        className='flex flex-col md:ml-auto lg:ml-auto text-white bg-black/70 hover:text-white hover:bg-[#E1B177] dark:bg-gray-950 dark:hover:bg-[#E1B177]  w-full md:w-[100px] lg:w-[100px]  '
         type='submit'
         disabled={!user || !botHeader || isPending || isUploading || disabled}
       >

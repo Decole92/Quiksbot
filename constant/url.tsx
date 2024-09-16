@@ -1,4 +1,5 @@
 export const BASE_URL =
   process.env.NODE_ENV !== "development"
-    ? `https://${process.env.VERCEL_URL}`
+    ? "https://quiksbot.com"
     : "http://localhost:3000";
+// ? `https://${process.env.VERCEL_URL}`

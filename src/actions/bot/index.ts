@@ -8,8 +8,7 @@ import { BASE_URL } from "../../../constant/url";
 import pineconeClient from "@/lib/pinecone";
 import { indexName } from "@/lib/langchain";
 import { ChatBot, PdfFile, botType } from "@prisma/client";
-
-import { backendClient } from "@/app/api/edgestore/[...edgestore]/route";
+import { backendClient } from "@/lib/edgstore-server";
 
 export const updateBotName = async (
   id: string,
@@ -290,7 +289,7 @@ export const createNewChatbot = async (botName: string, fullName: string) => {
         role: "Customer support agent", // Associating the chatbot with the created/found user
       },
     });
-    revalidatePath("/view-chatbot");
+    revalidatePath("/dashboard");
 
     return {
       chatbot,
@@ -424,7 +423,7 @@ export const deleteBot = async (sourceId: string, chatbot: ChatBot) => {
       where: { id: chatbot?.id },
     });
     // // Trigger revalidation for the chatbot view page
-    revalidatePath("/view-chatbot");
+    revalidatePath("/dashboard");
 
     return { chatbot, completed: true };
   } catch (err) {

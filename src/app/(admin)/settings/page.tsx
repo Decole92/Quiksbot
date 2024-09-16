@@ -78,7 +78,7 @@ export default function SettingsPage() {
     fetchUserOpenAiKey();
   }, [user]);
   return (
-    <div className='container py-10 max-w-5xl mx-auto mt-20 '>
+    <div className='container w-full py-10 md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto mt-20 '>
       <header className='mb-5'>
         <h1
           className='text-4xl font-thin text-[#E1B177]

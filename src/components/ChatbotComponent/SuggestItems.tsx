@@ -1,6 +1,11 @@
 import React, { useTransition } from "react";
 import { Button } from "../ui/button";
-import { ChatBot, ChatMessage, ChatRoom, FirstQuestion } from "@prisma/client";
+import type {
+  ChatBot,
+  ChatMessage,
+  ChatRoom,
+  FirstQuestion,
+} from "@prisma/client";
 import { getChatMessages, getChatRoom } from "@/actions/chat";
 
 import { useGlobalStore } from "@/store/globalStore";
@@ -121,15 +126,31 @@ Props) {
     });
   };
   return (
-    <div className='w-full p-5'>
-      <ul className='flex flex-nowrap gap-3 w-full overflow-x-auto hide-scrollbar'>
+    // <div className='w-full p-5'>
+    //   <ul className='flex flex-nowrap gap-3 w-full overflow-x-auto hide-scrollbar'>
+    //     {firstQuestion?.map((question) => (
+    //       <li key={question?.id} className='flex-shrink-0'>
+    //         <Button
+    //           disabled={isLoading || !chatRoom || !chatbot}
+    //           onClick={() => handleFirstQuestion(question?.question)}
+    //           variant={"ghost"}
+    //           className='rounded-full px-4 py-2 whitespace-nowrap hover:bg-muted border'
+    //         >
+    //           {question.question}
+    //         </Button>
+    //       </li>
+    //     ))}
+    //   </ul>
+    // </div>
+    <div className='p-2 md:p-3 lg:p-4 w-full'>
+      <ul className='flex flex-nowrap gap-1 md:gap-3 w-full overflow-x-auto hide-scrollbar'>
         {firstQuestion?.map((question) => (
           <li key={question?.id} className='flex-shrink-0'>
             <Button
               disabled={isLoading || !chatRoom || !chatbot}
               onClick={() => handleFirstQuestion(question?.question)}
-              variant={"ghost"}
-              className='rounded-full px-4 py-2 whitespace-nowrap hover:bg-muted border'
+              variant='ghost'
+              className='rounded-full text-xs md:text-sm lg:text-base px-3 py-1 md:px-4 md:py-2 lg:px-5 lg:py-3 whitespace-nowrap hover:bg-muted border text-gray-700 dark:text-gray-300'
             >
               {question.question}
             </Button>

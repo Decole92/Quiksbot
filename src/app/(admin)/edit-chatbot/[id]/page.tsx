@@ -14,9 +14,11 @@ import General from "@/components/TabContent/General";
 import Source from "@/components/TabContent/Source";
 import Connect from "@/components/TabContent/Connect";
 import SettingsPage from "@/components/TabContent/Settings";
-import { ChatBot } from "@prisma/client";
+import type { ChatBot } from "@prisma/client";
 import { BASE_URL } from "../../../../../constant/url";
 import Image from "next/image";
+import { BotMessageSquare } from "lucide-react";
+import Link from "next/link";
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
   const [activeTab, setActiveTab] = useState("general");
@@ -47,20 +49,29 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
   if (error) {
     console.error("An error occurred while fetching the bot data:", error);
     if (error.code === "P2023") {
-      return redirect("/view-chatbot");
+      return redirect("/dashboard");
     }
     return <div>Error loading bot data</div>;
   }
 
   if (!data) {
     console.error("No data found for the provided ID.");
-    return redirect(`${BASE_URL}/view-chatbot`);
+    return redirect(`${BASE_URL}/dashboard`);
   }
 
   return (
-    <div className='mt-20 space-y-12 w-full md:max-w-5xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
+    <div className='mt-20 space-y-12 w-full md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
       {data && <SideHeader data={data} />}
-
+      {data && (
+        <Link
+          href={`${BASE_URL}/chatbot/${data?.id}`}
+          className='flex w-full items-end justify-end'
+        >
+          <Button className='gap-2 text-gray-100 dark:text-gray-200 bg-black/50 flex items-center w-full md:max-w-[150px] lg:w-[150px] dark:bg-gray-900  hover:bg-[#E1B177]  dark:hover:bg-[#E1B177] '>
+            <BotMessageSquare /> <h3>Playground</h3>
+          </Button>
+        </Link>
+      )}
       <div className='flex items-center justify-between border-b '>
         <div className='flex w-full justify-evenly'>
           <Button

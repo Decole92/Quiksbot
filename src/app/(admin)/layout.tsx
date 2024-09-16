@@ -10,7 +10,7 @@ async function Adminlayout({
 }: Readonly<{ children: React.ReactNode }>) {
   // const { userId } = await auth();
 
-  //if (!userId) RedirectToSignIn();
+  // if (!userId) RedirectToSignIn();
   return (
     <ClerkLoaded>
       {/* <div className='flex flex-col flex-1 '> */}
@@ -24,7 +24,7 @@ async function Adminlayout({
 
       </div> */}
       <Header />
-      <div className='flex md:max-h-screen w-full h-full'>
+      <div className='flex md:max-h-screen w-full h-full '>
         <Sidebar />
         <div className='w-full h-screen flex flex-col pl-10 md:pl-4'>
           {children}

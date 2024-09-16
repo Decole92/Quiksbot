@@ -38,6 +38,7 @@ export default function Pricing() {
         userDetails as userDetails,
         plan
       );
+
       console.log("this is sesssionId", sessionId);
       await stripe?.redirectToCheckout({
         sessionId: sessionId!,
@@ -50,8 +51,8 @@ export default function Pricing() {
       <div className='md:max-w-5xl md:mx-auto lg:max-w-6xl lg:mx-auto w-full text-center px-4'>
         <h1 className='text-4xl font-thin text-[#E1B177]'>Pricing Plans</h1>
         <p className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
-          Choose the plan that's right for your business. Our flexible pricing
-          options make it easy to get started and scale as you grow.
+          Choose the plan that&#39;s right for your business. Our flexible
+          pricing options make it easy to get started and scale as you grow.
         </p>
 
         <div className='mt-10 grid gap-8 md:grid-cols-3'>

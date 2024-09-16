@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { ChatBot } from "@prisma/client";
+import type { ChatBot } from "@prisma/client";
 
 const ConversationSearch = ({
   chatbots,
