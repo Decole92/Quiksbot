@@ -129,7 +129,7 @@ export const sendMessage = async (
   
         Here is the key information you should be focusing on: ${systemCharacteristicData}, ${formattedRelevantDocs}. If the user asks something off-topic or inappropriate, kindly explain that the query is beyond your scope, and let them know a real person will assist them shortly.
         
-        Before proceeding, ask if they would like to provide their email address so that we can follow up with a human agent. For example, you could say: 'It seems your question is beyond my expertise. I can connect you with a human assistant. Could you please provide your email address so we can get back to you?' (realtime).
+        Before proceeding, ask if they would like to provide their email address so that we can follow up with a human agent. For example, you could say: 'It seems your question is beyond my expertise. I can connect you with a human assistant. Could you please provide your email address so we can get back to you?  and add a keyword (realtime) at the end.
         
         If they provide their email, confirm it politely. If they refuse, simply acknowledge and inform them that a human agent will continue the conversation shortly`;
     }
@@ -256,7 +256,7 @@ export const sendMessage = async (
 
         const sender =
           getUser && getUser?.User?.email
-            ? onMailer(getUser?.User?.email)
+            ? onMailer(getUser?.User?.email, chatbot?.name)
             : null;
 
         if (sender) {

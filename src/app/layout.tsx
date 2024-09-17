@@ -27,14 +27,14 @@ export default async function RootLayout({
       <html lang='en'>
         <body className={`${inter.className}  bg-gray-100 dark:bg-gray-950  `}>
           <script
-            src={`${BASE_URL}/api/chatbotWidget`}
+            src='https://quiksbot.com/api/chatbotWidget'
             data-name='quiksbot'
-            data-address={`${BASE_URL}`}
-            data-id='e3fb7e4c-ce42-4406-8d8f-2e5965bc4d3d'
+            data-address='https://quiksbot.com'
+            data-id='9462b5d9-4625-4a89-8fa6-987517d573d9'
             data-widget-size='normal'
             data-widget-button-size='normal'
             defer
-          />
+          ></script>
 
           <ThemeProvider
             attribute='class'

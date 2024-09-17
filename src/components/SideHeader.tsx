@@ -184,7 +184,7 @@ function SideHeader({ data }: { data: any }) {
       {isUploading && <Progress value={progress} className='w-full h-2' />}
       <Button
         //flex
-        className='flex flex-col md:ml-auto lg:ml-auto text-white bg-black/70 hover:text-white hover:bg-[#E1B177] dark:bg-gray-950 dark:hover:bg-[#E1B177]  w-full md:w-[100px] lg:w-[100px]  '
+        className='flex flex-col md:ml-auto lg:ml-auto text-white bg-black/70 hover:text-white hover:bg-[#E1B177] dark:bg-gray-950 dark:hover:bg-[#E1B177]  w-full md:w-[130px] lg:w-[140px]  '
         type='submit'
         disabled={!user || !botHeader || isPending || isUploading || disabled}
       >

@@ -101,6 +101,7 @@ const ConversationMenu = () => {
 
             <Button
               variant={"ghost"}
+              disabled
               className='gap-2 border bg-gray-200/50 dark:bg-gray-950 dark:text-gray-400 dark:hover:bg-[#E1B177] dark:hover:text-gray-100 text-black hidden md:inline-flex md:w-[100px] lg:w-[100px]   '
             >
               Export <Download className='h-5 w-5' />

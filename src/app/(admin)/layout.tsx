@@ -13,16 +13,6 @@ async function Adminlayout({
   // if (!userId) RedirectToSignIn();
   return (
     <ClerkLoaded>
-      {/* <div className='flex flex-col flex-1 '> */}
-      {/* <div className='max-h-screen'>
-        <Header />
-        <div className='flex'>
-          <Sidebar />
-
-          <div className='flex-1 pl-14 md:p-5 p-3 '>{children}</div>
-        </div>
-
-      </div> */}
       <Header />
       <div className='flex md:max-h-screen w-full h-full '>
         <Sidebar />
