@@ -117,7 +117,7 @@ const ChatBot: React.FC = () => {
   useEffect(() => {
     postToParent(
       JSON.stringify({
-        width: botOpened ? 380 : 80,
+        width: botOpened ? 360 : 80,
         height: botOpened ? 800 : 80,
       })
     );
@@ -159,9 +159,7 @@ const ChatBot: React.FC = () => {
 
   return (
     <div
-      className={`fixed bottom-3 right-3 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500 ${
-        botOpened ? "scale-90" : "scale-100"
-      }`}
+      className="fixed bottom-3 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500"
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
       {/* <div
@@ -170,7 +168,7 @@ const ChatBot: React.FC = () => {
        // className='fixed bottom-3 right-3 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end  '
      > */}
       {botOpened && (
-        <div className='mb-2 w-full max-w-[350px] h-[80vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
+        <div className='mb-2 w-full max-w-[350px] h-[100vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
           <div className='flex-1 overflow-y-auto'>
             <ChatbotMessages

@@ -37,8 +37,9 @@ export async function GET() {
           bottom: 10px;
           right: 10px;
           border: none;
-          width: 50px;
-          height: 50px;
+          width: 80px;
+          height: 80px;
+          z-index: 999;
           transition: width 0.3s ease, height 0.3s ease;
         }
       \`);
@@ -68,7 +69,6 @@ export async function GET() {
               // If it's an object (could be already parsed), use it as is
               data = e.data;
             }
-
             if (data && data.width && data.height) {
                 iframe.style.width = \`\${data.width}px\`;
                 iframe.style.height = \`\${data.height}px\`;

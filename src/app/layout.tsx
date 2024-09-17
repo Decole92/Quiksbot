@@ -25,7 +25,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider publishableKey={publishableKey}>
       <html lang='en'>
-        <body className={`${inter.className}  bg-gray-100 dark:bg-gray-950  `}>
+        <body className={`${inter.className} bg-transparent`}>
           <script
             src='https://quiksbot.com/api/chatbotWidget'
             data-name='quiksbot'
