@@ -65,7 +65,7 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
   );
 
   const { data: chatRoom, mutate: setChatRoom } = useSWR(
-    "/getChatRoom",
+    chatId ? `/getChatRoom/${chatId}` : null,
     async () => (chatId !== null ? await getChatRoom(chatId) : null)
   );
   const handleInformationSubmit = async (e: React.FormEvent) => {

@@ -33,6 +33,12 @@ interface FirstQuestion {
   chatbotId: string;
 }
 
+interface BlockPage {
+  id: string;
+  address: string;
+  chatbotId: string;
+}
+
 interface Source {
   id?: string;
   characteristic;
@@ -44,7 +50,6 @@ interface Source {
 interface characteristic {
   id: string;
   characteristic: string;
-
   sourceId?: string;
 }
 interface User {

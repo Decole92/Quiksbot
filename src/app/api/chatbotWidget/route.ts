@@ -1,93 +1,122 @@
+import { getBlocksByUserId } from "@/actions/user";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const jsContent = `
-    (function() {
+export async function GET(req: Request) {
+  try {
+    const { userId } = auth();
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
 
-            const existingIframe = document.querySelector('.chat-frame');
-            if (existingIframe) {
-                console.log("iframe already existing")
-                 return;
+    const blockedPages = await getBlocksByUserId(userId);
+    const blockedPagesArray = blockedPages || [];
+
+    const jsContent = `
+      (function() {
+        let chatFrame = null;
+
+        const isPathBlocked = (path) => {
+          const blockedPages = ${JSON.stringify(blockedPagesArray)};
+          return blockedPages.some(page => path.startsWith(page)) || path.startsWith('/chatbot');
+        };
+
+        const createChatbotIframe = () => {
+          if (chatFrame) return;
+
+          const script = document.querySelector('script[data-address][data-id]');
+          const address = script?.getAttribute("data-address");
+          const id = script?.getAttribute("data-id");
+
+          if (!address || !id) {
+            console.error('Missing data attributes in the script tag.');
+            return;
           }
 
-          if (window.location.pathname.startsWith('/chatbot')) {
-            return;
-        }
+          const isProduction = !['localhost', '127.0.0.1'].includes(window.location.hostname);
+          const chatbotUrl = isProduction ? \`\${address}/chatbot\` : 'http://localhost:3000/chatbot';
 
-      const script = document.currentScript;
-      const name = script?.getAttribute("data-name");
-      const address = script?.getAttribute("data-address");
-      const id = script?.getAttribute("data-id");
-      const widgetSize = script?.getAttribute("data-widget-size");
-      const widgetButtonSize = script?.getAttribute("data-widget-button-size");
-
-      const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    const chatbotUrl = isProduction ? \`\${address}/chatbot\` : 'http://localhost:3000/chatbot';
-   // const chatbotUrl = isProduction ? address : 'http://localhost:3000';
-
-      const iframeStyles = (styleString) => {
-        const style = document.createElement('style');
-        style.textContent = styleString;
-        document.head.append(style);
-      };
-
-      iframeStyles(\`
-        .chat-frame {
-          position: fixed;
-          bottom: 10px;
-          right: 10px;
-          border: none;
-          width: 80px;
-          height: 80px;
-          z-index: 999;
-          transition: width 0.3s ease, height 0.3s ease;
-        }
-      \`);
-
-      const iframe = document.createElement("iframe");
-      iframe.src = chatbotUrl;
-      iframe.classList.add("chat-frame");
-      document.body.appendChild(iframe);
-
-      window.addEventListener("message", (e) => {
-
-        if (e.origin !== new URL(chatbotUrl).origin) return;
-
-        try {
-
-            let data;
-
-            if (typeof e.data === 'string') {
-              try {
-                // Try to parse if it's a JSON string
-                data = JSON.parse(e.data);
-              } catch (parseError) {
-                // If it's not JSON, we treat it as a simple string message (likely the UUID)
-                data = e.data;  // This could be your botId or other simple message
-              }
-            } else {
-              // If it's an object (could be already parsed), use it as is
-              data = e.data;
+          const style = document.createElement('style');
+          style.textContent = \`
+            .chat-frame {
+              position: fixed;
+              bottom: 10px;
+              right: 10px;
+              border: none;
+              width: 80px;
+              height: 80px;
+              z-index: 999;
+              transition: width 0.3s ease, height 0.3s ease;
             }
-            if (data && data.width && data.height) {
-                iframe.style.width = \`\${data.width}px\`;
-                iframe.style.height = \`\${data.height}px\`;
+          \`;
+          document.head.appendChild(style);
+
+          chatFrame = document.createElement("iframe");
+          chatFrame.src = chatbotUrl;
+          chatFrame.classList.add("chat-frame");
+          document.body.appendChild(chatFrame);
+
+          window.addEventListener("message", (e) => {
+            if (e.origin !== new URL(chatbotUrl).origin) return;
+
+            try {
+              const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+
+              if (data && data.width && data.height) {
+                chatFrame.style.width = \`\${data.width}px\`;
+                chatFrame.style.height = \`\${data.height}px\`;
               }
 
-              // Send the ID back to the iframe (no need to stringify simple strings)
-              iframe.contentWindow.postMessage(id, chatbotUrl);
+              chatFrame.contentWindow.postMessage(id, chatbotUrl);
+            } catch (error) {
+              console.error("Error processing message data:", error);
+            }
+          });
+        };
 
-        } catch (error) {
-          console.error("Error parsing message data:", error);
-        }
-      });
-    })();
+        const removeChatbotIframe = () => {
+          if (chatFrame) {
+            chatFrame.remove();
+            chatFrame = null;
+          }
+        };
 
-  `;
+        const updateChatbotVisibility = () => {
+          const currentPath = window.location.pathname;
+          if (isPathBlocked(currentPath)) {
+            removeChatbotIframe();
+          } else {
+            createChatbotIframe();
+          }
+        };
 
-  return new NextResponse(jsContent, {
-    headers: {
-      "Content-Type": "application/javascript",
-    },
-  });
+        // Initial check
+        updateChatbotVisibility();
+
+        // Listen for navigation changes
+        const observer = new MutationObserver(() => {
+          updateChatbotVisibility();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Listen for popstate events (back/forward navigation)
+        window.addEventListener('popstate', updateChatbotVisibility);
+      })();
+    `;
+
+    return new NextResponse(jsContent, {
+      headers: {
+        "Content-Type": "application/javascript",
+      },
+    });
+  } catch (err) {
+    console.error("Error in GET function:", err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }

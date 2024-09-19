@@ -3,6 +3,9 @@
 import { auth } from "@clerk/nextjs/server";
 import prisma from "../../../prisma/client";
 import { getBot } from "../bot";
+import { ChatBot } from "@prisma/client";
+import { NextResponse } from "next/server";
+import { redirect } from "next/dist/server/api-utils";
 
 export const getUserSub = async (userId: string) => {
   if (!userId) return;
@@ -128,5 +131,82 @@ export const getUserCredits = async (id: string) => {
     return credits?.credits;
   } catch (err) {
     console.log("error has occur while trying to get users get credit", err);
+  }
+};
+
+export const blockAddress = async (value: string, chatBot: ChatBot) => {
+  if (!value || !chatBot) return;
+
+  try {
+    const block = await prisma.blockPages.create({
+      data: {
+        address: value,
+        chatbot: {
+          connect: {
+            id: chatBot?.id,
+          },
+        },
+      },
+    });
+    return block;
+  } catch (err) {
+    console.log("error have occur while blocking page address", err);
+  }
+};
+
+export const getBlocks = async (id: string) => {
+  if (!id) throw new Error("no id is fetched by getBlocks");
+  try {
+    const getAddresses = await prisma.blockPages.findMany({
+      where: {
+        chatbotId: id,
+      },
+    });
+    return getAddresses;
+  } catch (err) {
+    console.log("error occurs while try to fetch blocks address", err);
+  }
+};
+
+export const RemovePageAddressById = async (id: string) => {
+  if (!id) throw new Error("no id is fetched from removePageAddressById");
+
+  try {
+    const delAddress = await prisma.blockPages.delete({
+      where: {
+        id: id,
+      },
+    });
+    return delAddress;
+  } catch (err) {
+    console.log("error occurs while try to remove blocks address", err);
+  }
+};
+
+export const getBlocksByUserId = async (clerkId: string): Promise<string[]> => {
+  if (!clerkId) {
+    throw new Error("Invalid or missing userId");
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { clerkId },
+      include: {
+        ChatBot: {
+          include: {
+            blockPage: true,
+          },
+        },
+      },
+    });
+
+    if (!user || !user.ChatBot) {
+      return [];
+    }
+
+    return user.ChatBot[0].blockPage.map((page) => page.address);
+  } catch (err) {
+    console.error("Error fetching blocked pages:", err);
+    throw new Error(`Failed to fetch blocked pages`);
   }
 };

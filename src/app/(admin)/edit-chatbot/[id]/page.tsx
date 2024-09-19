@@ -9,7 +9,6 @@ import { getBot } from "@/actions/bot";
 import { redirect } from "next/navigation";
 import useSWR from "swr";
 
-import Avatar from "@/components/Avatar";
 import General from "@/components/TabContent/General";
 import Source from "@/components/TabContent/Source";
 import Connect from "@/components/TabContent/Connect";
@@ -19,6 +18,16 @@ import { BASE_URL } from "../../../../../constant/url";
 import Image from "next/image";
 import { BotMessageSquare } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+// export const metadata: Metadata = {
+//   title:
+//     "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot | Customize Chatbot to Suit Your Needs",
+//   description:
+//     "Discover how AI chatbots can boost sales and improve customer service. Easily embed chatbots on your website, track analytics, and customize your chatbot with OpenAI API integration. Quiksbot offers SalesBots for lead generation, PDF interaction, advanced chatbot customization, and export chat logs in CSV or PDF formats for better data management and insights.",
+//   keywords:
+//     "customizable AI chatbot, chatbot for websites, AI-powered chatbot, chatbot customization, OpenAI API chatbot, website chatbot embedding, lead generation chatbot, chatbot analytics, customer service chatbot, PDF chatbot, export chat logs, CSV chatbot export, chatbot data management, Quiksbot chatbot, sales chatbot, AI chatbot for business, chatbot integration",
+// };
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
   const [activeTab, setActiveTab] = useState("general");
@@ -60,7 +69,7 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
   }
 
   return (
-    <div className='mt-20 space-y-12 w-full md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
+    <div className='mt-20 h-full space-y-12 w-full md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
       {data && <SideHeader data={data} />}
       {data && (
         <Link

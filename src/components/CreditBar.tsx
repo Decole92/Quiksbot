@@ -1,7 +1,7 @@
 "use client";
 import { Progress } from "@/components/ui/progress";
 import useSubcription from "@/hook/useSubscription";
-import { Zap } from "lucide-react";
+import { LoaderCircle, Zap } from "lucide-react";
 
 interface AICreditBarProps {
   totalCredits: number;
@@ -19,7 +19,11 @@ export default function CreditBar() {
   } = useSubcription();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <LoaderCircle className='animate-spin' />
+      </div>
+    );
   }
 
   const remainingCredits = totalCredits - usedCredits;

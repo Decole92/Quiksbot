@@ -59,7 +59,7 @@ export const startNewChat = async ({
 
     if (!chatbot) return;
 
-    console.log("about to get location here>>>");
+    // console.log("about to get location here>>>");
 
     const response = await fetch(`${BASE_URL}/api/getLocation`, {
       method: "GET",
@@ -69,7 +69,7 @@ export const startNewChat = async ({
     });
     const data = await response.json();
 
-    console.log("this is data server side", data);
+    // console.log("this is data server side", data);
     const { country, city, lat, lng } = data;
 
     const customer = await prisma.customer.create({

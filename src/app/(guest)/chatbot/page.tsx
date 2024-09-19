@@ -154,12 +154,14 @@ const ChatBot: React.FC = () => {
         });
       }
     };
-    startChatAutomatically();
-  }, [bot, botId, userDetails, startChatting]);
+    if (botOpened) {
+      startChatAutomatically();
+    }
+  }, [bot, botId, userDetails, startChatting, botOpened]);
 
   return (
     <div
-      className="fixed bottom-3 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500"
+      className='fixed bottom-2 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500'
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
       {/* <div

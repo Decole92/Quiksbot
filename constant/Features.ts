@@ -28,7 +28,7 @@ export const plans = [
   },
   {
     name: "Pro",
-    price: "$49.99",
+    price: "$29.99",
     features: [
       "22 PDF Documents",
       "Unlimited AI Chat Messages",

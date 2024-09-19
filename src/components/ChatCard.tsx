@@ -139,11 +139,11 @@ const ChatCard = ({ customer }: Props) => {
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2 text-sm font-medium py-1'>
               <div> {customer?.name}</div>
-              {chatRoom?.live && (
+              {chatRoom?.live ? (
                 <div className='bg-primary px-2 py-0.5 rounded-full text-primary-foreground text-xs font-medium'>
                   Active
                 </div>
-              )}
+              ) : null}
             </div>
             <div className='text-xs text-muted-foreground absolute top-2 right-2'>
               {new Date(lastChatRoomEntry?.createdAt).toLocaleString()}

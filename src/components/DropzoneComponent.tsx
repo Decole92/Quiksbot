@@ -38,11 +38,10 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
         error:
           "Error while uploading pdf file, Upgrade your plan to enable you upload more pdf files.",
       });
-      await mutate(() => getBot(chatbotId));
 
       const result = await response;
       const data = await result.json();
-
+      mutate();
       if (data?.completed) {
         router.push(`/edit-chatbot/${chatbotId}`);
       }

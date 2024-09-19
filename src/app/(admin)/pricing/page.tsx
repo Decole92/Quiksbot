@@ -10,6 +10,16 @@ import getStripe from "@/lib/stripe-js";
 import { createCheckoutSession, createStripePortal } from "@/actions/stripe";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
+import { Metadata } from "next";
+
+// export const metadata: Metadata = {
+//   title:
+//     "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot | Pricing",
+//   description:
+//     "Boost your business with Quiksbot's AI chatbots. Explore flexible pricing plans: Basic (Free), Pro ($29.99), or Ultimate ($99.99). Quiksbot offers advanced lead generation, chatbot analytics, PDF interaction, website chatbot embedding, and more. Customize your AI with OpenAI API, switch between chat models, and export chat logs as CSV or PDF. Perfect for small teams, businesses, and enterprises looking for full control and scalability.",
+//   keywords:
+//     "AI chatbot pricing, website chatbot, AI-powered salesbot, lead generation chatbot, chatbot analytics, PDF chatbot, chatbot for business, OpenAI API integration, chatbot plans, chatbot for small businesses, chatbot customization, export chat logs, chatbot CSV export, Pro chatbot plan, Ultimate chatbot features, chatbot subscription, Quiksbot pricing plans",
+// };
 
 type userDetails = {
   name: string;

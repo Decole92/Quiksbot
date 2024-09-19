@@ -25,12 +25,12 @@ import {
 const Inter = Montserrat({ weight: "600", subsets: ["latin"] });
 
 function Header() {
-  const { hasActiveMembership } = useSubcription();
+  const { hasActiveMembership, usedCredits, totalCredits } = useSubcription();
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   const { setTheme } = useTheme();
   return (
-    <header className='fixed z-50 w-full justify-between flex flex-row p-5 dark:bg-gray-900  bg-white items-center md:drop-shadow-sm h-20'>
+    <header className='fixed z-50 w-full justify-between flex flex-row p-5 dark:bg-gray-900  bg-gray-100/50 items-center backdrop-blur-sm md:drop-shadow-sm h-20'>
       <Link href='/' className='flex flex-row items-center space-x-2'>
         <Image
           src={logo}
@@ -70,9 +70,17 @@ function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
         {hasActiveMembership === "STANDARD" ? (
-          <div className='m-3'>
-            <CreditBar />
-          </div>
+          <>
+            <div className='hidden md:block lg:block'>
+              <CreditBar />
+            </div>
+            <div className='md:hidden lg:hidden inline-flex flex-col'>
+              <p className='text-xs font-thin'>CR left </p>
+              <p className='text-sm dark:text-gray-400 text-gray-950'>
+                {totalCredits - usedCredits}
+              </p>
+            </div>
+          </>
         ) : (
           <div className='hidden md:block lg:block'>
             {hasActiveMembership === "PRO" ? (

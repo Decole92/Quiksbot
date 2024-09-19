@@ -1,4 +1,4 @@
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Send } from "lucide-react";
@@ -37,9 +37,13 @@ function ChatbotInput({
     "/getMessages",
     async () => await getChatMessages(chatRoomId)
   );
-  const { data: chatRoom, mutate: setChatRoom } = useSWR(
-    "/getChatRoom",
-    async () => (chatRoomId !== null ? await getChatRoom(chatRoomId) : null)
+
+  const {
+    data: chatRoom,
+    mutate: setChatRoom,
+    isLoading,
+  } = useSWR(chatRoomId ? `/getChatRoom/${chatRoomId}` : null, async () =>
+    chatRoomId !== null ? await getChatRoom(chatRoomId) : null
   );
 
   const { name, email } = userDetails;
@@ -74,8 +78,6 @@ function ChatbotInput({
       role: "ai",
       seen: true,
     };
-
-    setChatRoom(getChatRoom(chatRoomId));
 
     if (!chatRoom?.live) {
       mutate(getChatMessages(chatRoomId), {
@@ -117,11 +119,14 @@ function ChatbotInput({
           populateCache: true, // Ensure that the cache is updated with the final result
           revalidate: false, // Prevent additional revalidation since we handle the update here
         });
+        // setBot(getBot(chatbot?.id));
+        setChatRoom(getChatRoom(chatRoomId));
       } catch (error) {
         console.error("Error sending message:", error);
       }
     });
   };
+
   const isCheck = chatbot?.getDetails ? isPageLoading : false;
 
   return (

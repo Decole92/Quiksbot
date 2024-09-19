@@ -13,7 +13,6 @@ export default function ChatbotHeader({
   live?: boolean;
 }) {
   const pathname = usePathname();
-  const chatlog = pathname.includes("chatlog");
 
   return (
     <header
@@ -71,7 +70,7 @@ export default function ChatbotHeader({
           </div>
 
           <span className='text-sm font-medium text-muted-foreground'>
-            Agent Available
+            live
           </span>
         </div>
       ) : null}

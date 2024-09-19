@@ -16,16 +16,16 @@ datasource db {
 model User {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  fullname  String
-  clerkId   String   @unique
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  stripeId  String?
-  openAIkey String?
+  fullname     String
+  clerkId      String     @unique
+  type         String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  email        String     @unique
+  stripeId     String?
+  openAIkey    String?
   //domains Domain[]
-  credits      Int? @default(0) 
+  credits      Int?       @default(0)
   ChatBot      ChatBot[]
   subscription Billings?
   Campaign     Campaign[]
@@ -98,7 +98,10 @@ model ChatBot {
   User          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String?         @db.Uuid
 
-  helpdesk HelpDesk[]
+  // helpdesk HelpDesk[]
+
+  blockPage BlockPages[]
+
   customer Customer[]
 }
 
@@ -114,21 +117,28 @@ model FirstQuestion {
 }
 
 model Billings {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  plan    Plans   @default(STANDARD)
- 
-  User    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String? @unique @db.Uuid
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plan Plans  @default(STANDARD)
+
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @db.Uuid
 }
 
-model HelpDesk {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  question String
-  answer   String
+// model HelpDesk {
+//   id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   question String
+//   answer   String
 
-  // Domain   Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
-  // domainId String? @db.Uuid
+//   // Domain   Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
+//   // domainId String? @db.Uuid
 
+//   chatbot   ChatBot? @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+//   chatbotId String?  @db.Uuid
+// }
+
+model BlockPages {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  address   String
   chatbot   ChatBot? @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
   chatbotId String?  @db.Uuid
 }

@@ -212,7 +212,7 @@ function ChatInterface() {
             </div>
           </DialogContent>
         </Dialog>
-        <div className='border rounded-md w-full bg-white flex flex-col max-h-screen  relative dark:bg-gray-900'>
+        <div className='border rounded-md w-full bg-white flex flex-col md:max-h-screen h-full relative dark:bg-gray-900'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
 
           <ScrollArea className='h-[calc(100vh-400px)] p-5 '>

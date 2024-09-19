@@ -155,7 +155,8 @@ export const updateChatRoomMode = async (id: string) => {
 };
 export const onMailer = (email: string, name: string) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    // host: "smtp.gmail.com",
+    host: "smtp.hostinger.com",
     port: 465,
     secure: true,
     auth: {
@@ -167,7 +168,7 @@ export const onMailer = (email: string, name: string) => {
   const mailOptions = {
     to: email,
     subject: "Realtime Support",
-    text: `One of your customers on ${name} Quiksbot has just switched to real-time mode. Please go to the chat log to continue the conversation. Note that if there is no activity from the client for 30 minutes after their last message, the real-time mode will be automatically disabled.`,
+    text: `One of your customers on ${name} has just switched to real-time mode. Please go to the chat log to continue the conversation. Note that if there is no activity from the client for 30 minutes after their last message, the real-time mode will be automatically disabled.`,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {

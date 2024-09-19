@@ -28,6 +28,16 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { getUserById, updateOpenAiKey } from "@/actions/user";
 import { useTheme } from "next-themes";
+import { Metadata } from "next";
+
+// export const metadata: Metadata = {
+//   title:
+//     "AI Chatbot for Websites | Boost Sales with AI-Powered Chatbots | Quiksbot Settings",
+//   description:
+//     "Discover how to use AI chatbots to enhance sales, improve customer service, and automate lead generation. Learn how to embed AI chatbots on your website, analyze performance with chatbot analytics, and integrate custom OpenAI API. Export chat logs as CSV or PDF, manage your subscription, and access advanced features like light theme customization and subscription upgrades.",
+//   keywords:
+//     "AI chatbot, website chatbot, sales chatbot, chatbot for lead generation, chatbot analytics, OpenAI API integration, PDF interaction, chatlog export, customer service chatbot, upgrade subscription, chatbot settings, light theme chatbot",
+// };
 
 export default function SettingsPage() {
   const [openAIKey, setOpenAIKey] = useState("");

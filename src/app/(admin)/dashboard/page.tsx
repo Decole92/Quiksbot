@@ -8,6 +8,16 @@ import Link from "next/link";
 import { characteristic } from "../../../../typing";
 import type { PdfFile } from "@prisma/client";
 import ConfettiComponent from "@/components/thanks";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title:
+    "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot | Dashboard",
+  description:
+    "Discover how AI chatbots can boost sales, streamline customer service, and improve user engagement. Manage and track chatbot performance directly from your Quiksbot dashboard. Easily embed AI-powered chatbots on your website, monitor chatbot analytics, and customize your bot with OpenAI API integration. Quiksbot offers lead generation SalesBots, PDF interaction, and the ability to export chat logs in CSV or PDF formats for detailed insights and data management.",
+  keywords:
+    "AI chatbot dashboard, customizable AI chatbot, chatbot analytics, lead generation chatbot, website chatbot integration, customer service chatbot, OpenAI API chatbot, chatbot data export, PDF chatbot interaction, export chat logs, CSV chat export, business automation chatbot, chatbot for sales, AI chatbot for customer service, AI-powered SalesBot, Quiksbot chatbot solutions, chatbot performance tracking, chatbot data management",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +48,7 @@ async function Dashboard() {
       </div>
 
       {chatbots?.length === 0 && (
-        <div className='text-black flex flex-col w-full items-center text-center p-10 '>
+        <div className='text-black flex flex-col w-full items-center text-center p-10 dark:text-gray-400'>
           <p>
             You have not created any chatbots yet, Create a new chatbot by
             clicking on create.
@@ -74,9 +84,11 @@ async function Dashboard() {
                 </p>
 
                 <hr className='mt-2' />
-                <h5 className='pb-0 px-4 pt-4 text-[#E1B177] italic'>
-                  trained
-                </h5>
+                {chatbot?.Source?.length > 0 ? (
+                  <h5 className='pb-0 px-4 pt-4 text-[#E1B177] italic'>
+                    trained
+                  </h5>
+                ) : null}
 
                 <div className='p-4 space-y-4'>
                   <div className='flex items-center text-sm justify-between w-full  '>

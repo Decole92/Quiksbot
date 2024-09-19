@@ -1,8 +1,6 @@
 "use client";
 import Mainheader from "@/components/Mainheader";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAuth } from "@clerk/nextjs";
 import {
   ArrowRight,
   CheckCircle,
@@ -13,16 +11,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
 import bot3d from "../../public/bot3d.png";
 import screenshot from "../../public/screenshot.png";
 import { features, plans } from "../../constant/Features";
-export default function Home() {
-  const router = useRouter();
 
+export default function Home() {
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen '>
       <Mainheader />
 
       <main className='flex-1 '>
