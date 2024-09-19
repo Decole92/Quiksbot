@@ -147,7 +147,7 @@ Props) {
         {firstQuestion?.map((question) => (
           <li key={question?.id} className='flex-shrink-0'>
             <Button
-              disabled={isLoading || !chatRoom || !chatbot}
+              disabled={isLoading || !chatId || !chatbot}
               onClick={() => handleFirstQuestion(question?.question)}
               variant='ghost'
               className='rounded-full text-xs md:text-sm lg:text-base px-3 py-1 md:px-4 md:py-2 lg:px-5 lg:py-3 whitespace-nowrap hover:bg-muted border text-gray-700 dark:text-gray-300'

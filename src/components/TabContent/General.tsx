@@ -18,7 +18,7 @@ import {
   updateGreetings,
   updateTheme,
 } from "@/actions/bot";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import Characteristic from "../Characteristic";
 import { Moon, Sun, SunMoon, Upload } from "lucide-react";
 import quiksIcon from "../../../public/golden.png";
@@ -208,6 +208,7 @@ function General({ chatbot }: { chatbot: any }) {
                       : "What is example.com?"
                   }`}
                 />
+
                 <Button
                   disabled={
                     !user || !data.question || isPending || limitQuestion

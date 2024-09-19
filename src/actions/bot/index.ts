@@ -421,6 +421,11 @@ export const deleteBot = async (sourceId: string, chatbot: ChatBot) => {
 
     await prisma.chatBot.delete({
       where: { id: chatbot?.id },
+      include: {
+        Source: true,
+        firstQuestion: true,
+        blockPage: true,
+      },
     });
     // // Trigger revalidation for the chatbot view page
     revalidatePath("/dashboard");

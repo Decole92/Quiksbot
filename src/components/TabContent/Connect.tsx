@@ -22,9 +22,9 @@ function Connect({ chatbot }: { chatbot: ChatBot }) {
   let snippet = `<script
   src="${BASE_URL}/api/chatbotWidget"
   data-name='quiksbot'
-  data-address="${BASE_URL}"
+  data-address='${BASE_URL}'
   data-id='${chatbot?.id}'
-  data-position='${chatbot?.iconPosition}
+  data-position='${chatbot?.iconPosition}'
   data-widget-size='normal'
   data-widget-button-size='normal'
   defer

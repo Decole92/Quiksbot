@@ -5,8 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { BASE_URL } from "../../constant/url";
-import Chatbot from "@/components/Bot/Chatbot";
+import { Toaster } from "sonner";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -75,13 +74,21 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <EdgeStoreProvider>
+              {children}
+
+              <Toaster
+                position='bottom-center'
+                className='w-full max-w-sm mx-auto '
+              />
+            </EdgeStoreProvider>
+
             <Script
-              src='http://localhost:3000/api/chatbotWidget'
+              src='https://quiksbot.com/api/chatbotWidget'
               data-name='quiksbot'
-              data-address='http://localhost:3000'
+              data-address='https://quiksbot.com'
+              data-id='c8a0dfff-81fa-4ce4-be5e-67a8caff94ce'
               data-position='right'
-              data-id='9656a02f-5657-425b-a01f-57668c173039'
               data-widget-size='normal'
               data-widget-button-size='normal'
               defer

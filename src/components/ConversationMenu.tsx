@@ -1,13 +1,7 @@
 "use client";
-
 import React, { useState } from "react";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import logo from "../../public/golden.png";
-import { TABS_MENU } from "./SideMenu/Menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "./ui/separator";
-import TabsMenu from "./TabsMenu";
 import MessageComponent from "./MessageTab/MessageComponent";
 import useSWR from "swr";
 import { useUser } from "@clerk/nextjs";
@@ -17,6 +11,8 @@ import { Button } from "./ui/button";
 import { Download } from "lucide-react";
 import { getAllActiveChats, getUserCustomers } from "@/actions/customer";
 import Image from "next/image";
+import jsPDF from "jspdf";
+import { fetchAndDownloadPDF } from "@/lib/pdfFomatter";
 
 type Props = {
   domains?:
@@ -77,11 +73,12 @@ const ConversationMenu = () => {
       </div>
     );
   }
+  console.log("allcustomer data", allUserCustomers);
 
   const filteredData =
     activeTab === "expired" ? filteredCustomers : filteredChats;
   return (
-    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-muted dark:bg-transparent dark:text-gray-400'>
+    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-white dark:bg-transparent dark:text-gray-400'>
       <div className='p-5'>
         <div className='flex md:items-center justify-between border-b p-4 items-start lg:items-center'>
           <h2 className='text-lg font-medium'>Inbox</h2>
@@ -100,8 +97,9 @@ const ConversationMenu = () => {
             </Tabs>
 
             <Button
+              onClick={() => fetchAndDownloadPDF(allUserCustomers)}
               variant={"ghost"}
-              disabled
+              disabled={!allUserCustomers}
               className='gap-2 border bg-gray-200/50 dark:bg-gray-950 dark:text-gray-400 dark:hover:bg-[#E1B177] dark:hover:text-gray-100 text-black hidden md:inline-flex md:w-[100px] lg:w-[100px]   '
             >
               Export <Download className='h-5 w-5' />

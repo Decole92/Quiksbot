@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+
 import { ClerkLoaded, RedirectToSignIn } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 
@@ -23,7 +24,6 @@ async function Adminlayout({
             {children}
           </div>
         </div>
-        <Toaster position='bottom-center' />
       </div>
     </ClerkLoaded>
   );

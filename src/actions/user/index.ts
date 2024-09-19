@@ -33,7 +33,7 @@ export const getUserSub = async (userId: string) => {
 
 export const getUserPdfFiles = async (userId: string) => {
   if (!userId) return;
-  const user = await prisma.user.findUnique({
+  const user = await prisma?.user?.findUnique({
     where: { clerkId: userId },
   });
   try {

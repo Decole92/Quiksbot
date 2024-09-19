@@ -19,7 +19,17 @@ import {
   Libraries,
   useLoadScript,
 } from "@react-google-maps/api";
-
+import useSubcription from "@/hook/useSubscription";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { LockIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 // export const metadata: Metadata = {
 //   title:
 //     "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot Analytics",
@@ -64,6 +74,7 @@ const AnalyticsPage = () => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "",
     libraries: libraries as Libraries,
   });
+  const { hasActiveMembership } = useSubcription();
   const [HeatmapLayer, setHeatmapLayer] = useState(null);
   const { data, error } = useSWR(
     "/api/getChartData",
@@ -82,23 +93,57 @@ const AnalyticsPage = () => {
   if (!isLoaded || !data) return <div>Loading...</div>;
 
   return (
-    <div className='w-full mt-16  md:max-w-3xl md:mx-auto lg:max-w-6xl lg:mx-auto p-5 h-full lg:max-h-screen md:max-h-screen '>
-      <div className='bg-white shadow-md dark:bg-gray-900 rounded p-4 mb-8'>
-        <ChartComponent />
-      </div>
-      <div className='relative h-500 w-full bg-gray-200 rounded shadow-md'>
-        <GoogleMap mapContainerStyle={mapStyles} zoom={2} center={center}>
-          {heatmapData.length > 0 && (
-            <HeatmapLayerF
-              data={heatmapData.map((point: any) => ({
-                location: new window.google.maps.LatLng(point.lat, point.lng),
-                weight: 1,
-              }))}
-              options={{ radius: 50 }}
-            />
-          )}
-        </GoogleMap>
-      </div>
+    <div className='w-full mt-16  md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5 h-full lg:max-h-screen md:max-h-screen relative'>
+      {hasActiveMembership === "STANDARD" ? (
+        <div className='fixed inset-0 bg-white opacity-50 z-10 dark:bg-gray-950'>
+          <div className='flex items-center justify-center h-full'>
+            <Card className='w-full max-w-md mx-auto'>
+              <CardHeader className='text-center'>
+                <div className='w-12 h-12 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center'>
+                  <LockIcon className='h-6 w-6 text-amber-600' />
+                </div>
+                <CardTitle className='text-2xl font-bold text-gray-800'>
+                  Restricted Access
+                </CardTitle>
+              </CardHeader>
+              <CardContent className='text-center'>
+                <p className='text-gray-600'>
+                  Only users on an active plan have access to this feature.
+                </p>
+              </CardContent>
+              <CardFooter className='flex justify-center'>
+                <Link href='/pricing'>
+                  <Button className='bg-[#E1B177] hover:bg-gray-900 text-white'>
+                    Upgrade Your Plan
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className='bg-white shadow-md dark:bg-gray-900 rounded p-4 mb-8'>
+            <ChartComponent />
+          </div>
+          <div className='relative h-500 w-full bg-gray-200 rounded shadow-md'>
+            <GoogleMap mapContainerStyle={mapStyles} zoom={2} center={center}>
+              {heatmapData.length > 0 && (
+                <HeatmapLayerF
+                  data={heatmapData.map((point: any) => ({
+                    location: new window.google.maps.LatLng(
+                      point.lat,
+                      point.lng
+                    ),
+                    weight: 1,
+                  }))}
+                  options={{ radius: 50 }}
+                />
+              )}
+            </GoogleMap>
+          </div>
+        </>
+      )}
     </div>
   );
 };
