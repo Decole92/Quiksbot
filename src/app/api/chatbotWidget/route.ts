@@ -29,6 +29,7 @@ export async function GET(req: Request) {
 
           const script = document.querySelector('script[data-address][data-id]');
           const address = script?.getAttribute("data-address");
+          const position = script?.getAttribute("data-position");
           const id = script?.getAttribute("data-id");
 
           if (!address || !id) {
@@ -40,11 +41,22 @@ export async function GET(req: Request) {
           const chatbotUrl = isProduction ? \`\${address}/chatbot\` : 'http://localhost:3000/chatbot';
 
           const style = document.createElement('style');
+
           style.textContent = \`
             .chat-frame {
               position: fixed;
               bottom: 10px;
-              right: 10px;
+         
+              //  \${position }: \${position === "center" ? '50%' : 10}px; 
+              \${position === "center"
+                  ? \`\left: 50%;
+              transform: translateX(-50%);
+            \`
+                  : \`\${position}: 10px;
+            \`
+              }
+
+               
               border: none;
               width: 80px;
               height: 80px;

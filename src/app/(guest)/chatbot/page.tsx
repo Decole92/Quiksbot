@@ -161,7 +161,7 @@ const ChatBot: React.FC = () => {
 
   return (
     <div
-      className='fixed bottom-2 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500'
+      className={`fixed bottom-2 ${bot?.iconPosition}-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
       {/* <div

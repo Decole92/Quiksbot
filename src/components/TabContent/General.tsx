@@ -163,7 +163,8 @@ function General({ chatbot }: { chatbot: any }) {
       );
       toast.promise(promise, {
         loading: "Updating ChatBot Icon...",
-        success: "Chatbot Icon Updated",
+        success:
+          "Goto connect -> Copy & paste the embedding script to you website.",
         error: "Failed to update chatbot & position",
       });
       const updateBot = await getBot(chatbot?.id);

@@ -80,6 +80,7 @@ export default async function RootLayout({
               src='http://localhost:3000/api/chatbotWidget'
               data-name='quiksbot'
               data-address='http://localhost:3000'
+              data-position='right'
               data-id='9656a02f-5657-425b-a01f-57668c173039'
               data-widget-size='normal'
               data-widget-button-size='normal'

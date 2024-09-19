@@ -24,6 +24,7 @@ function Connect({ chatbot }: { chatbot: ChatBot }) {
   data-name='quiksbot'
   data-address="${BASE_URL}"
   data-id='${chatbot?.id}'
+  data-position='${chatbot?.iconPosition}
   data-widget-size='normal'
   data-widget-button-size='normal'
   defer
@@ -128,7 +129,7 @@ function Connect({ chatbot }: { chatbot: ChatBot }) {
                   value={address}
                   onChange={(e) => setAddress(e?.target?.value)}
                   className='flex-1 dark:bg-gray-900'
-                  placeholder='Example: To exclude pricing page https://example.com/pricing'
+                  placeholder='Example: To exclude pricing page /pricing'
                 />
                 <Button
                   disabled={isPending || !address}
