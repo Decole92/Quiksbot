@@ -210,7 +210,9 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
                       return;
                     }
                     setBotType(bot as botType);
-                    if (botType === "ChatPdf") setGetInfoBeforeChat(false);
+                    if (bot === "ChatPdf") {
+                      setGetInfoBeforeChat(false);
+                    }
                   }}
                 >
                   <SelectTrigger className='p-3 w-full dark:bg-gray-900'>
