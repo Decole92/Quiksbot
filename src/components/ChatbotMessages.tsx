@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Avatar from "./Avatar";
-import { UserCircle } from "lucide-react";
+import { Loader, UserCircle } from "lucide-react";
 import ReactMarkDown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
@@ -11,9 +11,11 @@ import type { ChatBot, ChatMessage } from "@prisma/client";
 const ChatbotMessages = ({
   chatbot,
   messages,
+  loading,
 }: {
   chatbot: ChatBot;
   messages: ChatMessage[];
+  loading?: boolean;
 }) => {
   const refDiv = useRef<HTMLDivElement | null>(null);
 
@@ -23,6 +25,14 @@ const ChatbotMessages = ({
 
   return (
     <div className='flex flex-col py-2 overflow-y-auto px-2 md:px-5 lg:px-5 space-y-5  '>
+      {loading && (
+        <div className='flex flex-col items-center justify-center'>
+          <div className='pt-10'>
+            <Loader className='h-7 w-7 animate-spin' />
+          </div>
+        </div>
+      )}
+
       {messages?.map((message: ChatMessage) => {
         const isSender = message?.role !== "user";
 

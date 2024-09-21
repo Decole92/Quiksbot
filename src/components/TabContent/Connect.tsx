@@ -20,7 +20,7 @@ function Connect({ chatbot }: { chatbot: ChatBot }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   let snippet = `<script
-  src="${BASE_URL}/api/chatbotWidget"
+  src='${BASE_URL}/api/chatbotWidget?id=${chatbot?.id}'
   data-name='quiksbot'
   data-address='${BASE_URL}'
   data-id='${chatbot?.id}'

@@ -1,18 +1,20 @@
-import { getBlocksByUserId } from "@/actions/user";
+import { getBlocksById } from "@/actions/user";
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const { userId } = auth();
-    if (!userId) {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
       return NextResponse.json(
-        { error: "User not authenticated" },
-        { status: 401 }
+        { error: "Missing ID parameter" },
+        { status: 400 }
       );
     }
 
-    const blockedPages = await getBlocksByUserId(userId);
+    const blockedPages = await getBlocksById(id);
     const blockedPagesArray = blockedPages || [];
 
     const jsContent = `
@@ -29,7 +31,7 @@ export async function GET(req: Request) {
 
           const script = document.querySelector('script[data-address][data-id]');
           const address = script?.getAttribute("data-address");
-          const position = script?.getAttribute("data-position");
+          const position = script?.getAttribute("data-position") || "right";
           const id = script?.getAttribute("data-id");
 
           if (!address || !id) {
@@ -41,22 +43,12 @@ export async function GET(req: Request) {
           const chatbotUrl = isProduction ? \`\${address}/chatbot\` : 'http://localhost:3000/chatbot';
 
           const style = document.createElement('style');
-
           style.textContent = \`
             .chat-frame {
               position: fixed;
               bottom: 10px;
-         
-              //  \${position }: \${position === "center" ? '50%' : 10}px; 
-              \${position === "center"
-                  ? \`\left: 50%;
-              transform: translateX(-50%);
-            \`
-                  : \`\${position}: 10px;
-            \`
-              }
-
-               
+              \${position}: \${position === "center" ? "50%" : "10px"}; 
+              \${position === "center" ? "transform: translateX(50%);" : ""}
               border: none;
               width: 80px;
               height: 80px;

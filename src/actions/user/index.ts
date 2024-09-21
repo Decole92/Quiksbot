@@ -183,30 +183,28 @@ export const RemovePageAddressById = async (id: string) => {
   }
 };
 
-export const getBlocksByUserId = async (clerkId: string): Promise<string[]> => {
-  if (!clerkId) {
-    throw new Error("Invalid or missing userId");
+export const getBlocksById = async (id: string): Promise<string[]> => {
+  if (!id) {
+    throw new Error("Invalid or missing chatbotId");
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { clerkId },
-      include: {
-        ChatBot: {
-          include: {
-            blockPage: true,
-          },
-        },
+    const blockPages = await prisma.blockPages.findMany({
+      where: {
+        chatbotId: id,
+      },
+      select: {
+        address: true, // Select the addresses directly
       },
     });
 
-    if (!user || !user.ChatBot) {
+    if (!blockPages || blockPages.length === 0) {
       return [];
     }
 
-    return user.ChatBot[0].blockPage.map((page) => page.address);
+    return blockPages.map((page) => page.address);
   } catch (err) {
     console.error("Error fetching blocked pages:", err);
-    throw new Error(`Failed to fetch blocked pages`);
+    throw new Error("Failed to fetch blocked pages");
   }
 };

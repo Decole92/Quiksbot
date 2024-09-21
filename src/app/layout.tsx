@@ -49,6 +49,7 @@ export default async function RootLayout({
     <ClerkProvider publishableKey={publishableKey}>
       <html lang='en'>
         <body className={`${inter.className} bg-transparent `}>
+          <link rel='icon' href='/favicon.ico' sizes='any' />
           <Script
             id='google_analytic'
             async
@@ -84,7 +85,7 @@ export default async function RootLayout({
             </EdgeStoreProvider>
 
             <Script
-              src='https://quiksbot.com/api/chatbotWidget'
+              src='https://quiksbot.com/api/chatbotWidget?id=c8a0dfff-81fa-4ce4-be5e-67a8caff94ce'
               data-name='quiksbot'
               data-address='https://quiksbot.com'
               data-id='c8a0dfff-81fa-4ce4-be5e-67a8caff94ce'

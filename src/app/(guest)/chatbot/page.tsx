@@ -51,7 +51,11 @@ const ChatBot: React.FC = () => {
       shouldRetryOnError: false,
     }
   );
-  const { data: chatMessages, mutate } = useSWR(
+  const {
+    data: chatMessages,
+    mutate,
+    isLoading: loadingChatMessages,
+  } = useSWR(
     chatId ? `/getMessages` : null,
     () => (chatId ? getChatMessages(chatId) : null),
     {
@@ -161,7 +165,7 @@ const ChatBot: React.FC = () => {
 
   return (
     <div
-      className={`fixed bottom-2 ${bot?.iconPosition}-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
+      className={`fixed bottom-2 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
       {/* <div
@@ -176,6 +180,7 @@ const ChatBot: React.FC = () => {
             <ChatbotMessages
               chatbot={bot as ChatBot}
               messages={chatMessages as ChatMessage[]}
+              loading={loadingChatMessages}
             />
           </div>
           <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900 '>

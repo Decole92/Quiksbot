@@ -37,7 +37,7 @@ import { Progress } from "../ui/progress";
 import type { ChatBot, FirstQuestion } from "@prisma/client";
 
 function General({ chatbot }: { chatbot: any }) {
-  const { mutate } = useSWR("/api/getBot");
+  const { mutate } = useSWR(chatbot ? `/api/getBot/${chatbot?.id}` : null);
   const { edgestore } = useEdgeStore();
   const [chatIcon, setChatIcon] = useState<File | null>(null);
   const [hex, setHex] = useState(chatbot?.userMessageBgColor);

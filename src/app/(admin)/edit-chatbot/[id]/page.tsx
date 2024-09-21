@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { getBot } from "@/actions/bot";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import useSWR from "swr";
 
 import General from "@/components/TabContent/General";
@@ -18,28 +18,27 @@ import { BASE_URL } from "../../../../../constant/url";
 import Image from "next/image";
 import { BotMessageSquare } from "lucide-react";
 import Link from "next/link";
-import { Metadata } from "next";
-
-// export const metadata: Metadata = {
-//   title:
-//     "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot | Customize Chatbot to Suit Your Needs",
-//   description:
-//     "Discover how AI chatbots can boost sales and improve customer service. Easily embed chatbots on your website, track analytics, and customize your chatbot with OpenAI API integration. Quiksbot offers SalesBots for lead generation, PDF interaction, advanced chatbot customization, and export chat logs in CSV or PDF formats for better data management and insights.",
-//   keywords:
-//     "customizable AI chatbot, chatbot for websites, AI-powered chatbot, chatbot customization, OpenAI API chatbot, website chatbot embedding, lead generation chatbot, chatbot analytics, customer service chatbot, PDF chatbot, export chat logs, CSV chatbot export, chatbot data management, Quiksbot chatbot, sales chatbot, AI chatbot for business, chatbot integration",
-// };
 
 function EditPage({ params: { id } }: { params: { id: string } }) {
   const [activeTab, setActiveTab] = useState("general");
+  const router = useRouter();
 
-  const { data, error, isLoading, mutate } = useSWR<ChatBot | any>(
-    "/api/getBot",
-    async () => await getBot(id!)
+  const { data, error, isLoading, mutate } = useSWR(
+    id ? `/api/getBot/${id}` : null,
+    () => getBot(id),
+    { revalidateOnFocus: false }
   );
 
   useEffect(() => {
     mutate();
-  }, [id]);
+  }, [id, mutate]);
+
+  useEffect(() => {
+    if (error || (!isLoading && !data)) {
+      console.error("Error or no data found:", error);
+      router.push(`${BASE_URL}/dashboard`);
+    }
+  }, [error, isLoading, data, router]);
 
   if (isLoading) {
     return (
@@ -55,32 +54,22 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
     );
   }
 
-  if (error) {
-    console.error("An error occurred while fetching the bot data:", error);
-    if (error.code === "P2023") {
-      return redirect("/dashboard");
-    }
-    return <div>Error loading bot data</div>;
-  }
-
   if (!data) {
-    console.error("No data found for the provided ID.");
-    return redirect(`${BASE_URL}/dashboard`);
+    return null; // This will prevent rendering the rest of the component while redirecting
   }
 
   return (
     <div className='mt-20 h-full space-y-12 w-full md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
-      {data && <SideHeader data={data} />}
-      {data && (
-        <Link
-          href={`${BASE_URL}/chatbot/${data?.id}`}
-          className='flex w-full items-end justify-end'
-        >
-          <Button className='gap-2 text-gray-100 dark:text-gray-200 bg-black/50 flex items-center w-full md:max-w-[150px] lg:w-[150px] dark:bg-gray-900  hover:bg-[#E1B177]  dark:hover:bg-[#E1B177] '>
-            <BotMessageSquare /> <h3>Playground</h3>
-          </Button>
-        </Link>
-      )}
+      <SideHeader data={data} />
+      <Link
+        target='_blank'
+        href={`${BASE_URL}/chatbot/${data.id} `}
+        className='flex w-full items-end justify-end'
+      >
+        <Button className='gap-2 text-gray-100 dark:text-gray-200 bg-black/50 flex items-center w-full md:max-w-[150px] lg:w-[150px] dark:bg-gray-900  hover:bg-[#E1B177]  dark:hover:bg-[#E1B177] '>
+          <BotMessageSquare /> <h3>Playground</h3>
+        </Button>
+      </Link>
       <div className='flex items-center justify-between border-b '>
         <div className='flex w-full justify-evenly'>
           <Button
@@ -146,10 +135,10 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
           Playground content goes here.
         </TabsContent>
         <TabsContent value='general'>
-          {data && <General chatbot={data} />}
+          <General chatbot={data} />
         </TabsContent>
         <TabsContent value='source'>
-          <Source chatbotId={data?.id} />
+          <Source chatbotId={data.id} />
         </TabsContent>
         <TabsContent value='connect'>
           <Connect chatbot={data} />

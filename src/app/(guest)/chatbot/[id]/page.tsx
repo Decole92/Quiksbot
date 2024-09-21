@@ -60,7 +60,11 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
 
   const [chatId, setChatId] = useState<string>("");
 
-  const { data: chatMessages, mutate } = useSWR("/getMessages", async () =>
+  const {
+    data: chatMessages,
+    mutate,
+    isLoading: loadingChatMessages,
+  } = useSWR("/getMessages", async () =>
     chatId !== null ? await getChatMessages(chatId) : null
   );
 
@@ -193,6 +197,7 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
             <ChatbotMessages
               chatbot={bot as ChatBot}
               messages={chatMessages as ChatMessage[]}
+              loading={loadingChatMessages}
             />
           </div>
 

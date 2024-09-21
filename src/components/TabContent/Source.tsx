@@ -14,8 +14,9 @@ import useSubcription from "@/hook/useSubscription";
 function Source({ chatbotId }: { chatbotId: string }) {
   const { isOverFileLimit, handleNewPdfUpload } = useSubcription();
   const [isPending, startTransition] = useTransition();
-  const { data: chatbot, mutate } = useSWR("/api/getBot", async () =>
-    getBot(chatbotId)
+  const { data: chatbot, mutate } = useSWR(
+    chatbotId ? `/api/getBot${chatbotId}` : null,
+    chatbotId ? async () => getBot(chatbotId) : null
   );
   const [characteristic, setCharacteristic] = useState("");
 
