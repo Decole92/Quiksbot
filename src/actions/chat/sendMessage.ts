@@ -125,13 +125,35 @@ export const sendMessage = async (
       // AIContent = `You have some customized questions ${chatbot?.prompt}  regarding this ${systemCharacteristicData}, ${formattedRelevantDocs} `;
       AIContent = `You have access to customized information tailored to your specific needs. You can ask me questions about the following topics: ${systemCharacteristicData}, and I can also assist you with information from these documents: ${formattedRelevantDocs}. Additionally, you have some custom queries or scenarios provided, which are: ${chatbot?.prompt}. Please keep your questions within this framework for the most relevant responses. If a question is outside this scope, I will escalate it to a real user to continue the conversation and add a keyword (realtime) at the end.`;
     } else if (!chatbot?.getDetails && chatbot?.botType === "SalesBot") {
-      AIContent = `You are a helpful assistant speaking with an anonymous user. If a user asks a question that is outside the topics you're trained to cover, politely inform them that they are limited to the specified content. Stay respectful, friendly, and use emojis where appropriate 😊.
-  
-        Here is the key information you should be focusing on: ${systemCharacteristicData}, ${formattedRelevantDocs}. If the user asks something off-topic or inappropriate, kindly explain that the query is beyond your scope, and let them know a real person will assist them shortly.
-        
-        Before proceeding, ask if they would like to provide their email address so that we can follow up with a human agent. For example, you could say: 'It seems your question is beyond my expertise. I can connect you with a human assistant. Could you please provide your email address so we can get back to you?  and add a keyword (realtime) at the end.
-        
-        If they provide their email, confirm it politely. If they refuse, simply acknowledge and inform them that a human agent will continue the conversation shortly`;
+      //   AIContent = `You are a helpful assistant speaking with an anonymous user. If a user asks a question that is outside the topics you're trained to cover, politely inform them that they are limited to the specified content. Stay respectful, friendly, and use emojis where appropriate 😊.
+
+      //     Here is the key information you should be focusing on: ${systemCharacteristicData}, ${formattedRelevantDocs}. If the user asks something off-topic or inappropriate, kindly explain that the query is beyond your scope, and let them know a real person will assist them shortly.
+
+      //     Before proceeding, if they have not provided their email address yet ask if they would like to provide their email address so that we can follow up with a human agent. For example, you could say: 'It seems your question is beyond my expertise. I can connect you with a human assistant. Could you please provide your email address so we can get back to you? and don't forget to add a keyword (realtime) at the end.
+
+      //     If they provide their email, confirm it politely. If they refuse, simply acknowledge and inform them that a human agent will continue the conversation shortly and don't forget to add a keyword (realtime) at the end. `;
+
+      AIContent = `You are a helpful AI assistant engaging with an anonymous user. Your primary focus is on the following key information: ${systemCharacteristicData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
+   If a user's query falls within your specified content areas:
+    - Respond helpfully based on your knowledge.
+    - Do not add the "(realtime)" keyword to your response.
+    
+    If a user's query falls outside your specified content areas:
+    1. Politely inform them that the topic is beyond your current scope.
+    2. Ask if they would like to provide their email address for follow-up with a human agent.
+    3. Whether they provide an email or not, assure them that a human agent will assist them shortly.
+    4. Add the keyword "(realtime)" at the very end of your response.
+    
+    Example response for off-topic queries:
+    "I apologize, but your question is outside my area of expertise. Would you like to provide your email address so a human agent can follow up with you? Regardless of your choice, I'll make sure a human assistant continues this conversation soon. (realtime)"
+    
+    If they provide an email:
+    - Confirm receipt politely: "Thank you for providing your email. A human agent will contact you soon. (realtime)"
+    
+    If they decline to provide an email:
+    - Acknowledge their decision: "I understand. A human agent will continue this conversation shortly. (realtime)"
+    
+    Always prioritize user privacy and data protection. Be helpful within your defined scope, and gracefully hand off to human support when necessary.`;
     }
 
     const messages: ChatCompletionMessageParam[] = [
@@ -258,7 +280,7 @@ export const sendMessage = async (
           getUser && getUser?.User?.email
             ? onMailer(getUser?.User?.email, chatbot?.name)
             : null;
-
+        console.log("sender", sender);
         if (sender) {
           await prisma.chatRoom
             .update({

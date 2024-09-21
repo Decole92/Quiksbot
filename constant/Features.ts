@@ -9,6 +9,7 @@ import {
   BotIcon,
   GlobeIcon,
   Cpu,
+  DownloadIcon,
 } from "lucide-react";
 
 export const plans = [
@@ -39,7 +40,7 @@ export const plans = [
       "Access Chatbot Analytics",
       "Client Can Switch to Live Agents",
       "Chat with Memory Record",
-      "Download Chatlogs (including customer details and chat messages)",
+      "Download Chatlogs",
     ],
     buttonText: "Choose to Pro",
     buttonLink: "#",
@@ -61,8 +62,8 @@ export const plans = [
       "Chat with Memory Record",
       "Use Custom OpenAI API Keys",
       "Customize AI Prompts",
-      "Download Chatlogs (including customer details and chat messages)",
-      "Alerts when Potential Customers Switching to Live Mode",
+      "Download Chatlogs",
+      "Notification when potential customers transition to live mode",
     ],
     buttonText: "Upgrade to Ultimate",
     buttonLink: "#",
@@ -146,5 +147,11 @@ export const features = [
     description:
       "Deploy a SalesBot to engage visitors, generate leads, and convert them into customers.",
     icon: BotIcon,
+  },
+  {
+    name: "Download Chatlog in PDF Format",
+    description:
+      "Download complete chat logs in PDF format for record-keeping and future reference.",
+    icon: DownloadIcon,
   },
 ];

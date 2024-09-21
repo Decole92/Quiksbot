@@ -153,31 +153,37 @@ export const updateChatRoomMode = async (id: string) => {
     throw new Error("error occurs while fetching chatroom");
   }
 };
-export const onMailer = (email: string, name: string) => {
-  const transporter = nodemailer.createTransport({
-    // host: "smtp.gmail.com",
-    host: "smtp.hostinger.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.NODE_MAILER_EMAIL,
-      pass: process.env.NODE_MAILER_GMAIL_APP_PASSWORD,
-    },
-  });
+export const onMailer = async (email: string, name: string) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      // host: "smtp.gmail.com",
+      host: "smtp.hostinger.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.NODE_MAILER_EMAIL,
+        pass: process.env.NODE_MAILER_GMAIL_APP_PASSWORD,
+      },
+    });
 
-  const mailOptions = {
-    to: email,
-    subject: "Realtime Support",
-    text: `One of your customers on ${name} has just switched to real-time mode. Please go to the chat log to continue the conversation. Note that if there is no activity from the client for 30 minutes after their last message, the real-time mode will be automatically disabled.`,
-  };
+    const mailOptions = {
+      from: process.env.NODE_MAILER_EMAIL,
+      to: email,
+      subject: "Realtime Support",
+      text: `One of your customers on ${name} QUIKSBOT has just switched to real-time mode. Please go to the chat log to continue the conversation. Note that if there is no activity from the client for 30 minutes after their last message, the real-time mode will be automatically disabled.`,
+    };
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
+    await transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+  } catch (err) {
+    console.error("Error sending email:", err);
+    throw new Error("Failed to send email");
+  }
 };
 
 export const chartBarData = async () => {

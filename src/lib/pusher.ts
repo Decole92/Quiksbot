@@ -7,6 +7,6 @@ export const serverPusher = new Pusher({
   secret: process.env.PUSHER_SECRET!,
   cluster: "eu",
 });
-export const clientPusher = new pusherJs("273a56bd155ad4143e05", {
+export const clientPusher = new pusherJs("beee85282478cf8a5899", {
   cluster: "eu",
 });
