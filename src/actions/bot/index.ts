@@ -425,6 +425,7 @@ export const deleteBot = async (sourceId: string, chatbot: ChatBot) => {
         Source: true,
         firstQuestion: true,
         blockPage: true,
+        customer: true,
       },
     });
     // // Trigger revalidation for the chatbot view page

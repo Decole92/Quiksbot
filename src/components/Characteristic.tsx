@@ -9,7 +9,7 @@ import type { Characteristic, FirstQuestion } from "@prisma/client";
 import { OctagonX } from "lucide-react";
 import { toast } from "sonner";
 import useSWR from "swr";
-import { BlockPage } from "../../typing";
+import { BlockPage, characteristic } from "../../typing";
 import { redirect, useRouter } from "next/navigation";
 
 function Characteristic({
@@ -17,13 +17,20 @@ function Characteristic({
   question,
   characteristic,
   type,
+  chatbotId,
 }: {
   blockpage?: BlockPage;
   question?: FirstQuestion;
   characteristic?: Characteristic;
   type: string;
+  chatbotId?: string;
 }) {
-  const { mutate } = useSWR("/api/getBot");
+  // const { mutate } = useSWR("/api/getBot");
+  const { mutate } = useSWR(
+    chatbotId ? `/api/getBot/${chatbotId}` : null,
+    chatbotId ? async () => getBot(chatbotId) : null
+  );
+
   const { mutate: getBlockPage } = useSWR(
     blockpage ? `/api/getBlocks/${blockpage?.chatbotId}` : null,
     blockpage ? async () => await getBlocks(blockpage?.chatbotId) : null

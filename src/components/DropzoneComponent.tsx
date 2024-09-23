@@ -21,7 +21,10 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
   const acceptedFileTypes = {
     "application/pdf": [".pdf"],
   };
-  const { mutate } = useSWR("/api/getBot", async () => await getBot(chatbotId));
+  const { mutate } = useSWR(
+    chatbotId ? `/api/getBot/${chatbotId}` : null,
+    chatbotId ? async () => getBot(chatbotId) : null
+  );
   const uploadFile = async (selectedFile: File) => {
     const formData = new FormData();
     formData.append("file", selectedFile);
@@ -42,10 +45,12 @@ function DropzoneComponent({ chatbotId }: { chatbotId: string }) {
       const result = await response;
       const data = await result.json();
       mutate();
-      if (data?.completed) {
-        router.push(`/edit-chatbot/${chatbotId}`);
-      }
+
+      // if (data?.completed) {
+      //   router.push(`/edit-chatbot/${chatbotId}`);
+      // }
       handleNewPdfUpload();
+      return data;
     });
   };
 

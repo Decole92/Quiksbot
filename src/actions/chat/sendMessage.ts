@@ -112,11 +112,12 @@ export const sendMessage = async (
       .join(" + ");
 
     //console.log("this is systemPromptData", systemCharacteristicData);
+    const person = !name ? "an anonymous" : name;
 
     let AIContent = "";
 
-    if (chatbot?.getDetails && chatbot?.botType === "SalesBot") {
-      AIContent = `You are a helpful AI assistant engaging with user ${name}. Your primary focus is on the following key information: ${systemCharacteristicData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
+    if (chatbot?.botType === "SalesBot") {
+      AIContent = `You are a helpful AI assistant engaging with ${person} user. Your primary focus is on the following key information: ${systemCharacteristicData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
       If a user's query falls within your specified content areas:
        - Respond helpfully based on your knowledge.
        - Do not add the "(realtime)" keyword to your response.
@@ -137,26 +138,13 @@ export const sendMessage = async (
        - Acknowledge their decision: "I understand. A human agent will continue this conversation shortly. (realtime)"
        
        Always prioritize user privacy and data protection. Be helpful within your defined scope, and gracefully hand off to human support when necessary.`;
-
-      // AIContent = `You are a helpful assistant talking to ${name}. If a generic question is asked which is not relevant or in the same scope or domain as the points in mentioned in the key information section, kindly inform the user they are only allowed to search for the specified content . use Emoji's where possible be respectful. Here is somekey information that you need to be aware of, there are the elements you may be asked about: ${systemCharacteristicData}, ${formattedRelevantDocs}, but if the customer says something out of context or inapporpriate. Simply say this is beyond you and you will get a real user to continue the conversation and add a keyword (realtime) at the end.`;
     } else if (chatbot?.botType === "ChatPdf") {
-      // AIContent = `Given the above conversation, generate a serach query to look up inorder to get information relevant to the conversation`
-      // AIContent = `Answer users questions based on the contexts:  ${systemCharacteristicData}, ${formattedRelevantDocs}`;
       AIContent = `I can help you with information extracted from our available documents. My responses will be based on these key contexts: ${systemCharacteristicData}, along with relevant document details: ${formattedRelevantDocs}. Please focus your questions on the content of these documents, and I'll do my best to provide accurate answers!.`;
     } else if (chatbot?.prompt && chatbot?.botType === "Custom") {
-      // AIContent = `You have some customized questions ${chatbot?.prompt}  regarding this ${systemCharacteristicData}, ${formattedRelevantDocs} `;
       AIContent = `You have access to customized information tailored to your specific needs. You can ask me questions about the following topics: ${systemCharacteristicData}, and I can also assist you with information from these documents: ${formattedRelevantDocs}. Additionally, you have some custom queries or scenarios provided, which are: ${chatbot?.prompt}. Please keep your questions within this framework for the most relevant responses. If a question is outside this scope, I will escalate it to a real user to continue the conversation and add a keyword (realtime) at the end.`;
-    } else if (!chatbot?.getDetails && chatbot?.botType === "SalesBot") {
-      //   AIContent = `You are a helpful assistant speaking with an anonymous user. If a user asks a question that is outside the topics you're trained to cover, politely inform them that they are limited to the specified content. Stay respectful, friendly, and use emojis where appropriate 😊.
-
-      //     Here is the key information you should be focusing on: ${systemCharacteristicData}, ${formattedRelevantDocs}. If the user asks something off-topic or inappropriate, kindly explain that the query is beyond your scope, and let them know a real person will assist them shortly.
-
-      //     Before proceeding, if they have not provided their email address yet ask if they would like to provide their email address so that we can follow up with a human agent. For example, you could say: 'It seems your question is beyond my expertise. I can connect you with a human assistant. Could you please provide your email address so we can get back to you? and don't forget to add a keyword (realtime) at the end.
-
-      //     If they provide their email, confirm it politely. If they refuse, simply acknowledge and inform them that a human agent will continue the conversation shortly and don't forget to add a keyword (realtime) at the end. `;
-
+    } else {
       AIContent = `You are a helpful AI assistant engaging with an anonymous user. Your primary focus is on the following key information: ${systemCharacteristicData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
-   If a user's query falls within your specified content areas:
+     If a user's query falls within your specified content areas:
     - Respond helpfully based on your knowledge.
     - Do not add the "(realtime)" keyword to your response.
     

@@ -55,21 +55,42 @@ function EditPage({ params: { id } }: { params: { id: string } }) {
   }
 
   if (!data) {
-    return null; // This will prevent rendering the rest of the component while redirecting
+    return null;
   }
 
   return (
     <div className='mt-20 h-full space-y-12 w-full md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5'>
       <SideHeader data={data} />
-      <Link
-        target='_blank'
-        href={`${BASE_URL}/chatbot/${data.id} `}
-        className='flex w-full items-end justify-end'
-      >
-        <Button className='gap-2 text-gray-100 dark:text-gray-200 bg-black/50 flex items-center w-full md:max-w-[150px] lg:w-[150px] dark:bg-gray-900  hover:bg-[#E1B177]  dark:hover:bg-[#E1B177] '>
-          <BotMessageSquare /> <h3>Playground</h3>
+
+      {data?.Source &&
+      (data.Source.characteristic.length > 0 ||
+        data?.Source.pdfFile.length > 0) ? (
+        <Link
+          target='_blank'
+          href={`${BASE_URL}/chatbot/${data.id} `}
+          className='flex w-full items-end justify-end'
+        >
+          <div className='p-[2px] flex md:max-w-[180px] lg:max-w-[180px] w-full mx-5 bg-gradient-to-r from-gray-500 via-[#FFD700] to-[#E1B177] rounded-lg items-center'>
+            <Button className='px-8 py-2 bg-gray-100 hover:text-gray-100 hover:bg-gray-200/70 dark:bg-gray-950  dark:hover:bg-gray-900 dark:hover:text-gray-200 text-gray-900 dark:text-gray-400 font-semibold rounded-md transition-all duration-300 ease-in-out w-full'>
+              <BotMessageSquare className='w-6 h-6 mr-2' />
+              Playground
+            </Button>
+          </div>
+
+          {/* <Button className='hover:bg-[] text-gray-100 dark:text-gray-200 bg-black/50 md:max-w-[150px] lg:max-w-[150px] w-full mx-5  font-semibold py-2 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-opacity-50'>
+            <BotMessageSquare className='w-5 h-5 mr-2' />
+            Playground
+          </Button> */}
+        </Link>
+      ) : (
+        <Button
+          disabled
+          variant={"ghost"}
+          className='flex w-full  mx-5  md:flex-row items-center justify-center text-red-500  ml-auto md:max-w-[150px] lg:w-[150px] dark:bg-gray-900  hover:bg-[#E1B177]  dark:hover:bg-[#E1B177]'
+        >
+          Not Trained yet
         </Button>
-      </Link>
+      )}
       <div className='flex items-center justify-between border-b '>
         <div className='flex w-full justify-evenly'>
           <Button

@@ -84,11 +84,17 @@ async function Dashboard() {
                 </p>
 
                 <hr className='mt-2' />
-                {chatbot?.Source?.length > 0 ? (
+                {chatbot?.Source &&
+                (chatbot?.Source.characteristic.length > 0 ||
+                  chatbot?.Source.pdfFile.length > 0) ? (
                   <h5 className='pb-0 px-4 pt-4 text-[#E1B177] italic'>
                     trained
                   </h5>
-                ) : null}
+                ) : (
+                  <h5 className='pb-0 px-4 pt-4 text-red-500 italic'>
+                    Not trained yet
+                  </h5>
+                )}
 
                 <div className='p-4 space-y-4'>
                   <div className='flex items-center text-sm justify-between w-full  '>

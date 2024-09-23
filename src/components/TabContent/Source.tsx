@@ -15,9 +15,10 @@ function Source({ chatbotId }: { chatbotId: string }) {
   const { isOverFileLimit, handleNewPdfUpload } = useSubcription();
   const [isPending, startTransition] = useTransition();
   const { data: chatbot, mutate } = useSWR(
-    chatbotId ? `/api/getBot${chatbotId}` : null,
+    chatbotId ? `/api/getBot/${chatbotId}` : null,
     chatbotId ? async () => getBot(chatbotId) : null
   );
+
   const [characteristic, setCharacteristic] = useState("");
 
   const handleAddCharacteristics = async (e: React.FormEvent) => {
@@ -89,6 +90,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
                   <Characteristic
                     key={characteristic?.id}
                     characteristic={characteristic}
+                    chatbotId={chatbotId}
                     type='characteristic'
                   />
                 ))}

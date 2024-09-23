@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import bot3d from "../../public/bot3d.png";
 import screenshot from "../../public/screenshot.png";
+
 import { features, plans } from "../../constant/Features";
 
 export default function Home() {
@@ -42,7 +43,7 @@ export default function Home() {
                 {/* below button */}
                 <div className='flex items-center gap-5 mt-5 md:mt-7 lg:mt-12'>
                   <Link href='/dashboard'>
-                    <Button className='bg-gray-900 dark:text-gray-400 dark:bg-gray-900 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
+                    <Button className='bg-gray-950 dark:text-gray-400 dark:bg-gray-950 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
                       Get Started
                     </Button>
                   </Link>
@@ -84,13 +85,31 @@ export default function Home() {
 
           <div className='relative overflow-hidden pt-16'>
             <div className='mx-auto max-w-7xl px-6 lg:px-8'>
-              <Image
+              {/* <Image
                 src={screenshot}
                 alt='screenshot'
                 width={2432}
                 height={1442}
                 className='mb-[-0%] rounded-xl shadow-2xl right-1 ring-gray-900/10 dark:shadow-gray-900'
-              />
+              /> */}
+
+              <video
+                autoPlay
+                loop
+                playsInline
+                muted
+                no-control
+                className='mb-[-0%] rounded-xl shadow-2xl right-1 ring-gray-900/10 dark:shadow-gray-900'
+                width={2432}
+                height={1442}
+              >
+                <source
+                  src='https://firebasestorage.googleapis.com/v0/b/skybluelounge-aa327.appspot.com/o/users%2Fuser123%2Fvideo%2FLAPtRQ8Ldnj1xIb1bVWO?alt=media&token=9f454d44-4a78-491e-83a2-1d125adc0a08
+                  '
+                  type='video/mp4'
+                />
+                Your browser does not support the video tag.
+              </video>
               <div aria-hidden='true' className='relative'>
                 <div className='absolute bg-gradient-to-t from-gray-100/15  dark:from-gray-400/15 pt-[5%] -inset-32 bottom-0' />
               </div>

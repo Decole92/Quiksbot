@@ -73,7 +73,7 @@ function Mainheader() {
             Pricing
           </Link>
           <Link href='/dashboard'>
-            <Button className='hidden sm:inline-block bg-gray-900 dark:text-gray-400 dark:bg-gray-900 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
+            <Button className='hidden sm:inline-block bg-gray-950 dark:text-gray-400 dark:bg-gray-950 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
               Get started
             </Button>
           </Link>

@@ -227,6 +227,7 @@ function General({ chatbot }: { chatbot: any }) {
                       key={question.id}
                       question={question}
                       type='suggestion'
+                      chatbotId={chatbot?.id!}
                     />
                   ))}
                 </ul>
