@@ -74,21 +74,13 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
   );
   const handleInformationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("userDetails", userDetails, id);
 
-    try {
-      const response = await axios.get("/api/getlocation");
-      console.log("country", response.data.country);
-    } catch (err) {
-      console.log("error while getting location", err);
-    }
     startTransition(async () => {
       const chatRoomId = await startNewChat({ userDetails, id });
       setChatId(chatRoomId!);
       setIsOpen(false);
       setFormStatus(true);
     });
-    console.log("formStatus from startautomatically", formStatus);
   };
 
   useEffect(() => {
@@ -106,15 +98,13 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
 
   useEffect(() => {
     setIsOpen(bot?.getDetails!);
-    console.log("this is isOpen");
   }, [id, bot]);
 
   useEffect(() => {
     if (!chatRoom?.live) return;
     const channel = clientPusher.subscribe("message");
     channel.bind("realtime", async (data: ChatMessage) => {
-      if (chatMessages?.some((message: any) => message.id === data.id)) return;
-
+      if (chatMessages?.find((message: any) => message.id === data.id)) return;
       if (!chatMessages) {
         await mutate(getChatMessages(chatId));
       } else {
@@ -202,12 +192,14 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
           </div>
 
           <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900'>
-            <SuggestItems
-              firstQuestion={bot?.firstQuestion as any}
-              userDetails={userDetails}
-              chatbot={bot!}
-              chatId={chatId!}
-            />
+            {!chatRoom?.live && (
+              <SuggestItems
+                firstQuestion={bot?.firstQuestion as any}
+                userDetails={userDetails}
+                chatbot={bot!}
+                chatId={chatId!}
+              />
+            )}
             <ChatbotInput
               userDetails={userDetails}
               chatRoomId={chatId}

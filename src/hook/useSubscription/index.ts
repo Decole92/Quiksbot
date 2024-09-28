@@ -33,7 +33,7 @@ function useSubcription() {
       setLoading(true);
       const files: number | undefined = await getUserPdfFiles(user.id);
       const credits: number | null | undefined = await getUserCredits(user.id);
-      console.log("User PDF files:", files);
+      // console.log("User PDF files:", files);
 
       const limit =
         hasActiveMembership === "STANDARD"
@@ -42,7 +42,7 @@ function useSubcription() {
           ? PRO_LIMIT
           : ULTIMATE_LIMIT;
 
-      console.log("Calculated limit:", limit);
+      // console.log("Calculated limit:", limit);
       setUsersLimit(limit);
       setTotalCredits(STANDARD_CREDITS);
 

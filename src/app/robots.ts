@@ -6,8 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
+
         allow: "/",
-        disallow: "/chatbot/",
+        disallow: ["/chatbot/", "/edit-chatbot/", "/settings", "/chatlogs/"],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,

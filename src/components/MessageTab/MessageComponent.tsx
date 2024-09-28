@@ -7,22 +7,31 @@ import { useUser } from "@clerk/nextjs";
 import { getAllActiveChats, getUserCustomers } from "@/actions/customer";
 import { transformData } from "@/lib/transformData";
 import { ScrollArea } from "../ui/scroll-area";
-// md:max-h-[800px] lg:max-h-[800px] md:min-h-[800px] lg:min-h-[800px]
-function MessageComponent({ data }: { data: any[] }) {
-  // const { user } = useUser();
 
+function MessageComponent({ data }: { data: any[] }) {
+  const liveChatRooms = data?.filter((customer: any) =>
+    customer.chatRoom.some((chatRoom: any) => chatRoom.live)
+  );
   return (
-    <ScrollArea className='h-[calc(100vh-120px)] p-4'>
-      {data && data?.length > 0 ? (
-        <div>
-          {data?.map((customer: any) => (
-            <ChatCard key={customer?.chatRoom[0]?.id} customer={customer} />
-          ))}
-        </div>
-      ) : (
-        "There is no active lead customer yet!!"
-      )}
-    </ScrollArea>
+    <>
+      <ScrollArea className='lg:h-[calc(100vh-230px)] md:h-[calc(100vh-230px)] h-full p-2'>
+        {data && data?.length > 0 ? (
+          <div>
+            {data?.map((customer: any) => (
+              <ChatCard
+                key={customer?.chatRoom[0]?.id}
+                customer={customer}
+                isLive={customer.chatRoom.some(
+                  (chatRoom: any) => chatRoom.live
+                )}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className='text-center'>There is no active lead customer yet.</p>
+        )}
+      </ScrollArea>
+    </>
   );
 }
 

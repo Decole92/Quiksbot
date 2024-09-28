@@ -76,12 +76,6 @@ const ChatBot: React.FC = () => {
 
   const handleInformationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await axios.get("/api/getlocation");
-      console.log("Country:", response.data.country);
-    } catch (err) {
-      console.error("Error while getting location:", err);
-    }
     startTransition(async () => {
       const chatRoomId = await startNewChat({ userDetails, id: botId });
       setChatId(chatRoomId!);
@@ -100,7 +94,8 @@ const ChatBot: React.FC = () => {
     if (!chatRoom?.live) return;
     const channel = clientPusher.subscribe("message");
     channel.bind("realtime", async (data: ChatMessage) => {
-      if (chatMessages?.some((message: any) => message.id === data.id)) return;
+      if (chatMessages?.find((message: any) => message.id === data.id)) return;
+
       if (!chatMessages) {
         await mutate(getChatMessages(chatId));
       } else {
@@ -129,9 +124,12 @@ const ChatBot: React.FC = () => {
 
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
-      if (typeof e.data === "string") {
+      if (typeof e.data === "string" && e.data.trim() !== "") {
         setBotId(e.data);
       }
+      //  else {
+      //   console.warn("Received invalid message data:", e.data);
+      // }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
@@ -168,11 +166,6 @@ const ChatBot: React.FC = () => {
       className={`fixed bottom-2 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
-      {/* <div
-    //   className='z-50 fixed bottom-3 right-2 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end'
-
-       // className='fixed bottom-3 right-3 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end  '
-     > */}
       {botOpened && (
         <div className='mb-2 w-full max-w-[350px] h-[100vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
@@ -184,12 +177,14 @@ const ChatBot: React.FC = () => {
             />
           </div>
           <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900 '>
-            <SuggestItems
-              firstQuestion={bot?.firstQuestion as any}
-              userDetails={userDetails}
-              chatbot={bot!}
-              chatId={chatId!}
-            />
+            {!chatRoom?.live && (
+              <SuggestItems
+                firstQuestion={bot?.firstQuestion as any}
+                userDetails={userDetails}
+                chatbot={bot!}
+                chatId={chatId!}
+              />
+            )}
 
             <ChatbotInput
               userDetails={userDetails}

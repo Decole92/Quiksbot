@@ -207,7 +207,7 @@ export const sendMessage = async (
           seen: true,
         },
       });
-
+      console.log("this is id", newMessage.id);
       // Trigger serverPusher for real-time updates
       serverPusher.trigger("message", "realtime", {
         id: newMessage.id,

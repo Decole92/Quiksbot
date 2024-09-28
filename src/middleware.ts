@@ -24,16 +24,26 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhook",
 ]);
 
+// Function to check if the request is from a crawler
+function isCrawler(request: NextRequest) {
+  const userAgent = request.headers.get("user-agent") || "";
+  return /bot|crawler|spider|crawling/i.test(userAgent);
+}
+
 // Custom middleware function
 async function middleware(request: NextRequest, event: any) {
   const { pathname } = request.nextUrl;
 
-  // Bypass Clerk for chatbot routes
   if (pathname.startsWith("/chatbot")) {
     const response = NextResponse.next();
     response.headers.set("Content-Security-Policy", "frame-ancestors 'self' *");
     response.headers.set("X-Frame-Options", "SAMEORIGIN");
     return response;
+  }
+
+  // Allow crawlers to access all routes
+  if (isCrawler(request)) {
+    return NextResponse.next();
   }
 
   return clerkMiddleware((auth) => {
@@ -42,7 +52,7 @@ async function middleware(request: NextRequest, event: any) {
     } else if (!isPublicRoute(request)) {
       auth().protect();
     }
-  })(request, event); // Pass both `request` and `event` here
+  })(request, event);
 }
 
 export default middleware;

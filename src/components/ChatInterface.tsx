@@ -36,11 +36,14 @@ import {
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 
 function ChatInterface() {
   const [openModel, setOpenModel] = useState(false);
   const [isDeleting, startDeleting] = useTransition();
   const { user } = useUser();
+  const pathname = usePathname();
+  const router = useRouter();
   const [selectedChatRoomId, setSelectedChatRoomId] = useGlobalStore(
     (state) => [state.selectedChatRoomId, state.setSelectedChatRoomId]
   );
@@ -49,13 +52,14 @@ function ChatInterface() {
       ? await getChatMessages(selectedChatRoomId)
       : null
   );
+
   const {
     data: chatRoom,
     error: chatRoomError,
     mutate: setChatRoom,
     isLoading: loadingRoom,
   } = useSWR(
-    selectedChatRoomId ? `/api/chatRoom/${selectedChatRoomId}` : null,
+    selectedChatRoomId ? `/getChatRoom/${selectedChatRoomId}` : null,
     () => getChatRoom(selectedChatRoomId!)
   );
 
@@ -102,6 +106,7 @@ function ChatInterface() {
         await getAll(getUserCustomers(user?.id!));
       }
     });
+
     setSelectedChatRoomId("");
   };
 
@@ -147,7 +152,20 @@ function ChatInterface() {
     const channel = clientPusher.subscribe("message");
 
     channel.bind("realtime", async (data: ChatMessage) => {
-      if (chatMessages?.some((message: any) => message.id === data.id)) return;
+      console.log(
+        "chatmessage ids",
+        chatMessages?.map((chat) => chat?.id)
+      );
+      console.log("realtime data", data.id);
+
+      if (
+        chatMessages?.find(
+          (message: any) => message.id === Date.now().toString()
+        )
+      ) {
+        console.log("Message already exists, skipping");
+        return;
+      }
 
       if (!chatRoom?.message) {
         await mutate(getChatMessages(selectedChatRoomId!));
@@ -215,7 +233,7 @@ function ChatInterface() {
         <div className='border rounded-md w-full bg-white flex flex-col md:max-h-screen h-full relative dark:bg-gray-900'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
 
-          <ScrollArea className='h-[calc(100vh-300px)] p-5 '>
+          <ScrollArea className='h-[calc(100vh-400px)] p-0 '>
             {hasMessages ? (
               <ChatbotMessages
                 chatbot={bot as ChatBot}
@@ -229,7 +247,7 @@ function ChatInterface() {
           </ScrollArea>
           <div className=' bg-white w-full dark:bg-gray-900 dark:text-gray-400 '>
             {!chatRoom?.live ? (
-              <div className='p-5 text-center m-5 '>
+              <div className='p-5 text-center'>
                 <Separator className='mb-5' />
                 <h5>
                   {" "}
@@ -275,8 +293,8 @@ function ChatInterface() {
   }
 
   return (
-    <div className='h-full flex items-center justify-center'>
-      <p className='text-muted-foreground'>
+    <div className='h-full flex items-center justify-center '>
+      <p className='text-muted-foreground '>
         Select a chat to view the message.
       </p>
     </div>

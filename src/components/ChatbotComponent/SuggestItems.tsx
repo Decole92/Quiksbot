@@ -108,7 +108,7 @@ Props) {
           chatbot,
           "user"
         );
-        console.log("Message sent:", result);
+        // console.log("Message sent:", result);
 
         mutate(getChatMessages(chatId), {
           optimisticData: (messages: any) =>

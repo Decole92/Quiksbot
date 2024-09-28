@@ -63,7 +63,7 @@ export const plans = [
       "Use Custom OpenAI API Keys",
       "Customize AI Prompts",
       "Download Chatlogs",
-      "Notification when potential customers transition to live mode",
+      "Notify when customers switch to live mode.",
     ],
     buttonText: "Upgrade to Ultimate",
     buttonLink: "#",

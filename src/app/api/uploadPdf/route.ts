@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     include: { subscription: true },
   });
 
-  console.log("This is the user:", user);
+  // console.log("This is the user:", user);
 
   // Set the upload limit based on the user's subscription plan
   const limit =
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       ? PRO_LIMIT
       : ULTIMATE_LIMIT;
 
-  console.log("This is usersFiles & limit:", userFiles, limit);
+  // console.log("This is usersFiles & limit:", userFiles, limit);
 
   // Check if userFiles is a valid number and within the allowed limit
   if (typeof userFiles === "number") {
@@ -73,8 +73,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 
-    console.log("Chatbot ID:", chatbotId);
-    console.log("File:", file);
+    // console.log("Chatbot ID:", chatbotId);
+    // console.log("File:", file);
 
     // Convert the file to a buffer for storing as Bytes in Prisma
     const fileBuffer = await file.arrayBuffer();
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
       fileId = newPdf?.id;
     }
 
-    console.log("fileId", fileId);
+    // console.log("fileId", fileId);
     const generateEmbeddings = async () => {
       await generateEmbeddingsInPineconeVectorStore(file, fileId);
     };

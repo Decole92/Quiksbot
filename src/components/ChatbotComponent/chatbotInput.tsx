@@ -1,15 +1,10 @@
 import React, { useEffect, useState, useTransition } from "react";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Send } from "lucide-react";
 import { useGlobalStore } from "@/store/globalStore";
 import useSWR from "swr";
 import { getChatMessages, getChatRoom } from "@/actions/chat";
-import { getBot } from "@/actions/bot";
-import axios from "axios";
-import { useUser } from "@clerk/nextjs";
 import type { ChatBot, ChatMessage, botType } from "@prisma/client";
-import useSubcription from "@/hook/useSubscription";
 import { sendMessage } from "@/actions/chat/sendMessage";
 
 function ChatbotInput({
@@ -50,10 +45,10 @@ function ChatbotInput({
 
   const handleAskQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("formStatus", formStatus);
+    // console.log("formStatus", formStatus);
     if (!formStatus && chatbot?.getDetails) {
       setIsOpen(true);
-      console.log("isOpen from first if", isOpen);
+      // console.log("isOpen from first if", isOpen);
       return;
     }
     const passedMessage = message;
@@ -92,7 +87,7 @@ function ChatbotInput({
       });
     } else {
       mutate(getChatMessages(chatRoomId), {
-        optimisticData: [...(chatMessages as ChatMessage[]), userMessage],
+        optimisticData: [...(chatMessages ? chatMessages : []), userMessage],
         rollbackOnError: true,
         populateCache: false,
         revalidate: false,
@@ -107,19 +102,21 @@ function ChatbotInput({
           chatbot,
           type === "assistant" ? "ai" : name
         );
-        console.log("Message sent:", result);
+        // console.log("Message sent:", result);
 
         mutate(getChatMessages(chatRoomId), {
           optimisticData: (messages: any) =>
             messages!.map((msg: ChatMessage) =>
               msg?.id === loadingMessage?.id
                 ? { ...msg, message: result?.message!, id: result?.id! }
+                : msg?.id === userMessage?.id
+                ? { ...msg, message: result?.message!, id: result?.id! }
                 : msg
             ),
-          populateCache: true, // Ensure that the cache is updated with the final result
-          revalidate: false, // Prevent additional revalidation since we handle the update here
+          populateCache: false,
+          revalidate: false,
         });
-        // setBot(getBot(chatbot?.id));
+
         setChatRoom(getChatRoom(chatRoomId));
       } catch (error) {
         console.error("Error sending message:", error);
@@ -146,9 +143,9 @@ function ChatbotInput({
         <Button
           disabled={isPending || !message || isCheck}
           type='submit'
-          className={`p-2 bg-transparent rounded-md group hover:bg-{} dark:text-gray-950 dark:hover:bg-[${chatbot?.userMessageBgColor}] hover:bg-[${chatbot?.userMessageBgColor}]`}
+          className={`p-2 dark:bg-gray-950  bg-gray-200 shadow-lg shadow-gray-300 dark:shadow-gray-700 rounded-md group dark:text-gray-400 dark:hover:bg-[${chatbot?.userMessageBgColor}] hover:bg-[${chatbot?.userMessageBgColor}]`}
         >
-          <Send className='text-black group-hover:text-white' />
+          <Send className='text-black group-hover:text-white dark:text-gray-400 ' />
         </Button>
       </form>
     </div>

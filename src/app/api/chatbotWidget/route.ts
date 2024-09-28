@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
             .chat-frame {
               position: fixed;
               bottom: 10px;
-              \${position}: \${position === "center" ? "50%" : "10px"}; 
+              \${position}: \${position === "center" ? "50%" : "10px"};
               \${position === "center" ? "transform: translateX(50%);" : ""}
               border: none;
               width: 80px;
@@ -63,8 +63,9 @@ export async function GET(req: NextRequest) {
           chatFrame.classList.add("chat-frame");
           document.body.appendChild(chatFrame);
 
-          window.addEventListener("message", (e) => {
+          const handleMessage = (e) => {
             if (e.origin !== new URL(chatbotUrl).origin) return;
+           
 
             try {
               const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
@@ -74,11 +75,15 @@ export async function GET(req: NextRequest) {
                 chatFrame.style.height = \`\${data.height}px\`;
               }
 
-              chatFrame.contentWindow.postMessage(id, chatbotUrl);
+              if (chatFrame && chatFrame.contentWindow) {
+                chatFrame.contentWindow.postMessage(id, chatbotUrl);
+              }
             } catch (error) {
               console.error("Error processing message data:", error);
             }
-          });
+          };
+
+          window.addEventListener("message", handleMessage);
         };
 
         const removeChatbotIframe = () => {

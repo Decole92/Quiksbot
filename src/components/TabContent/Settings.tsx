@@ -90,7 +90,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
       try {
         const response = await fetch("/api/getModel");
         const data = await response.json();
-        console.log("this is data", data?.modelOptions);
+        // console.log("this is data", data?.modelOptions);
         setModels(data?.modelOptions);
       } catch (error) {
         console.error("Error fetching models:", error);
@@ -98,7 +98,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
     };
 
     fetchModels();
-    console.log("this is model", models);
+    // console.log("this is model", models);
   }, [chatbot, hasActiveMembership]);
 
   return (

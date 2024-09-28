@@ -73,7 +73,6 @@ const ConversationMenu = () => {
       </div>
     );
   }
-  console.log("allcustomer data", allUserCustomers);
 
   const filteredData =
     activeTab === "expired" ? filteredCustomers : filteredChats;

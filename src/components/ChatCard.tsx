@@ -1,17 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardContent, CardDescription } from "./ui/card";
 import Avatar from "./Avatar";
-import { Chat } from "openai/resources/beta/chat/chat.mjs";
+
 import Image from "next/image";
-import { toast } from "sonner";
-import { viewMessage } from "@/actions/customer";
+
 import { useGlobalStore } from "@/store/globalStore";
-import { getBot } from "@/actions/bot";
-import UrgentIcon from "../../constant/icons/urgentIcon";
-import useSWR, { mutate } from "swr";
-import { getChatRoom } from "@/actions/chat";
+
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type ChatMessage = {
   id: string;
@@ -23,6 +20,7 @@ type ChatRoomEntry = {
   message: ChatMessage[];
   createdAt: string;
   id: string;
+  live: boolean;
 };
 
 type Customer = {
@@ -33,9 +31,10 @@ type Customer = {
 
 type Props = {
   customer: Customer;
+  isLive: boolean;
 };
 
-const ChatCard = ({ customer }: Props) => {
+const ChatCard = ({ customer, isLive }: Props) => {
   const [selectedChatRoomId, setSelectedChatRoomId] = useGlobalStore(
     (state) => [state?.selectedChatRoomId, state.setSelectedChatRoomId]
   );
@@ -51,22 +50,8 @@ const ChatCard = ({ customer }: Props) => {
       console.error("Chatbot ID is not available.");
       return;
     }
-
     setSelectedChatRoomId(id!);
   };
-  const handleNextScreen = async (id: string) => {
-    if (!id) {
-      console.error("Chatbot ID is not available.");
-      return;
-    }
-
-    setSelectedChatRoomId(id!);
-    router.push("/view-chatmessage");
-  };
-  const { data: chatRoom } = useSWR(
-    selectedChatRoomId ? `/api/chatRoom/${selectedChatRoomId}` : null,
-    () => getChatRoom(selectedChatRoomId!)
-  );
 
   return (
     <>
@@ -97,7 +82,7 @@ const ChatCard = ({ customer }: Props) => {
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2 text-sm font-medium py-1'>
               <div> {customer?.name}</div>
-              {chatRoom?.live && (
+              {isLive && (
                 <div className='bg-primary px-2 py-0.5 rounded-full text-primary-foreground text-xs font-medium'>
                   Active
                 </div>
@@ -112,48 +97,51 @@ const ChatCard = ({ customer }: Props) => {
           </div>
         </div>
       </Card>
-      <Card
-        // className='group flex flex-row gap-4 p-4 rounded-lg hover:bg-muted transition-colors'
-        className={`mb-4 md:hidden w-full lg:hidden inline-flex group  flex-row items-center  gap-4 cursor-pointer rounded-lg border p-7 transition-all hover:bg-gray-100 relative ${
-          selectedChatRoomId === id
-            ? "bg-gray-100 dark:bg-gray-900  "
-            : "bg-white dark:bg-gray-950"
-        }`}
-        onClick={() => handleNextScreen(id)}
-      >
-        {/* Bot Icon or Avatar on the left */}
-        <div className='flex-shrink-0'>
-          {customer?.botIcon ? (
-            <Image
-              src={customer?.botIcon}
-              alt='chatbotIcon'
-              width={100}
-              height={100}
-              className='rounded-full h-16 w-16'
-            />
-          ) : (
-            <Avatar seed={customer?.name} className='h-16 w-16' />
-          )}
-        </div>
-        <div className='flex flex-col flex-1 gap-1'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-2 text-sm font-medium py-1'>
-              <div> {customer?.name}</div>
-              {chatRoom?.live ? (
-                <div className='bg-primary px-2 py-0.5 rounded-full text-primary-foreground text-xs font-medium'>
-                  Active
-                </div>
-              ) : null}
+
+      <Link href={`/chatlogs/${id}`}>
+        <Card
+          // className='group flex flex-row gap-4 p-4 rounded-lg hover:bg-muted transition-colors'
+          className={`mb-4 md:hidden w-full lg:hidden inline-flex group  flex-row items-center  gap-4 cursor-pointer rounded-lg border p-7 transition-all hover:bg-gray-100 relative ${
+            selectedChatRoomId === id
+              ? "bg-gray-100 dark:bg-gray-900  "
+              : "bg-white dark:bg-gray-950"
+          }`}
+        >
+          {/* Bot Icon or Avatar on the left */}
+          <div className='flex-shrink-0'>
+            {customer?.botIcon ? (
+              <Image
+                src={customer?.botIcon}
+                alt='chatbotIcon'
+                width={100}
+                height={100}
+                className='rounded-full h-16 w-16'
+              />
+            ) : (
+              <Avatar seed={customer?.name} className='h-16 w-16' />
+            )}
+          </div>
+          <div className='flex flex-col flex-1 gap-1'>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center gap-2 text-sm font-medium py-1 '>
+                <div> {customer?.name}</div>
+
+                {isLive && (
+                  <div className='bg-primary px-2 py-0.5 rounded-full text-primary-foreground text-xs font-medium'>
+                    Active
+                  </div>
+                )}
+              </div>
+              <div className='text-xs text-muted-foreground absolute top-2 right-2'>
+                {new Date(lastChatRoomEntry?.createdAt).toLocaleString()}
+              </div>
             </div>
-            <div className='text-xs text-muted-foreground absolute top-2 right-2'>
-              {new Date(lastChatRoomEntry?.createdAt).toLocaleString()}
+            <div className='text-sm text-muted-foreground line-clamp-2'>
+              {lastMessage ? `${lastMessage}` : "No messages yet"}
             </div>
           </div>
-          <div className='text-sm text-muted-foreground line-clamp-2'>
-            {lastMessage ? `${lastMessage}` : "No messages yet"}
-          </div>
-        </div>
-      </Card>
+        </Card>
+      </Link>
     </>
   );
 };

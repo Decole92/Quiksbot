@@ -12,12 +12,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export async function generateMetadata() {
   return {
-    title:
-      "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot",
+    title: "AI Chatbot for websites | Chat with Pdf File | Quiksbot",
     description:
-      "Explore how AI chatbots can boost sales and enhance customer service. Learn about chatbot embedding, advanced analytics, and integrating with OpenAI API. Quiksbot offers features for lead generation, PDF interactions, and exporting chat logs. Perfect for websites looking to improve engagement and manage customer data efficiently.",
+      "Explore how AI chatbots can boost sales and enhance customer service. Learn about chatbot embedding, advanced analytics, and integrating with OpenAI API. Quiksbot offers features for lead generation, PDF interactions(chatting with your Pdf File), and exporting chat logs. Perfect for websites looking to improve engagement and manage customer data efficiently.",
     keywords:
-      "AI chatbot, SalesBot, website chatbot, lead generation, chatbot analytics, OpenAI API, PDF interaction, chatbot integration, customer service chatbot, chat log export",
+      "ai chatbot, chat with pdf, chatbot analytics, PDF interaction, chatbot integration, customer service chatbot, chat ai online, user experience, machine learning, natural language, LLM, openai chat",
 
     icons: {
       icon: ["/favicon.ico?v=4"],
@@ -46,7 +45,7 @@ export default async function RootLayout({
   const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
   const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTIC;
   return (
-    <ClerkProvider publishableKey={publishableKey}>
+    <ClerkProvider>
       <html lang='en'>
         <body className={`${inter.className} bg-transparent `}>
           <link rel='icon' href='/favicon.ico' sizes='any' />

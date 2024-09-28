@@ -70,7 +70,7 @@ export default function ChatbotHeader({
           </div>
 
           <span className='text-sm font-medium text-muted-foreground'>
-            live
+            LIVE
           </span>
         </div>
       ) : null}

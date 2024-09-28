@@ -11,18 +11,17 @@ import ConfettiComponent from "@/components/thanks";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "AI Chatbot for Websites | Engage Leads with AI-Powered SalesBot | Quiksbot | Dashboard",
+  title: "Quiksbot | Dashboard",
   description:
     "Discover how AI chatbots can boost sales, streamline customer service, and improve user engagement. Manage and track chatbot performance directly from your Quiksbot dashboard. Easily embed AI-powered chatbots on your website, monitor chatbot analytics, and customize your bot with OpenAI API integration. Quiksbot offers lead generation SalesBots, PDF interaction, and the ability to export chat logs in CSV or PDF formats for detailed insights and data management.",
   keywords:
-    "AI chatbot dashboard, customizable AI chatbot, chatbot analytics, lead generation chatbot, website chatbot integration, customer service chatbot, OpenAI API chatbot, chatbot data export, PDF chatbot interaction, export chat logs, CSV chat export, business automation chatbot, chatbot for sales, AI chatbot for customer service, AI-powered SalesBot, Quiksbot chatbot solutions, chatbot performance tracking, chatbot data management",
+    "ai chatbot dashboard, customizable AI chatbot, chatbot analytics, lead generation chatbot, website chatbot integration, customer service chatbot, OpenAI API chatbot, openai chat, PDF chatbot interaction, export chatbot data, pdf chat export, business automation chatbot, chatbot for sales, AI chatbot for customer service, AI-powered SalesBot, Quiksbot chatbot solutions, chatbot performance tracking, chatbot data management, user experience, machine learning, natural language",
 };
 
 export const dynamic = "force-dynamic";
 
 async function Dashboard() {
-  const { userId } = await auth();
+  const { userId } = auth();
   if (!userId) return;
 
   const chatbots: any = userId && (await getChatBotByUser(userId));
@@ -36,7 +35,7 @@ async function Dashboard() {
   return (
     <div className='mt-14  w-full md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-5 '>
       <ConfettiComponent />
-      <div className='flex justify-between items-center mb-5 md:mt-5 p-5  shadow-md shadow-white w-full dark:shadow-gray-900'>
+      <div className='flex justify-between items-center mb-5 md:mt-5 p-5 shadow-md  shadow-gray-100 w-full dark:shadow-gray-900 '>
         <h1 className='text-xl lg:text-3xl font-thin text-[#E1B177]'>
           Chatbots List
         </h1>
@@ -55,14 +54,14 @@ async function Dashboard() {
           </p>
         </div>
       )}
-      <ul className='grid md:grid-cols-2 grid-cols-1 gap-5'>
+      <ul className='grid md:grid-cols-2 grid-cols-1 gap-5 '>
         {sortedBots?.map((chatbot: any) => (
           <Link
             className='dark:bg-gray-900'
             key={chatbot?.id}
             href={`/edit-chatbot/${chatbot?.id}`}
           >
-            <li className='relative md:p-10 p-5  border rounded-md max-w-2xl dark:bg-gray-900 bg-white dark:text-gray-400 '>
+            <li className='relative md:p-10 p-5  border rounded-md max-w-2xl dark:bg-gray-900 bg-white dark:text-gray-400  hover:shadow-xl'>
               <div>
                 <div className='flex items-center space-x-4'>
                   {chatbot?.botIcon ? (

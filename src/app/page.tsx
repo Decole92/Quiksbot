@@ -1,14 +1,7 @@
 "use client";
 import Mainheader from "@/components/Mainheader";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  CheckCircle,
-  CheckIcon,
-  Ghost,
-  Menu,
-  X,
-} from "lucide-react";
+import { ArrowRight, CheckIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import bot3d from "../../public/bot3d.png";
@@ -30,7 +23,7 @@ export default function Home() {
                   <h1 className='text-5xl md:text-7xl font-bold tracking-tighter bg-gradient-to-b from-gray-700 to-[#E1B177] text-transparent bg-clip-text'>
                     Pathway to Smarter Conversations
                   </h1>
-                  <p className='text-xl text-gray-700 dark:text-gray-400 tracking-tight '>
+                  <h5 className='text-xl text-gray-700 dark:text-gray-400 tracking-tight '>
                     Unlock the power of AI with a platform that lets you chat
                     directly with your PDF documents, create customized sales
                     chatbots, and embed them on your website to capture leads.
@@ -38,7 +31,7 @@ export default function Home() {
                     conversations, or analyzing performance, our app is designed
                     to drive your productivity and enhance your customer
                     interactions.
-                  </p>
+                  </h5>
                 </div>
                 {/* below button */}
                 <div className='flex items-center gap-5 mt-5 md:mt-7 lg:mt-12'>
@@ -74,13 +67,16 @@ export default function Home() {
           id='learn'
           className='md:max-w-3xl md:mx-auto lg:max-w-5xl lg:mx-auto p-6 w-full mt-12 flex flex-col gap-5'
         >
-          <div className='mx-auto max-w-2xl sm:text-center'>
+          <div className='mx-auto max-w-2xl sm:text-center md:max-w-5xl md:mx-auto lg:max-w-5xl lg:mx-auto'>
             <h2 className='text-base font-semibold leading-7 text-[#E1B177] text-center'>
               Your Interactive Document Companion
             </h2>
-            <p className='mt-2 text-3xl md:text-7xl  font-bold tracking-tight text-gray-900 dark:text-gray-400 sm:text-6xl text-center'>
-              Transform Your PDFs into Conversations
-            </p>
+            <h1 className='mt-2 text-3xl md:text-7xl font-bold tracking-tight text-gray-900 dark:text-gray-400 sm:text-6xl text-center'>
+              {/* Transform Your PDFs into Interactive Conversations. Build a
+              Powerful Chatbot to Engage Your Clients. 
+            Turn PDFs into Conversations. Build a Chatbot to Engage Clients.  */}
+              Turn PDFs into Conversations. Build Chatbots to Engage.
+            </h1>
           </div>
 
           <div className='relative overflow-hidden pt-16'>
@@ -141,11 +137,11 @@ export default function Home() {
               <h1 className='text-4xl font-thin text-[#E1B177]'>
                 Pricing Plans
               </h1>
-              <p className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
+              <h5 className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
                 Choose the plan that is right for your business. Our flexible
                 pricing options make it easy to get started and scale as you
                 grow.
-              </p>
+              </h5>
 
               <div className='mt-10 grid gap-8 md:grid-cols-3'>
                 {plans.map((plan) => (

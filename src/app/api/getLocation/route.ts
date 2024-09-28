@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const data = await response.json();
     const { country_name, city, latitude, longitude } = data;
 
-    console.log("this is data", data);
+    // console.log("this is data", data);
     return NextResponse.json(
       { country: country_name, city: city, lat: latitude, lng: longitude },
       { status: 200 }

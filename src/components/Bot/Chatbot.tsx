@@ -72,12 +72,7 @@ const ChatBot: React.FC = () => {
 
   const handleInformationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await axios.get("/api/getlocation");
-      console.log("Country:", response.data.country);
-    } catch (err) {
-      console.error("Error while getting location:", err);
-    }
+
     startTransition(async () => {
       const chatRoomId = await startNewChat({ userDetails, id: botId });
       setChatId(chatRoomId!);
@@ -157,7 +152,6 @@ const ChatBot: React.FC = () => {
     startChatAutomatically();
   }, [bot, botId, userDetails, startChatting]);
 
-  console.log("this is botId", botId);
   return (
     <div
       className={`fixed bottom-3 right-3 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500 ${
@@ -165,11 +159,6 @@ const ChatBot: React.FC = () => {
       }`}
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
-      {/* <div
-    //   className='z-50 fixed bottom-3 right-2 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end'
-
-       // className='fixed bottom-3 right-3 md:bottom-5 md:right-5 lg:bottom-5 lg:right-5 flex flex-col items-end  '
-     > */}
       {botOpened && (
         <div className='mb-2 w-full max-w-[350px] h-[80vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />

@@ -18,7 +18,7 @@ const ConversationSearch = ({
   defaultSelect: string;
 }) => {
   return (
-    <div className='flex flex-col py-3 '>
+    <div className='flex flex-col lg:-mb-2 md:-mb-2 pt-4'>
       <Select onValueChange={onSelectBot} defaultValue={defaultSelect}>
         <SelectTrigger className=' w-full '>
           <SelectValue placeholder='Filter Chatbot' />
