@@ -208,3 +208,25 @@ export const getBlocksById = async (id: string): Promise<string[]> => {
     throw new Error("Failed to fetch blocked pages");
   }
 };
+
+export const getBotPosition = async (id: string) => {
+  if (!id) {
+    throw new Error("Invalid or missing chatbotId");
+  }
+
+  try {
+    const botPosition = await prisma.chatBot.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        iconPosition: true,
+      },
+    });
+
+    return botPosition?.iconPosition;
+  } catch (err) {
+    console.error("Error fetching blocked pages:", err);
+    throw new Error("Failed to fetch blocked pages");
+  }
+};

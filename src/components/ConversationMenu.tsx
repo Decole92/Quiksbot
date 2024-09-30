@@ -77,7 +77,7 @@ const ConversationMenu = () => {
   const filteredData =
     activeTab === "expired" ? filteredCustomers : filteredChats;
   return (
-    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-white dark:bg-transparent dark:text-gray-400'>
+    <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-white dark:bg-transparent dark:text-gray-400 h-full'>
       <div className='p-5'>
         <div className='flex md:items-center justify-between border-b p-4 items-start lg:items-center'>
           <h2 className='text-lg font-medium'>Inbox</h2>
@@ -99,7 +99,7 @@ const ConversationMenu = () => {
               onClick={() => fetchAndDownloadPDF(allUserCustomers)}
               variant={"ghost"}
               disabled={!allUserCustomers}
-              className='gap-2 border bg-gray-200/50 dark:bg-gray-950 dark:text-gray-400 dark:hover:bg-[#E1B177] dark:hover:text-gray-100 text-black hidden md:inline-flex md:w-[100px] lg:w-[100px]   '
+              className='gap-2 border bg-gray-200/50 dark:bg-gray-950 dark:text-gray-400 dark:hover:bg-[#E1B177] dark:hover:text-gray-100 text-black hidden  md:inline-flex md:w-[100px] lg:w-[100px]   '
             >
               Export <Download className='h-5 w-5' />
             </Button>

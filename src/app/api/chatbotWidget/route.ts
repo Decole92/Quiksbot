@@ -1,5 +1,4 @@
-import { getBlocksById } from "@/actions/user";
-import { auth } from "@clerk/nextjs/server";
+import { getBlocksById, getBotPosition } from "@/actions/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -13,8 +12,11 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
+    const [blockedPages, botPosition] = await Promise.all([
+      getBlocksById(id),
+      getBotPosition(id),
+    ]);
 
-    const blockedPages = await getBlocksById(id);
     const blockedPagesArray = blockedPages || [];
 
     const jsContent = `
@@ -29,10 +31,10 @@ export async function GET(req: NextRequest) {
         const createChatbotIframe = () => {
           if (chatFrame) return;
 
-          const script = document.querySelector('script[data-address][data-id]');
-          const address = script?.getAttribute("data-address");
-          const position = script?.getAttribute("data-position") || "right";
-          const id = script?.getAttribute("data-id");
+          const script = document.querySelector('script[data-address]');
+          const address = script?.getAttribute('data-address');
+          const position = ${JSON.stringify(botPosition)};
+          const id = "${id}"
 
           if (!address || !id) {
             console.error('Missing data attributes in the script tag.');
@@ -47,8 +49,13 @@ export async function GET(req: NextRequest) {
             .chat-frame {
               position: fixed;
               bottom: 10px;
-              \${position}: \${position === "center" ? "50%" : "10px"};
-              \${position === "center" ? "transform: translateX(50%);" : ""}
+               \${
+              position === "center"
+                ? "left: 50%; transform: translateX(-50%);"
+                : position === "right"
+                  ? "right: 10px;"
+                  : "left: 10px;"
+            }
               border: none;
               width: 80px;
               height: 80px;

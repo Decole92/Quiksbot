@@ -23,8 +23,6 @@ function Connect({ chatbot }: { chatbot: ChatBot }) {
   src='${BASE_URL}/api/chatbotWidget?id=${chatbot?.id}'
   data-name='quiksbot'
   data-address='${BASE_URL}'
-  data-id='${chatbot?.id}'
-  data-position='${chatbot?.iconPosition}'
   data-widget-size='normal'
   data-widget-button-size='normal'
   defer

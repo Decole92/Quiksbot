@@ -87,8 +87,6 @@ export default async function RootLayout({
               src='https://quiksbot.com/api/chatbotWidget?id=c8a0dfff-81fa-4ce4-be5e-67a8caff94ce'
               data-name='quiksbot'
               data-address='https://quiksbot.com'
-              data-id='c8a0dfff-81fa-4ce4-be5e-67a8caff94ce'
-              data-position='right'
               data-widget-size='normal'
               data-widget-button-size='normal'
               defer

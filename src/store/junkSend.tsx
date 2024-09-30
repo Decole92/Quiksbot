@@ -848,3 +848,5 @@
 // }
 
 // export default ChatInterface;
+// \${position}: \${position === "center" ? "50%" : "10px"};
+// \${position === "center" ? "transform: translateX(50%);" : ""}
