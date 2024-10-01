@@ -34,7 +34,13 @@ function MaxMenu() {
       </ul>
       <ul className='absolute bottom-28  space-y-8 dark:text-gray-400'>
         <Link href={"/pricing"}>
-          <li className='flex items-center gap-7 hover:text-[#E1B177]'>
+          <li
+            className={`${
+              pathname.includes("/pricing")
+                ? `dark:[&]:text-[#E1B177] text-[#E1B177] `
+                : ""
+            } flex items-center gap-7 hover:text-[#E1B177]`}
+          >
             <Zap /> <h3>Upgrade</h3>
           </li>
         </Link>
