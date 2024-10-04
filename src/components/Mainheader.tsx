@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import logo from "../../public/golden.png";
+import logo from "../../public/circlegolden.png";
 import { Button } from "./ui/button";
 import { Montserrat } from "next/font/google";
 import {
@@ -31,9 +31,9 @@ function Mainheader() {
             className='h-16 w-16 rounded-full'
           />
           <div>
-            <h1 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
-              Quiks bot
-            </h1>
+            <h3 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
+              Quiksbot
+            </h3>
             <h4 className={`${Inter} text-xs text-black dark:text-gray-400`}>
               Chat smarter, not harder.
             </h4>

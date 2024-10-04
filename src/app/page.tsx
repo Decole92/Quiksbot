@@ -20,20 +20,31 @@ export default function Home() {
             <div className='md:flex items-center overflow-x-clip '>
               <div className='md:w-[478px]'>
                 <div className='flex flex-col gap-5 md:gap-7 lg:gap-12'>
-                  <h1 className='text-5xl md:text-7xl font-bold tracking-tighter bg-gradient-to-b from-gray-700 to-[#E1B177] text-transparent bg-clip-text'>
+                  <h4 className='text-5xl md:text-7xl font-bold tracking-tighter bg-gradient-to-b from-gray-700 to-[#E1B177] text-transparent bg-clip-text'>
                     Pathway to Smarter Conversations
-                  </h1>
+                  </h4>
                   <h5 className='text-xl text-gray-700 dark:text-gray-400 tracking-tight '>
                     Unlock the power of AI with a platform that lets you chat
                     directly with your PDF documents, create customized sales
                     chatbots, and embed them on your website to capture leads.
                     Whether you&#39;re engaging customers, tracking
-                    conversations, or analyzing performance, our app is designed
-                    to drive your productivity and enhance your customer
-                    interactions.
+                    conversations, or analyzing performance, Quiksbot is
+                    designed to drive your productivity and enhance your
+                    customer interactions.
                   </h5>
+                  <h6 hidden>
+                    ai chatbot, chatbot ai, chat with pdf, chatbot analytics,
+                    PDF interaction, chatbot integration, customer service
+                    chatbot, chat ai online, ai chat online, user experience,
+                    machine learning, natural language, LLM, openai chat,
+                    openai, Quiksbot, quick ai learning, ai chat, ai bot, ai
+                    chat free, ai chatbot free, ai chatbot online, ai chatbot
+                    online free, ai texting bot, ai to talk to, artificial
+                    intelligence online chat, chat artificial intelligence, talk
+                    to artificial intelligence, chat gpt, chat pgpt
+                  </h6>
                 </div>
-                {/* below button */}
+
                 <div className='flex items-center gap-5 mt-5 md:mt-7 lg:mt-12'>
                   <Link href='/dashboard'>
                     <Button className='bg-gray-950 dark:text-gray-400 dark:bg-gray-950 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
@@ -75,7 +86,13 @@ export default function Home() {
               {/* Transform Your PDFs into Interactive Conversations. Build a
               Powerful Chatbot to Engage Your Clients. 
             Turn PDFs into Conversations. Build a Chatbot to Engage Clients.  */}
-              Turn PDFs into Conversations. Build Chatbots to Engage.
+              Turn PDFs into Conversations. Build Chatbots to Engage.{" "}
+              <span hidden>
+                Create a chatbot & embed inside your website | chat with pdf
+                File | Quiksbot. | switch between live agent | ai chatbot |
+                chatbot ai | ai to talk to | ai chat | ai | chat ai | chat gpt |
+                chat pgpt
+              </span>
             </h1>
           </div>
 
@@ -134,9 +151,9 @@ export default function Home() {
         <section id='pricing'>
           <div className='bg-gray-100  py-12 mt-20 dark:bg-gray-950'>
             <div className='md:max-w-5xl md:mx-auto lg:max-w-6xl lg:mx-auto w-full text-center px-4'>
-              <h1 className='text-4xl font-thin text-[#E1B177]'>
+              <h6 className='text-4xl font-thin text-[#E1B177]'>
                 Pricing Plans
-              </h1>
+              </h6>
               <h5 className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
                 Choose the plan that is right for your business. Our flexible
                 pricing options make it easy to get started and scale as you
@@ -201,7 +218,17 @@ export default function Home() {
 
       <footer className='flex flex-col gap-2  py-6 w-full shrink-0 items-center justify-center px-4 md:px-6 border-t'>
         <p className='text-xs text-gray-500 dark:text-gray-400 text-center'>
-          © 2024 Quiks bot. All rights reserved.
+          © 2024 Quiksbot. All rights reserved.
+        </p>
+        <p hidden>
+          ai chatbot, chatbot ai, chat with pdf, chatbot analytics, PDF
+          interaction, chatbot integration, customer service chatbot, chat ai
+          online, ai chat online, user experience, machine learning, natural
+          language, LLM, openai chat, openai, Quiksbot, quick ai learning, ai
+          chat, ai bot, ai chat free, ai chatbot free, ai chatbot online, ai
+          chatbot online free, ai texting bot, ai to talk to, artificial
+          intelligence online chat, chat artificial intelligence, talk to
+          artificial intelligence, chat ai, chat gpt, chat pgpt
         </p>
       </footer>
     </div>

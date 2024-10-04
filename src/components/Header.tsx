@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Avatar from "./Avatar";
-import logo from "../../public/golden.png";
+import logo from "../../public/circlegolden.png";
 import { Montserrat } from "next/font/google";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
@@ -30,7 +30,7 @@ function Header() {
   const router = useRouter();
   const { setTheme } = useTheme();
   return (
-    <header className='fixed z-50 w-full justify-between flex flex-row p-5 dark:bg-gray-900  bg-gray-100/50 items-center backdrop-blur-sm md:drop-shadow-sm h-20'>
+    <header className='fixed z-50 w-full justify-between flex flex-row p-5 dark:bg-gray-900  bg-gray-100 items-center h-20'>
       <Link href='/' className='flex flex-row items-center space-x-2'>
         <Image
           src={logo}
@@ -41,7 +41,7 @@ function Header() {
         />
         <div className='space-y-1'>
           <h1 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
-            Quiks Bot
+            QuiksBot
           </h1>
           <h4 className={`${Inter} text-xs text-black dark:text-gray-400`}>
             Chat smarter, not harder.

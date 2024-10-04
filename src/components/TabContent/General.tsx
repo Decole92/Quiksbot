@@ -21,7 +21,7 @@ import {
 import { Toaster, toast } from "sonner";
 import Characteristic from "../Characteristic";
 import { Moon, Sun, SunMoon, Upload } from "lucide-react";
-import quiksIcon from "../../../public/golden.png";
+import quiksIcon from "../../../public/circlegolden.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -158,7 +158,7 @@ function General({ chatbot }: { chatbot: any }) {
     startPosition(async () => {
       const promise = updateChatbotPosition(
         chatbot?.id!,
-        iconPosition,
+        iconPosition !== "" ? iconPosition : chatbot?.iconPosition,
         imageUrl!
       );
       toast.promise(promise, {
@@ -356,22 +356,22 @@ function General({ chatbot }: { chatbot: any }) {
                       setChatIcon(e.target.files![0]);
                     }}
                   />
-                  <div className='relative '>
-                    {chatbot && chatbot?.icon !== null ? (
-                      <Image
-                        src={chatbot?.icon!}
-                        alt={chatbot?.icon!}
-                        height={100}
-                        width={100}
-                        className='h-24 w-22 rounded-full'
-                      />
-                    ) : chatIcon ? (
+                  <div className='relative'>
+                    {chatIcon ? (
                       <Image
                         src={URL.createObjectURL(chatIcon)}
                         alt='icon'
                         width={100}
                         height={100}
                         className=' rounded-full h-24 w-22 '
+                      />
+                    ) : chatbot && chatbot?.icon !== null ? (
+                      <Image
+                        src={chatbot?.icon!}
+                        alt={chatbot?.icon!}
+                        height={100}
+                        width={100}
+                        className='h-24 w-22 rounded-full'
                       />
                     ) : (
                       <Image

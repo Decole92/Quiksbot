@@ -4,7 +4,7 @@ import { Loader, UserCircle } from "lucide-react";
 import ReactMarkDown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
-import botIcon from "@/../../public/golden.png";
+import botIcon from "@/../../public/circlegolden.png";
 import type { ChatBot, ChatMessage } from "@prisma/client";
 // [#b48143]
 

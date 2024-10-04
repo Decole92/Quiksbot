@@ -4,9 +4,9 @@ import Link from "next/link";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Sign Up for Quiksbot | AI Chatbots & PDF Interaction",
+  title: "Sign Up | AI Chatbots & PDF Interaction | Quiksbot",
   description:
-    "Create your account on Quiksbot to access AI-powered chatbots for lead generation, chatbot analytics, business automation, and PDF interaction. Explore flexible pricing: Free, Pro, or Ultimate. Customize your AI using OpenAI API, switch between chat models, chat with PDFs, and export logs as CSV or PDF. Ideal for small businesses and enterprises looking for scalable AI solutions.",
+    "Create an account on Quiksbot for AI chatbots, lead generation, and PDF interaction. Choose from Free, Pro, or Ultimate plans. Customize with OpenAI API.",
   keywords:
     "ai chatbot sign up, Quiksbot registration, business chatbot platform, sign up for AI chatbots, chat with PDF, lead generation chatbot, website chatbot integration, OpenAI chatbot, chatbot analytics, scalable AI solutions, small business chatbot, Free plan chatbot, machine learning chatbot, natural language processing chatbot, LLM chatbot, PDF chatbot, chatbot registration page",
 };
@@ -21,7 +21,10 @@ function SignUpPage() {
             <span className='text-[#E1B177]'>Quiksbot</span>
           </Link>
           <br />
-          <span className='font-thin uppercase pt-2'>Kindly Sign up here</span>
+          <span hidden className='font-thin uppercase pt-2'>
+            Kindly Sign up here to our ai chatbot that you can embed inside your
+            website which allows you to also chat with your pdf file .
+          </span>
         </h1>
         <h3 className='mt-2 text-lg text-gray-500'>
           Register to manage your account and access the AI-powered chatbot

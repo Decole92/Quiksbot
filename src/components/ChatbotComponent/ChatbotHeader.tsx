@@ -1,7 +1,7 @@
 import { BotIcon } from "lucide-react";
 import Image from "next/image";
 import Avatar from "../Avatar";
-import botIcon from "../../../public/golden.png";
+import botIcon from "../../../public/circlegolden.png";
 import { usePathname } from "next/navigation";
 import type { ChatBot } from "@prisma/client";
 

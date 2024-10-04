@@ -13,7 +13,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Quiksbot | Dashboard",
   description:
-    "Discover how AI chatbots can boost sales, streamline customer service, and improve user engagement. Manage and track chatbot performance directly from your Quiksbot dashboard. Easily embed AI-powered chatbots on your website, monitor chatbot analytics, and customize your bot with OpenAI API integration. Quiksbot offers lead generation SalesBots, PDF interaction, and the ability to export chat logs in CSV or PDF formats for detailed insights and data management.",
+    "Manage AI chatbots from the Quiksbot dashboard. Boost sales, enhance service, embed bots, track analytics, and use OpenAI integration. Export logs and explore SalesBots & PDF interactions.",
   keywords:
     "ai chatbot dashboard, customizable AI chatbot, chatbot analytics, lead generation chatbot, website chatbot integration, customer service chatbot, OpenAI API chatbot, openai chat, PDF chatbot interaction, export chatbot data, pdf chat export, business automation chatbot, chatbot for sales, AI chatbot for customer service, AI-powered SalesBot, Quiksbot chatbot solutions, chatbot performance tracking, chatbot data management, user experience, machine learning, natural language",
 };
@@ -38,6 +38,12 @@ async function Dashboard() {
       <div className='flex justify-between items-center mb-5 md:mt-5 p-5 shadow-md  shadow-gray-100 w-full dark:shadow-gray-900 '>
         <h1 className='text-xl lg:text-3xl font-thin text-[#E1B177]'>
           Chatbots List
+          <span hidden>
+            Manage ai chatbots from quiksbot dashboard | lead generation chatbot
+            | website chatbot integration | customer service chatbot, OpenAI API
+            chatbot, openai chat, PDF chatbot interaction | business automation
+            chatbot | AI chatbot for customer service, AI-powered SalesBot
+          </span>
         </h1>
         <Button className='flex ml-auto right-1 bg-gray-200/50 dark:hover:bg-[#E1B177] hover:bg-[#E1B177] dark:bg-gray-900 text-gray-400  hover:text-white '>
           <Link href={`/create-chatbot`} className='flex items-center'>

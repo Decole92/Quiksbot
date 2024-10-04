@@ -49,11 +49,18 @@ export default function PricingClient() {
   return (
     <div className='bg-gray-100 min-h-screen py-12 mt-20 dark:bg-gray-950'>
       <div className='md:max-w-5xl md:mx-auto lg:max-w-6xl lg:mx-auto w-full text-center px-4'>
-        <h1 className='text-4xl font-thin text-[#E1B177]'>Pricing Plans</h1>
-        <p className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
+        <h1 className='text-4xl font-thin text-[#E1B177]'>
+          Pricing Plans{" "}
+          <span hidden>
+            Boost your business with Quiksbot AI chatbots. Explore pricing:
+            Free, Pro ($29.99), Ultimate ($99.99). Get lead generation,
+            analytics, PDF interaction, and OpenAI integration.
+          </span>
+        </h1>
+        <h5 className='mt-4 text-lg text-gray-600 dark:text-gray-400'>
           Choose the plan that&#39;s right for your business. Our flexible
           pricing options make it easy to get started and scale as you grow.
-        </p>
+        </h5>
 
         <div className='mt-10 grid gap-8 md:grid-cols-3'>
           {plans.map((plan) => (

@@ -109,7 +109,7 @@ function ChatbotInput({
             messages!.map((msg: ChatMessage) =>
               msg?.id === loadingMessage?.id
                 ? { ...msg, message: result?.message!, id: result?.id! }
-                : msg?.id === userMessage?.id
+                : msg?.id === userMessage?.id && chatRoom?.live!
                 ? { ...msg, message: result?.message!, id: result?.id! }
                 : msg
             ),

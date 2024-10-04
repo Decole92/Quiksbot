@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-import defaultLogo from "../../../../public/golden.png";
+import defaultLogo from "../../../../public/circlegolden.png";
 
 const ChatBot: React.FC = () => {
   const [botOpened, setBotOpened] = useState(false);
