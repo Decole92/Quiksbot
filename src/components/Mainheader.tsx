@@ -20,17 +20,18 @@ function Mainheader() {
     <header className=' lg:px-6 h-16 bg-transparent dark:bg-transparent dark:text-gray-400 sticky top-0 backdrop-blur-sm z-20 p-2'>
       <div className='flex items-center '>
         <Link
+          title='homepage'
           className='flex items-center justify-center gap-3 md:gap-5 lg:gap-5'
-          href='#'
+          href='/'
         >
           <Image
             src={logo}
             alt='logo'
             width={100}
             height={100}
-            className='h-16 w-16 rounded-full'
+            className='h-10 w-10 md:w-16 md:h-16 lg:w-16 lg:h-16 rounded-full'
           />
-          <div>
+          <div className='-space-y-0.5 lg:space-y-1 md:space-y-1'>
             <h3 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
               Quiksbot
             </h3>
@@ -63,16 +64,18 @@ function Mainheader() {
           <Link
             className='text-sm font-medium hover:underline underline-offset-4 hidden sm:inline-block'
             href='#features'
+            title='features'
           >
             Features
           </Link>
           <Link
             className='text-sm font-medium hover:underline underline-offset-4 hidden sm:inline-block'
             href='#pricing'
+            title='pricing'
           >
             Pricing
           </Link>
-          <Link href='/dashboard'>
+          <Link href='/dashboard' title='dashboard'>
             <Button className='hidden sm:inline-block bg-gray-950 dark:text-gray-400 dark:bg-gray-950 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
               Get started
             </Button>
@@ -98,6 +101,7 @@ function Mainheader() {
             <Link
               className='text-sm font-medium hover:underline underline-offset-4 '
               href='#features'
+              title='features'
             >
               <Button
                 variant={"ghost"}
@@ -109,6 +113,7 @@ function Mainheader() {
             <Link
               className='text-sm font-medium hover:underline underline-offset-4'
               href='#pricing'
+              title='pricing'
             >
               <Button
                 variant={"ghost"}
@@ -117,7 +122,11 @@ function Mainheader() {
                 Pricing
               </Button>
             </Link>
-            <Link href='/dashboard' className='max-w-md mx-auto '>
+            <Link
+              href='/dashboard'
+              title='dashboard'
+              className='max-w-md mx-auto '
+            >
               <Button className='w-full dark:bg-gray-950 dark:text-gray-400 bg-gray-900 text-gray-100 '>
                 Get Started
               </Button>

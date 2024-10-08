@@ -37,9 +37,9 @@ function Header() {
           alt='logo'
           width={100}
           height={100}
-          className='h-16 w-16 rounded-full'
+          className='h-10 w-10 md:w-16 md:h-16 lg:w-16 lg:h-16 rounded-full'
         />
-        <div className='space-y-1'>
+        <div className='lg:space-y-1 md:space-y-1 -space-y-0.5'>
           <h1 className='font-thin text-black text-2xl dark:text-[#E1B177]'>
             QuiksBot
           </h1>

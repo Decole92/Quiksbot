@@ -14,15 +14,15 @@ export async function generateMetadata() {
   return {
     title: "AI Chatbot for websites | Chat with Pdf File | Quiksbot",
     description:
-      "Explore how AI chatbots boost sales and enhance service with chatbot embedding, advanced analytics, PDF interactions, and OpenAI API integration using Quiksbot.",
+      "Explore how AI chatbot boosts sales and enhances service with chatbot embedding, advanced analytics, PDF interactions, and OpenAI API integration using quiksbot.",
     keywords:
-      "ai chatbot, chatbot ai, chat with pdf, chat ai, chatbot analytics, PDF interaction, chatbot integration, customer service chatbot, chat ai online, ai chat online, user experience, machine learning, natural language, LLM, openai chat, openai, Quiksbot, quick ai learning, ai chat, ai bot, ai chat free, ai chatbot free, ai chatbot online, ai chatbot online free, ai texting bot, ai to talk to, artificial intelligence online chat, chat artificial intelligence, talk to artificial intelligence, chat pgpt, chat gpt",
+      "ai chatbot, chatbot ai, chat with pdf, chat ai, chatbot analytics, PDF interaction, chatbot integration, customer service chatbot, chat ai online, ai chat online, user experience, machine learning, natural language, LLM, openai chat, openai, quiksbot, quick ai learning, ai chat, ai bot, ai chat free, ai chatbot free, ai chatbot online, ai chatbot online free, ai texting bot, ai to talk to, artificial intelligence online chat, chat artificial intelligence, talk to artificial intelligence",
 
     icons: {
       icon: ["/favicon.ico?v=4"],
       apple: ["/favicon.png?v=4"],
       shortcut: ["/favicon.png"],
-      sizes: ["32x32", "72x72", "96x96", "144x144", "192x192"], // Common sizes
+      sizes: ["32x32", "72x72", "96x96", "144x144", "192x192"],
     },
 
     twitter: {

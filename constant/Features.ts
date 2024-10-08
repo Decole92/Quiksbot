@@ -16,6 +16,7 @@ export const plans = [
   {
     name: "Basic",
     price: "Free",
+    originalPrice: "Free",
     features: [
       "2 PDF Documents",
       "25 AI Chat Credits",
@@ -31,6 +32,7 @@ export const plans = [
   {
     name: "Pro",
     price: "$29.99",
+    originalPrice: "$49.99",
     features: [
       "22 PDF Documents",
       "Unlimited AI Chat Messages",
@@ -51,6 +53,7 @@ export const plans = [
   {
     name: "Ultimate",
     price: "$99.99",
+    originalPrice: "$149.99",
     features: [
       "50 PDF Documents",
       "Unlimited AI Chat Messages",

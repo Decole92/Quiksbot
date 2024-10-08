@@ -37,21 +37,21 @@ export default function Home() {
                     PDF interaction, chatbot integration, customer service
                     chatbot, chat ai online, ai chat online, user experience,
                     machine learning, natural language, LLM, openai chat,
-                    openai, Quiksbot, quick ai learning, ai chat, ai bot, ai
+                    openai, quiksbot, quick ai learning, ai chat, ai bot, ai
                     chat free, ai chatbot free, ai chatbot online, ai chatbot
                     online free, ai texting bot, ai to talk to, artificial
                     intelligence online chat, chat artificial intelligence, talk
-                    to artificial intelligence, chat gpt, chat pgpt
+                    to artificial intelligence
                   </h6>
                 </div>
 
                 <div className='flex items-center gap-5 mt-5 md:mt-7 lg:mt-12'>
-                  <Link href='/dashboard'>
+                  <Link href='/dashboard' title='dashboard'>
                     <Button className='bg-gray-950 dark:text-gray-400 dark:bg-gray-950 dark:hover:text-gray-200 hover:bg-[#E1B177] dark:hover:bg-[#E1B177]'>
                       Get Started
                     </Button>
                   </Link>
-                  <Link href='#features'>
+                  <Link href='#features' title='features'>
                     <Button
                       variant={"ghost"}
                       className='flex items-center gap-2 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] hover:text-gray-100 dark:hover:text-gray-200'
@@ -88,10 +88,9 @@ export default function Home() {
             Turn PDFs into Conversations. Build a Chatbot to Engage Clients.  */}
               Turn PDFs into Conversations. Build Chatbots to Engage.{" "}
               <span hidden>
-                Create a chatbot & embed inside your website | chat with pdf
-                File | Quiksbot. | switch between live agent | ai chatbot |
-                chatbot ai | ai to talk to | ai chat | ai | chat ai | chat gpt |
-                chat pgpt
+                Create a chatbot | embed chatbot inside your website | chat with
+                pdf File | quiksbot | ai chatbot | chatbot ai | ai to talk to |
+                ai chat | chat ai
               </span>
             </h1>
           </div>
@@ -194,7 +193,7 @@ export default function Home() {
                       ))}
                     </ul>
                     {plan?.buttonText !== "" && (
-                      <Link href='/pricing'>
+                      <Link href='/pricing' title='pricing'>
                         <Button
                           // disabled={isPending}
                           //  onClick={() => router.push("/p")}
@@ -224,11 +223,11 @@ export default function Home() {
           ai chatbot, chatbot ai, chat with pdf, chatbot analytics, PDF
           interaction, chatbot integration, customer service chatbot, chat ai
           online, ai chat online, user experience, machine learning, natural
-          language, LLM, openai chat, openai, Quiksbot, quick ai learning, ai
+          language, LLM, openai chat, openai, quiksbot, quick ai learning, ai
           chat, ai bot, ai chat free, ai chatbot free, ai chatbot online, ai
           chatbot online free, ai texting bot, ai to talk to, artificial
           intelligence online chat, chat artificial intelligence, talk to
-          artificial intelligence, chat ai, chat gpt, chat pgpt
+          artificial intelligence, chat ai
         </p>
       </footer>
     </div>

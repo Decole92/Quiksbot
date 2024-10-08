@@ -80,6 +80,7 @@ export default function PricingClient() {
               </h2>
               <h2 className='mt-4 text-gray-900 dark:text-gray-200 text-3xl font-bold'>
                 {plan.price}
+
                 {plan.name !== "Basic" && (
                   <span className='text-sm font-semibold leading-6 text-gray-600'>
                     /month
