@@ -42,6 +42,7 @@ export const plans = [
       "Access Chatbot Analytics",
       "Client Can Switch to Live Agents",
       "Chat with Memory Record",
+      "Remove chatbot watermark",
       "Download Chatlogs",
     ],
     buttonText: "Choose to Pro",
@@ -57,6 +58,7 @@ export const plans = [
     features: [
       "50 PDF Documents",
       "Unlimited AI Chat Messages",
+      "Remove chatbot watermark",
       "Delete & Manage Bots",
       "Switch Between Chat with PDF & Salesbots",
       "Switch Between ChatGPT Models",

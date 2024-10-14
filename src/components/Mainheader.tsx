@@ -21,7 +21,7 @@ function Mainheader() {
       <div className='flex items-center '>
         <Link
           title='homepage'
-          className='flex items-center justify-center gap-3 md:gap-5 lg:gap-5'
+          className='flex items-center justify-center gap-2 md:gap-3 lg:gap-3'
           href='/'
         >
           <Image

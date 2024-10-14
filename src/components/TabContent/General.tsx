@@ -22,12 +22,6 @@ import { Toaster, toast } from "sonner";
 import Characteristic from "../Characteristic";
 import { Moon, Sun, SunMoon, Upload } from "lucide-react";
 import quiksIcon from "../../../public/circlegolden.png";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Block } from "@uiw/react-color";
 
 import Image from "next/image";
@@ -35,6 +29,9 @@ import useSWR from "swr";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Progress } from "../ui/progress";
 import type { ChatBot, FirstQuestion } from "@prisma/client";
+import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
+import useSubcription from "@/hook/useSubscription";
 
 function General({ chatbot }: { chatbot: any }) {
   const { mutate } = useSWR(chatbot ? `/api/getBot/${chatbot?.id}` : null);
@@ -48,6 +45,7 @@ function General({ chatbot }: { chatbot: any }) {
     question: "",
     greetings: chatbot?.greetings,
   });
+  const { hasActiveMembership } = useSubcription();
   const [isPending, startTransition] = useTransition();
   const [isHolding, startPosition] = useTransition();
   const [isHex, startColoring] = useTransition();
@@ -76,18 +74,19 @@ function General({ chatbot }: { chatbot: any }) {
     });
   };
 
-  const handleTheme = async (theme: string) => {
-    const update = await updateTheme(chatbot?.id, theme);
+  const handleWaterMark = async (watermark: boolean) => {
+    if (!hasActiveMembership || hasActiveMembership === "STANDARD") return;
+    const update = await updateTheme(chatbot?.id, watermark!);
     if (update) {
       toast.promise(Promise.resolve(update), {
-        loading: "Updating chatbot Theme...",
-        success: "Chatbot Theme updated Successfully!",
+        loading: "Updating watermark theme...",
+        success: "Chatbot watermark theme updated Successfully!",
         error: "An error has occurred while updating chatbot theme",
       });
       await mutate();
       return update;
     } else {
-      toast.error("An error has occurred while updating theme");
+      toast.error("An error has occurred while updating watermark theme");
     }
   };
 
@@ -269,49 +268,24 @@ function General({ chatbot }: { chatbot: any }) {
             </div>
           </div>
 
-          <div className='flex items-center justify-between '>
+          <div className='flex  flex-col '>
             <div>
-              <h3 className='font-bold text-lg'>Interface theme</h3>
-              <h5 className='pb-2'>Select or customize your UI theme</h5>
+              <h3 className='font-bold text-lg'>Watermark Interface</h3>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='outline' size='icon'>
-                  <Sun
-                    className={`h-[1.2rem] w-[1.2rem] ${
-                      chatbot?.theme === "light"
-                        ? "rotate-0 scale-100"
-                        : "rotate-90 scale-0"
-                    } transition-all`}
-                  />
-                  <Moon
-                    className={`absolute h-[1.2rem] w-[1.2rem] ${
-                      chatbot?.theme === "dark"
-                        ? "rotate-0 scale-100"
-                        : "rotate-90 scale-0"
-                    } transition-all`}
-                  />
-                  <SunMoon
-                    className={`absolute h-[1.2rem] w-[1.2rem] ${
-                      chatbot?.theme === "system"
-                        ? "rotate-0 scale-100"
-                        : "rotate-90 scale-0"
-                    } transition-all`}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
-                <DropdownMenuItem onClick={() => handleTheme("light")}>
-                  Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleTheme("dark")}>
-                  Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleTheme("system")}>
-                  System
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+
+            <div className='flex items-center justify-between space-x-4 border p-3 rounded-md dark:bg-gray-900'>
+              <Label htmlFor='use-watermark'>
+                Toggle the switch to enable or disable the watermark on your
+                interface.
+              </Label>
+
+              <Switch
+                disabled={hasActiveMembership === "STANDARD"}
+                id='get-watermark-state'
+                checked={chatbot?.watermark}
+                onCheckedChange={() => handleWaterMark(!chatbot?.watermark)}
+              />
+            </div>
           </div>
 
           <div className='grid lg:grid-cols-5 rounded-lg gap-5'>

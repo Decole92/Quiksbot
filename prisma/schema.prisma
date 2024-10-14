@@ -79,6 +79,7 @@ model ChatBot {
   icon               String?
   iconPosition       String   @default("right")
   theme              Theme    @default(light)
+  watermark          Boolean  @default(true)
   userMessageBgColor String?  @default("#E1B177")
   chatModel          String   @default("gpt-3.5-turbo")
   botType            botType  @default(SalesBot)

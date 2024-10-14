@@ -162,17 +162,15 @@ export const updateColor = async (id: string, color: string) => {
   }
 };
 
-export const updateTheme = async (id: string, theme: string) => {
-  // const { userId } = await auth();
+export const updateTheme = async (id: string, watermark: boolean) => {
   if (!id) return;
-  const themeEnum = theme as any;
   try {
     const updated = await prisma.chatBot.update({
       where: {
         id: id,
       },
       data: {
-        theme: themeEnum,
+        watermark: watermark,
       },
     });
     return updated;

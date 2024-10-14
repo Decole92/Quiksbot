@@ -163,11 +163,11 @@ const ChatBot: React.FC = () => {
 
   return (
     <div
-      className={`fixed bottom-2 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
+      className={`fixed bottom-1 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
       style={{ transformOrigin: "bottom right" }} // Zoom effect origin
     >
       {botOpened && (
-        <div className='mb-2 w-full max-w-[350px] h-[100vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
+        <div className='lg:mb-2 md:mb-2 mb-1 w-full max-w-[350px] h-[100vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
           <div className='flex-1 overflow-y-auto'>
             <ChatbotMessages
@@ -200,7 +200,7 @@ const ChatBot: React.FC = () => {
       <button
         id='chatbot-icon'
         onClick={handleOpenChatBot}
-        className='relative w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
+        className='relative w-12 h-12  md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md '
         // className='relative w-20 h-20 rounded-full bg-white  dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
       >
         {botOpened ? (
@@ -217,7 +217,7 @@ const ChatBot: React.FC = () => {
             width={48}
             height={48}
             // className='rounded-full'
-            className='rounded-full w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16'
+            className='rounded-full w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 '
           />
         )}
       </button>

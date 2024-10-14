@@ -6,7 +6,9 @@ import useSWR from "swr";
 import { getChatMessages, getChatRoom } from "@/actions/chat";
 import type { ChatBot, ChatMessage, botType } from "@prisma/client";
 import { sendMessage } from "@/actions/chat/sendMessage";
-
+import Image from "next/image";
+import logo from "../../../public/circlegolden.png";
+import Link from "next/link";
 function ChatbotInput({
   userDetails,
   chatRoomId,
@@ -148,6 +150,25 @@ function ChatbotInput({
           <Send className='text-black group-hover:text-white dark:text-gray-400 ' />
         </Button>
       </form>
+      {chatbot?.watermark ? (
+        <Link
+          target='_blank'
+          href='https://quiksbot.com'
+          className='text-xs font-light dark:font-thin flex items-center justify-center -mt-5 p-4 tracking-widest w-full text-gray-400 '
+        >
+          Get your own ai chatbot |
+          <span className='flex items-center gap-2 pl-1 font-semibold'>
+            Quiksbot
+            <Image
+              src={logo}
+              alt='watermark'
+              width={46}
+              height={46}
+              className='h-4 w-4'
+            />
+          </span>
+        </Link>
+      ) : null}
     </div>
   );
 }
