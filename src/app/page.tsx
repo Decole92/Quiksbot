@@ -8,6 +8,7 @@ import bot3d from "../../public/bot3d.png";
 import screenshot from "../../public/screenshot.png";
 
 import { features, plans } from "../../constant/Features";
+import { BASE_URL } from "../../constant/url";
 
 export default function Home() {
   return (
@@ -24,13 +25,14 @@ export default function Home() {
                     Pathway to Smarter Conversations
                   </h4>
                   <h5 className='text-xl text-gray-700 dark:text-gray-400 tracking-tight '>
-                    Unlock the power of AI with a platform that lets you chat
-                    directly with your PDF documents, create customized sales
-                    chatbots, and embed them on your website to capture leads.
-                    Whether you&#39;re engaging customers, tracking
-                    conversations, or analyzing performance, Quiksbot is
-                    designed to drive your productivity and enhance your
-                    customer interactions.
+                    Unlock the power of AI with a platform that enables you to
+                    train chatbots using PDFs, website crawls, and text data.
+                    Create customized sales chatbots that can be seamlessly
+                    embedded on your website to capture leads and engage
+                    customers. With Quiksbot, you can efficiently track
+                    conversations, analyze performance, and drive productivity,
+                    enhancing every customer interaction and streamlining your
+                    workflows.
                   </h5>
                   <h6 hidden>
                     ai chatbot, chatbot ai, chat with pdf, chatbot analytics,
@@ -41,7 +43,8 @@ export default function Home() {
                     chat free, ai chatbot free, ai chatbot online, ai chatbot
                     online free, ai texting bot, ai to talk to, artificial
                     intelligence online chat, chat artificial intelligence, talk
-                    to artificial intelligence
+                    to artificial intelligence, email campaign, marketing
+                    campaign tool
                   </h6>
                 </div>
 
@@ -80,13 +83,13 @@ export default function Home() {
         >
           <div className='mx-auto max-w-2xl sm:text-center md:max-w-5xl md:mx-auto lg:max-w-5xl lg:mx-auto'>
             <h2 className='text-base font-semibold leading-7 text-[#E1B177] text-center'>
-              Your Interactive Document Companion
+              Your Interactive Quik bot Companion
             </h2>
             <h1 className='mt-2 text-3xl md:text-7xl font-bold tracking-tight text-gray-900 dark:text-gray-400 sm:text-6xl text-center'>
               {/* Transform Your PDFs into Interactive Conversations. Build a
               Powerful Chatbot to Engage Your Clients. 
             Turn PDFs into Conversations. Build a Chatbot to Engage Clients.  */}
-              Turn PDFs into Conversations. Build Chatbots to Engage.{" "}
+              Build a Powerful Chatbot to Engage Your Clients.
               <span hidden>
                 Create a chatbot | embed chatbot inside your website | chat with
                 pdf File | quiksbot | ai chatbot | chatbot ai | ai to talk to |
@@ -193,10 +196,8 @@ export default function Home() {
                       ))}
                     </ul>
                     {plan?.buttonText !== "" && (
-                      <Link href='/pricing' title='pricing'>
+                      <Link href={`${BASE_URL}/pricing`} title='pricing'>
                         <Button
-                          // disabled={isPending}
-                          //  onClick={() => router.push("/p")}
                           className={`mt-6 block text-center py-2 px-4 rounded-md text-white w-full dark:hover:bg-[#E1B177]/70 ${
                             plan.isMostPopular
                               ? "bg-[#E1B177] hover:bg-[#E1B177]"

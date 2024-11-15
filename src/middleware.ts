@@ -13,6 +13,8 @@ const isProtectedRoute = createRouteMatcher([
   "/chatlogs(.*)",
   "/pricing(.*)",
   "/settings(.*)",
+  "/integration(.*)",
+  "/email-compaign(.*)",
 ]);
 
 const isPublicRoute = createRouteMatcher([
@@ -21,7 +23,8 @@ const isPublicRoute = createRouteMatcher([
   "/api/(.*)",
   "/chatbot/(.*)",
   "/",
-  "/api/webhook",
+  "/appointmentToken/(.*)",
+  "/webhook",
 ]);
 
 // Custom middleware function
@@ -51,5 +54,6 @@ export const config = {
     "/((?!.*\\..*|_next).*)", // Match all pages except files and _next paths
     "/", // Match the root path
     "/(api|trpc)(.*)", // Match API and TRPC routes
+    "/webhook", // Ensure the webhook route is matched
   ],
 };

@@ -13,7 +13,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Quiksbot | Dashboard",
   description:
-    "Manage AI chatbots from the Quiksbot dashboard. Boost sales, enhance service, embed bots, track analytics, and use OpenAI integration. Export logs and explore SalesBots & PDF interactions.",
+    "Manage AI chatbots from the Quiksbot dashboard. Boost sales, enhance service, embed bots, track analytics, and use OpenAI integration. Export logs and explore SalesBots",
   keywords:
     "ai chatbot dashboard, customizable AI chatbot, chatbot analytics, lead generation chatbot, website chatbot integration, customer service chatbot, OpenAI API chatbot, openai chat, PDF chatbot interaction, export chatbot data, pdf chat export, business automation chatbot, chatbot for sales, AI chatbot for customer service, AI-powered SalesBot, Quiksbot chatbot solutions, chatbot performance tracking, chatbot data management, user experience, machine learning, natural language",
 };
@@ -91,7 +91,8 @@ async function Dashboard() {
                 <hr className='mt-2' />
                 {chatbot?.Source &&
                 (chatbot?.Source.characteristic.length > 0 ||
-                  chatbot?.Source.pdfFile.length > 0) ? (
+                  chatbot?.Source.pdfFile.length > 0 ||
+                  chatbot?.Source.webpage?.length > 0) ? (
                   <h5 className='pb-0 px-4 pt-4 text-[#E1B177] italic'>
                     trained
                   </h5>
@@ -133,13 +134,7 @@ async function Dashboard() {
                       )}
                     </div>
                   </div>
-                  {/* 
-                  <div className='flex items-center text-sm justify-between  '>
-                    <h5>Website Url</h5>
-                    <h5 className='truncate md:w-[240px]'>
-                      https://portfolio.decolemills.com/#about
-                    </h5>
-                  </div> */}
+
                   <div className='flex items-center text-sm justify-between  '>
                     <h5>No of Session</h5>
                     <h5>{chatbot?.customer?.length!}</h5>

@@ -1,6 +1,7 @@
 import type { ChatBot, ChatRoom } from "@prisma/client";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import { Contact } from "../../typing";
 
 interface BoardState {
   userPosition: {
@@ -9,6 +10,9 @@ interface BoardState {
   };
 
   setUserPosition: (newPosition: { lat: number; lng: number }) => void;
+
+  contactList: Contact[];
+  setContactList: (contactList: Contact[]) => void;
 
   position: {
     lat: string;
@@ -33,42 +37,55 @@ interface BoardState {
   setChatRoom: (chatRoom: ChatRoom) => void;
   selectedChatRoomId: string | null;
   setSelectedChatRoomId: (id: string | null) => void;
+  chatId: string;
+  setChatId: (id: string) => void;
+  feedback: boolean;
+  setFeedback: (feed: boolean) => void;
 
-  formStatus: boolean;
-  setFormStatus: (formStatus: boolean) => void;
+  subject: string;
+  setSubject: (subject: string) => void;
 }
 
 export const useGlobalStore = create<BoardState>()(
-  // devtools(
-  //   persist(
-  (set) => ({
-    userPosition: { lat: null, lng: null },
-    setUserPosition: (newUser) => set({ userPosition: newUser }),
+  devtools(
+    persist(
+      (set) => ({
+        contactList: [],
+        setContactList: (contactList: Contact[]) => set({ contactList }),
 
-    position: { lat: "", lng: "", address: "" },
-    setPosition: (newLocal) => set({ position: newLocal }),
+        userPosition: { lat: null, lng: null },
+        setUserPosition: (newUser) => set({ userPosition: newUser }),
 
-    isExtended: false,
-    setIsExtended: (isExtended) => set({ isExtended }),
+        position: { lat: "", lng: "", address: "" },
+        setPosition: (newLocal) => set({ position: newLocal }),
 
-    bot: null,
-    setBot: (bot) => set({ bot }),
+        isExtended: false,
+        setIsExtended: (isExtended) => set({ isExtended }),
 
-    isOpen: false,
-    setIsOpen: (isOpen) => set({ isOpen }),
+        bot: null,
+        setBot: (bot) => set({ bot }),
 
-    chatRoom: null,
-    setChatRoom: (chatRoom) => set({ chatRoom }),
+        isOpen: false,
+        setIsOpen: (isOpen) => set({ isOpen }),
 
-    selectedChatRoomId: null,
-    setSelectedChatRoomId: (id) => set({ selectedChatRoomId: id }),
+        chatRoom: null,
+        setChatRoom: (chatRoom) => set({ chatRoom }),
 
-    formStatus: false,
-    setFormStatus: (formStatus) => set({ formStatus }),
-  })
-  //     {
-  //       name: "tem-storage",
-  //     }
-  //   )
-  // )
+        selectedChatRoomId: null,
+        setSelectedChatRoomId: (id) => set({ selectedChatRoomId: id }),
+
+        chatId: "",
+        setChatId: (chatId) => set({ chatId }),
+
+        feedback: false,
+        setFeedback: (feedback) => set({ feedback }),
+
+        subject: "",
+        setSubject: (subject) => set({ subject }),
+      }),
+      {
+        name: "idstorage",
+      }
+    )
+  )
 );

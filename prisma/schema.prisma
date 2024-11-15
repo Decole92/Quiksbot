@@ -17,51 +17,61 @@ model User {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   fullname     String
-  clerkId      String     @unique
+  clerkId      String    @unique
   type         String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  email        String     @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  email        String    @unique
   stripeId     String?
   openAIkey    String?
   //domains Domain[]
-  credits      Int?       @default(0)
+  credits      Int?      @default(0)
   ChatBot      ChatBot[]
   subscription Billings?
-  Campaign     Campaign[]
+  // Campaign     Campaign[]
+  Mail         Mail?
+  MailId       String?
 }
 
-// model Domain {
-//   id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-//   name String
-//   icon String
+model Mail {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-//   //chatBot         ChatBot?
-//   helpdesk        HelpDesk[]
-//   filterQuestions FilterQuestions[]
-//   //products        Product[]
+  host      String   @default("smtp.hostinger.com")
+  port      Int      @default(465)
+  secure    Boolean  @default(true)
+  userEmail String // The email address for SMTP authentication
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-//   customer   Customer[]
-//   User       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   userId     String?    @db.Uuid
-//   //Campaign   Campaign?  @relation(fields: [campaignId], references: [id])
-//   campaignId String?    @db.Uuid
-// }
+  // User relation
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @db.Uuid
+}
 
 model Source {
   id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   pdfFile        PdfFile[]
   characteristic Characteristic[]
-  //website_url    String?
-  ChatBot        ChatBot?
+  webpage        Website[]
+
+  ChatBot ChatBot?
+}
+
+model Website {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  weblinks String
+  content  String
+  length   String
+  Source   Source? @relation(fields: [sourceId], references: [id])
+  sourceId String? @db.Uuid
 }
 
 model Characteristic {
-  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   characteristic String
-
-  Source   Source? @relation(fields: [sourceId], references: [id])
-  sourceId String? @db.Uuid
+  Source         Source? @relation(fields: [sourceId], references: [id])
+  sourceId       String? @db.Uuid
 }
 
 model PdfFile {
@@ -82,39 +92,79 @@ model ChatBot {
   watermark          Boolean  @default(true)
   userMessageBgColor String?  @default("#E1B177")
   chatModel          String   @default("gpt-3.5-turbo")
-  botType            botType  @default(SalesBot)
+  botType            botType  @default(Defaults)
   getDetails         Boolean  @default(false)
   prompt             String?
   role               String?
   name               String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  Source             Source?  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  sourceId           String?  @unique @db.Uuid
 
-  // helpdesk   Boolean @default(false)
-  Source        Source?         @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  sourceId      String?         @unique @db.Uuid
-  // Domain     Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
-  // domainId   String? @unique @db.Uuid
   firstQuestion FirstQuestion[]
   User          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String?         @db.Uuid
 
   // helpdesk HelpDesk[]
-
-  blockPage BlockPages[]
-
-  customer Customer[]
+  appointment Appointment?
+  blockPage   BlockPages[]
+  customer    Customer[]
 }
 
-model FirstQuestion {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  question String
-
-  // Domain   Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
-  // domainId String? @db.Uuid
-
+model Appointment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
   chatbot   ChatBot? @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
-  chatbotId String?  @db.Uuid
+  chatbotId String?  @unique @db.Uuid
+
+  appointment_type    AppointmentType[]
+  timeSlot            BusinessHours[]
+  appointments_client AppointmentClient[]
+}
+
+model BusinessHours {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  day           String // 'monday', 'tuesday', etc.
+  startTime     String // '09:00'
+  endTime       String // '17:00'
+  isOpen        Boolean      @default(true)
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId String?      @db.Uuid
+}
+
+model AppointmentType {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  typeName      String // e.g., 'Consultation', 'Follow-up', 'Therapy Session'
+  description   String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId String?      @db.Uuid
+}
+
+model AppointmentClient {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String
+  email             String
+  phone             String?
+  createdAt         DateTime          @default(now())
+  status            AppointmentStatus @default(PENDING) // Added status field
+  notes             String?
+  confirmationToken String
+  tokenExpiry       DateTime
+  tokenUsed         Boolean
+  selectedDate      DateTime
+  // Relations
+  appointment       Appointment?      @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId     String?           @db.Uuid
+  appointmentType   String // Store the selected appointment type
+  selectedTime      String // Store the selected time slot
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
 }
 
 model Billings {
@@ -124,18 +174,6 @@ model Billings {
   User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @unique @db.Uuid
 }
-
-// model HelpDesk {
-//   id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-//   question String
-//   answer   String
-
-//   // Domain   Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
-//   // domainId String? @db.Uuid
-
-//   chatbot   ChatBot? @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
-//   chatbotId String?  @db.Uuid
-// }
 
 model BlockPages {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -148,18 +186,14 @@ model FilterQuestions {
   id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   question String
   answered String?
-
-  // Domain   Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
-  // domainId String? @db.Uuid
 }
 
-// model CustomerResponses {
-//   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-//   question   String
-//   answered   String?
-//   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-//   customerId String   @db.Uuid
-// }
+model FirstQuestion {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question  String
+  chatbot   ChatBot? @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+  chatbotId String?  @db.Uuid
+}
 
 model Customer {
   id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -176,15 +210,14 @@ model Customer {
 }
 
 model ChatRoom {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  live       Boolean   @default(false)
-  mailed     Boolean   @default(false)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  Customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  customerId String?   @db.Uuid
-
-  message ChatMessage[]
+  id         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  live       Boolean       @default(false)
+  mailed     Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  Customer   Customer?     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String?       @db.Uuid
+  message    ChatMessage[]
 }
 
 model ChatMessage {
@@ -192,6 +225,7 @@ model ChatMessage {
   message    String
   role       Role?
   createdAt  DateTime  @default(now())
+  type       Type?     @default(message_text)
   updatedAt  DateTime  @updatedAt
   ChatRoom   ChatRoom? @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   chatRoomId String?   @db.Uuid
@@ -200,13 +234,12 @@ model ChatMessage {
 
 model Campaign {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
+  subject   String
   customers String[]
-  // domain    Domain[]
   template  String?
-  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String?  @db.Uuid
+  userId    String
   createdAt DateTime @default(now())
+  from      String
 }
 
 enum Plans {
@@ -216,14 +249,22 @@ enum Plans {
 }
 
 enum botType {
-  SalesBot
-  ChatPdf
+  Defaults
+  Sales
+  Services
+  Support
   Custom
 }
 
 enum Role {
   user
   ai
+}
+
+enum Type {
+  message_text
+  contact_form
+  appointment_form
 }
 
 enum Theme {

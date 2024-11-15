@@ -12,11 +12,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export async function generateMetadata() {
   return {
-    title: "AI Chatbot for websites | Chat with Pdf File | Quiksbot",
+    title: "AI Chatbot for websites | Quiksbot",
     description:
-      "Explore how AI chatbot boosts sales and enhances service with chatbot embedding, advanced analytics, PDF interactions, and OpenAI API integration using quiksbot.",
+      "Explore how AI chatbot boosts sales and enhances service with chatbot embedding, advanced analytics, and OpenAI API integration using quiksbot.",
     keywords:
-      "ai chatbot, chatbot ai, chat with pdf, chat ai, chatbot analytics, PDF interaction, chatbot integration, customer service chatbot, chat ai online, ai chat online, user experience, machine learning, natural language, LLM, openai chat, openai, quiksbot, quick ai learning, ai chat, ai bot, ai chat free, ai chatbot free, ai chatbot online, ai chatbot online free, ai texting bot, ai to talk to, artificial intelligence online chat, chat artificial intelligence, talk to artificial intelligence",
+      "ai chatbot, chatbot ai,  chat ai, chatbot analytics, chatbot integration, customer service chatbot, chat ai online, ai chat online, user experience, machine learning, natural language, LLM, openai chat, openai, quiksbot, quick ai learning, ai chat, ai bot, ai chat free, ai chatbot free, ai chatbot online, ai chatbot online free, ai texting bot, ai to talk to, artificial intelligence online chat, chat artificial intelligence, talk to artificial, email marketing, marketing campaign tool",
 
     icons: {
       icon: ["/favicon.ico?v=4"],
@@ -42,7 +42,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
   const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTIC;
   return (
     <ClerkProvider>
@@ -84,9 +83,9 @@ export default async function RootLayout({
             </EdgeStoreProvider>
 
             <Script
-              src='https://quiksbot.com/api/chatbotWidget?id=c8a0dfff-81fa-4ce4-be5e-67a8caff94ce'
+              src='https://www.quiksbot.com/api/chatbotWidget?id=76fc6ee1-5db4-437b-8db8-7258eb6dcb06'
               data-name='quiksbot'
-              data-address='https://quiksbot.com'
+              data-address='https://www.quiksbot.com'
               data-widget-size='normal'
               data-widget-button-size='normal'
               defer

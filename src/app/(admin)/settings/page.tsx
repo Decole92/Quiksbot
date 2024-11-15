@@ -1,6 +1,6 @@
-import SettingsPageClient from "@/components/SettingsComponent";
 import React from "react";
 import { Metadata } from "next";
+import SettingsPageClient from "@/components/MajorComponent/SettingsComponent";
 
 export const metadata: Metadata = {
   title: "Quiksbot | Settings",

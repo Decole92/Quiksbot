@@ -1,4 +1,4 @@
-import AnalyticsClient from "@/components/AnalyticPageComponent";
+import AnalyticsClient from "@/components/MajorComponent/AnalyticPageComponent";
 import { Metadata } from "next";
 import React from "react";
 

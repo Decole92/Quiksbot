@@ -23,7 +23,7 @@ function MaxMenu() {
               pathname.includes(menu.path)
                 ? `dark:[&]:text-[#E1B177] text-[#E1B177] `
                 : ""
-            } cursor-pointer flex items-center gap-7 hover:text-[#E1B177] dark:text-gray-400 dark:hover:text-[#E1B177]`}
+            }  hover:text-[#E1B177] dark:text-gray-400 dark:hover:text-[#E1B177] flex items-center cursor-pointer gap-7`}
             onClick={() => router.push(`${menu.path}`)}
             key={menu.label}
           >

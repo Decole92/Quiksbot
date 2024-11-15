@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
-import CreatePageComponent from "@/components/CreatepageComponent";
+import CreatePageComponent from "@/components/MajorComponent/CreatepageComponent";
+
 export const metadata: Metadata = {
   title: "Quiksbot | Create chatbot",
   description:

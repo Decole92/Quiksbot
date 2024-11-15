@@ -1,4 +1,4 @@
-import ViewMessageClient from "@/components/ViewMessageClient";
+import ViewMessageClient from "@/components/MajorComponent/ViewMessageClient";
 import { Metadata } from "next";
 import React from "react";
 

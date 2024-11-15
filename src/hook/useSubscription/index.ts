@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 
 //file docs
 export const STANDARD_LIMIT = 2;
-export const PRO_LIMIT = 22;
-export const ULTIMATE_LIMIT = 50;
-export const STANDARD_CREDITS = 25;
+export const PRO_LIMIT = 10;
+export const ULTIMATE_LIMIT = 20;
+export const STANDARD_CREDITS = 10;
 function useSubcription() {
   const [hasActiveMembership, setHasActiveMembership] = useState<Plans>();
   const [isOverFileLimit, setIsOverFileLimit] = useState(false);

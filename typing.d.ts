@@ -64,27 +64,27 @@ interface User {
   openAiKey: string?;
 }
 
-interface CustomerResponses {
-  id: string;
-  question: string;
-  answered: string | null;
-  customer: Customer;
-  customerId: string;
-}
+// interface CustomerResponses {
+//   id: string;
+//   question: string;
+//   answered: string | null;
+//   customer: Customer;
+//   customerId: string;
+// }
 
-interface Customer {
-  id: string;
-  name: string;
-  email: string | null;
-  questions: CustomerResponses[];
-  chatRoom: ChatRoom[];
-  Chatbot: ChatBot | null;
-  chatbotId: string | null;
-  country?: string;
-  city?: string;
-  lat?: string;
-  lng?: string;
-}
+// interface Customer {
+//   id: string;
+//   name: string;
+//   email: string | null;
+//   questions: CustomerResponses[];
+//   chatRoom: ChatRoom[];
+//   Chatbot: ChatBot | null;
+//   chatbotId: string | null;
+//   country?: string;
+//   city?: string;
+//   lat?: string;
+//   lng?: string;
+// }
 
 interface ChatRoom {
   id: string;
@@ -126,3 +126,37 @@ interface userDetails {
   name: string;
   email: string;
 }
+interface BusinessHoursState {
+  monday: { startTime: string; endTime: string; isOpen: boolean };
+  tuesday: { startTime: string; endTime: string; isOpen: boolean };
+  wednesday: { startTime: string; endTime: string; isOpen: boolean };
+  thursday: { startTime: string; endTime: string; isOpen: boolean };
+  friday: { startTime: string; endTime: string; isOpen: boolean };
+  saturday: { startTime: string; endTime: string; isOpen: boolean };
+  sunday: { startTime: string; endTime: string; isOpen: boolean };
+}
+
+interface AppointmentData extends FormData {
+  appointmentDate: Date;
+  selectedTime: string;
+  appointmentType: string;
+  status: "PENDING" | "CONFIRMED" | "CANCELLED";
+}
+interface FormData {
+  name: string;
+  email: string;
+}
+
+interface Contact {
+  email: string;
+}
+
+// interface Contact {
+//   id: number;
+//   name: string;
+//   email: string;
+//   location: string;
+//   acquired: string;
+//   type: "contact" | "appointment";
+//   createdAt: string;
+// }

@@ -1,11 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ChatCard from "../ChatCard";
-import { useGlobalStore } from "@/store/globalStore";
-import useSWR from "swr";
-import { useUser } from "@clerk/nextjs";
-import { getAllActiveChats, getUserCustomers } from "@/actions/customer";
-import { transformData } from "@/lib/transformData";
 import { ScrollArea } from "../ui/scroll-area";
 
 function MessageComponent({ data }: { data: any[] }) {
@@ -18,7 +13,7 @@ function MessageComponent({ data }: { data: any[] }) {
               <ChatCard
                 key={customer?.chatRoom[0]?.id}
                 customer={customer}
-                isLive={customer.chatRoom.some(
+                isLive={customer?.chatRoom?.some(
                   (chatRoom: any) => chatRoom.live
                 )}
               />
@@ -37,7 +32,7 @@ function MessageComponent({ data }: { data: any[] }) {
               <ChatCard
                 key={customer?.chatRoom[0]?.id}
                 customer={customer}
-                isLive={customer.chatRoom.some(
+                isLive={customer?.chatRoom?.some(
                   (chatRoom: any) => chatRoom.live
                 )}
               />

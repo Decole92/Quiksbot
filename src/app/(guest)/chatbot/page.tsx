@@ -1,42 +1,31 @@
 "use client";
 
-import React, { useCallback, useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
-import { XCircle } from "lucide-react";
-
+import { MessageCircle, X, XCircle } from "lucide-react";
 import { useGlobalStore } from "@/store/globalStore";
 import { getBot } from "@/actions/bot";
 import { getChatMessages, getChatRoom, startNewChat } from "@/actions/chat";
 import { postToParent } from "@/lib/parseToParent";
 import { clientPusher } from "@/lib/pusher";
 import useSWR from "swr";
-import axios from "axios";
 import type { ChatBot, ChatMessage, ChatRoom } from "@prisma/client";
 
 import ChatbotHeader from "@/components/ChatbotComponent/ChatbotHeader";
-import ChatbotMessages from "@/components/ChatbotMessages";
+import ChatbotMessages from "@/components/ChatbotComponent/ChatbotMessages";
 import SuggestItems from "@/components/ChatbotComponent/SuggestItems";
 import ChatbotInput from "@/components/ChatbotComponent/chatbotInput";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
 import defaultLogo from "../../../../public/circlegolden.png";
 
-const ChatBot: React.FC = () => {
+export default function ChatBot() {
+  const [chatId, setChatId] = useGlobalStore((state) => [
+    state.chatId,
+    state.setChatId,
+  ]);
   const [botOpened, setBotOpened] = useState(false);
   const [botId, setBotId] = useState<string>("");
-  const [userDetails, setUserDetails] = useState({ name: "", email: "" });
-  const [chatId, setChatId] = useState<string>("");
-  const [isLoading, startTransition] = useTransition();
+  const [showGreeting, setShowGreeting] = useState(true);
   const [isPending, startChatting] = useTransition();
   const [isOpen, setIsOpen] = useGlobalStore((state) => [
     state.isOpen,
@@ -51,6 +40,7 @@ const ChatBot: React.FC = () => {
       shouldRetryOnError: false,
     }
   );
+
   const {
     data: chatMessages,
     mutate,
@@ -63,6 +53,7 @@ const ChatBot: React.FC = () => {
       shouldRetryOnError: false,
     }
   );
+
   const { data: chatRoom, mutate: setChatRoom } = useSWR(
     chatId ? `/getChatRoom/${chatId}` : null,
     () => (chatId ? getChatRoom(chatId) : null),
@@ -72,15 +63,24 @@ const ChatBot: React.FC = () => {
     }
   );
 
-  const handleOpenChatBot = () => setBotOpened(!botOpened);
+  const startChatAutomatically = async () => {
+    if (bot) {
+      startChatting(async () => {
+        try {
+          const chatRoomId = await startNewChat({ id: botId });
+          setChatId(chatRoomId!);
+        } catch (error) {
+          console.error("Error starting chat:", error);
+        }
+      });
+    }
+  };
 
-  const handleInformationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    startTransition(async () => {
-      const chatRoomId = await startNewChat({ userDetails, id: botId });
-      setChatId(chatRoomId!);
-      setIsOpen(false);
-    });
+  const handleOpenChatBot = () => {
+    if (!chatId) {
+      startChatAutomatically();
+    }
+    setBotOpened(!botOpened);
   };
 
   useEffect(() => {
@@ -116,8 +116,8 @@ const ChatBot: React.FC = () => {
   useEffect(() => {
     postToParent(
       JSON.stringify({
-        width: botOpened ? 360 : 80,
-        height: botOpened ? 800 : 80,
+        width: botOpened ? 460 : 460,
+        height: botOpened ? 800 : 130,
       })
     );
   }, [botOpened]);
@@ -127,9 +127,6 @@ const ChatBot: React.FC = () => {
       if (typeof e.data === "string" && e.data.trim() !== "") {
         setBotId(e.data);
       }
-      //  else {
-      //   console.warn("Received invalid message data:", e.data);
-      // }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
@@ -147,47 +144,31 @@ const ChatBot: React.FC = () => {
     }
   }, [bot, setIsOpen]);
 
-  useEffect(() => {
-    const startChatAutomatically = async () => {
-      if (bot && !bot.getDetails) {
-        startChatting(async () => {
-          const chatRoomId = await startNewChat({ userDetails, id: botId });
-          setChatId(chatRoomId!);
-        });
-      }
-    };
-    if (botOpened) {
-      startChatAutomatically();
-    }
-  }, [bot, botId, userDetails, startChatting, botOpened]);
-
   return (
     <div
-      className={`fixed bottom-1 right-2.5 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
-      style={{ transformOrigin: "bottom right" }} // Zoom effect origin
+      className={`fixed bottom-1 right-1 md:bottom-5 md:right-5 z-50 flex flex-col items-end transition-transform duration-500`}
+      style={{ transformOrigin: "bottom right" }}
     >
-      {botOpened && (
-        <div className='lg:mb-2 md:mb-2 mb-1 w-full max-w-[350px] h-[100vh] max-h-[680px] flex flex-col bg-white dark:bg-gray-900 rounded-xl border shadow-lg overflow-hidden'>
+      {botOpened && bot && (
+        <div className='flex h-[700px]  w-full max-w-[500px] flex-col overflow-hidden rounded-xl border bg-white shadow-lg dark:bg-gray-900'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
-          <div className='flex-1 overflow-y-auto'>
+          <div className='flex-1 w-full overflow-y-auto'>
             <ChatbotMessages
               chatbot={bot as ChatBot}
               messages={chatMessages as ChatMessage[]}
-              loading={loadingChatMessages}
+              loading={loadingChatMessages || isPending}
+              chatId={chatId}
             />
           </div>
-          <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900 '>
+          <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900'>
             {!chatRoom?.live && (
               <SuggestItems
                 firstQuestion={bot?.firstQuestion as any}
-                userDetails={userDetails}
                 chatbot={bot!}
                 chatId={chatId!}
               />
             )}
-
             <ChatbotInput
-              userDetails={userDetails}
               chatRoomId={chatId!}
               chatbot={bot as ChatBot}
               type='user'
@@ -196,90 +177,41 @@ const ChatBot: React.FC = () => {
           </div>
         </div>
       )}
-
-      <button
-        id='chatbot-icon'
-        onClick={handleOpenChatBot}
-        className='relative w-12 h-12  md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md '
-        // className='relative w-20 h-20 rounded-full bg-white  dark:bg-gray-950 dark:shadow-gray-900 flex items-center justify-center focus:outline-none shadow-md'
-      >
-        {botOpened ? (
-          <XCircle
-            className='w-8 h-8 md:w-10 md:h-10 text-gray-600'
-            // className='w-10 h-10 text-gray-600'
-          />
-        ) : (
-          <Image
-            src={bot?.icon || defaultLogo}
-            alt='ChatBot'
-            // width={60}
-            // height={60}
-            width={48}
-            height={48}
-            // className='rounded-full'
-            className='rounded-full w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 '
-          />
+      <div className='flex flex-col items-end space-y-2'>
+        {showGreeting && bot && !chatId && (
+          <div className='relative bg-white dark:bg-gray-950 rounded-lg p-4 shadow-md max-w-[280px]'>
+            <button
+              onClick={() => setShowGreeting(false)}
+              className='absolute top-2 right-2 text-gray-500 hover:text-gray-700 p-1'
+            >
+              <X size={16} />
+            </button>
+            <p className='text-sm text-gray-600 dark:text-gray-300 pr-6'>
+              {bot?.greetings}
+            </p>
+          </div>
         )}
-      </button>
-
-      <Dialog open={isOpen && botOpened} onOpenChange={setIsOpen}>
-        <DialogContent className='sm:max-w-[425px]'>
-          <form onSubmit={handleInformationSubmit}>
-            <DialogHeader>
-              <DialogTitle>Let&#39;s help you out!</DialogTitle>
-              <DialogDescription>
-                We just need a few details to get started.
-              </DialogDescription>
-            </DialogHeader>
-            <div className='grid gap-4 py-4'>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='name' className='text-right'>
-                  Name
-                </Label>
-                <Input
-                  id='name'
-                  required
-                  placeholder='John Doe'
-                  className='col-span-3'
-                  value={userDetails.name}
-                  onChange={(e) =>
-                    setUserDetails((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='email' className='text-right'>
-                  Email
-                </Label>
-                <Input
-                  id='email'
-                  required
-                  type='email'
-                  placeholder='john@example.com'
-                  className='col-span-3'
-                  value={userDetails.email}
-                  onChange={(e) =>
-                    setUserDetails((prev) => ({
-                      ...prev,
-                      email: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type='submit' disabled={isLoading}>
-                {isLoading ? "Loading..." : "Continue"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+        <button
+          id='chatbot-icon'
+          onClick={() => {
+            handleOpenChatBot();
+            setShowGreeting(false);
+          }}
+          className=' items-center justify-center h-12 w-12 rounded-full shadow-md flex'
+        >
+          {botOpened ? (
+            <XCircle className='h-8 w-8 text-gray-600 ' />
+          ) : (
+            <Image
+              src={bot?.icon || defaultLogo}
+              alt='ChatBot'
+              width={48}
+              height={48}
+              className='h-8 w-8 rounded-full'
+            />
+          )}
+        </button>
+      </div>
     </div>
   );
-};
-
-export default React.memo(ChatBot);
+}

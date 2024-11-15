@@ -250,6 +250,7 @@ function General({ chatbot }: { chatbot: any }) {
                   className='flex-1 dark:bg-gray-900 dark:text-gray-400'
                   placeholder='Hey! How can we assist you today ?'
                   defaultValue={chatbot?.greetings!}
+                  maxLength={60}
                   onChange={(e) =>
                     setData((value) => ({
                       ...value,

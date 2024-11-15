@@ -22,7 +22,7 @@ import useSubcription from "@/hook/useSubscription";
 import type { ChatBot, botType } from "@prisma/client";
 import { botTypeData } from "../../../constant/Features";
 import { toast } from "sonner";
-import { updateBotSettings } from "@/actions/customer";
+import { adjustBotType, updateBotSettings } from "@/actions/customer";
 import { deleteBot } from "@/actions/bot";
 import { redirect, useRouter } from "next/navigation";
 import {
@@ -35,6 +35,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import AvailabilityCalender from "../AvailibilityCalender";
 
 function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
   const [getInfoBeforeChat, setGetInfoBeforeChat] = useState<boolean>(
@@ -50,25 +51,34 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
   const { hasActiveMembership } = useSubcription();
   const [isPending, startTransiton] = useTransition();
   const [openModel, setOpenModel] = useState(false);
+
   const handleUpdateForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     startTransiton(async () => {
       const promise = updateBotSettings(
-        botType,
         selectedModel,
         getInfoBeforeChat,
-        chatbot?.id,
-        prompt
+        chatbot?.id
       );
 
       toast.promise(promise, {
-        loading: "Updating bot settings...",
+        loading: "Settings gpt model & get client details...",
         success: `${chatbot?.name} Settings updated`,
         error: "error has occur while trying to update the bot settings",
       });
     });
   };
+
+  const handleBotType = async (botType: botType) => {
+    const promise = adjustBotType(botType, chatbot?.id);
+    toast.promise(promise, {
+      loading: "Setting chatbot type...",
+      success: `${botType} Updated.`,
+      error: "error has occur while trying to update bot types!",
+    });
+  };
+
   const handleDropBot = async () => {
     const fetch = deleteBot(chatbot?.sourceId!, chatbot);
 
@@ -134,7 +144,7 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
         <div className='grid lg:grid-cols-5 h-full rounded-lg gap-5'>
           <form
             onSubmit={handleUpdateForm}
-            className='col-span-5 lg:col-span-5 space-y-4'
+            className='col-span-5 lg:col-span-5 space-y-4 border p-4 rounded-md'
           >
             <div className='pb-2'>
               <h3 className='font-bold text-lg'>Select ChatGPT Model</h3>
@@ -189,61 +199,6 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
               </div>
             </div>
 
-            <div>
-              <h3 className='font-bold text-lg'>Choose Your Bot Type</h3>
-              <h5 className='pb-2'>
-                Select the most suitable bot for your needs. Whether you&#39;re
-                setting up a Sales Bot to engage with customers or a Chatbot
-                that interacts via PDF documents, this choice will determine how
-                your chatbot will serve your clients.
-              </h5>
-              <div className='bg-gray-200/50 p-3 rounded-md dark:bg-gray-950'>
-                <Select
-                  defaultValue={botType}
-                  onValueChange={(bot) => {
-                    if (
-                      (hasActiveMembership === "STANDARD" ||
-                        hasActiveMembership === "PRO") &&
-                      bot === "Custom"
-                    ) {
-                      alert("Customize prompt is not allowed for basic users.");
-                      return;
-                    }
-                    setBotType(bot as botType);
-                    if (bot === "ChatPdf") {
-                      setGetInfoBeforeChat(false);
-                    }
-                  }}
-                >
-                  <SelectTrigger className='p-3 w-full dark:bg-gray-900'>
-                    <SelectValue placeholder='Choose a bot type that fits your needs' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {botTypeData?.map((bot) => (
-                      <SelectItem
-                        key={bot?.value}
-                        value={bot?.value}
-                        disabled={
-                          (hasActiveMembership === "STANDARD" ||
-                            hasActiveMembership === "PRO") &&
-                          bot.value === "Custom"
-                        }
-                        className={`${
-                          (hasActiveMembership === "STANDARD" ||
-                            hasActiveMembership === "PRO") &&
-                          bot.value === "Custom"
-                            ? "text-gray-500 cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
-                        {bot?.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
             {botType === "Custom" && (
               <div>
                 <h3 className='font-bold text-lg'>Customize GPT Prompt</h3>
@@ -260,21 +215,16 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
 
             <div className='pb-2 '>
               <h3 className='font-bold text-lg'>Collect Client Information</h3>
-              <h5 className='pb-2'>
-                Would you like to gather client details before starting the
-                chat?
-              </h5>
+              <h5 className='pb-2'>Would you like to gather client details?</h5>
 
               <div className='flex items-center justify-between space-x-4 border p-3 rounded-md dark:bg-gray-900'>
                 <Label htmlFor='use-own-key'>
-                  Enable a dialog to request client information before
-                  initiating the conversation.
+                  Enable a form for client information before initiating the
+                  conversation.
                 </Label>
 
                 <Switch
-                  disabled={
-                    hasActiveMembership === "STANDARD" || botType === "ChatPdf"
-                  }
+                  disabled={hasActiveMembership === "STANDARD"}
                   id='get-info-before-chat'
                   checked={getInfoBeforeChat}
                   onCheckedChange={setGetInfoBeforeChat}
@@ -282,33 +232,6 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
               </div>
             </div>
 
-            <div className=' bg-gray-200/50 p-3 rounded-md dark:bg-gray-900 '>
-              <Card
-                onClick={() => {
-                  if (hasActiveMembership !== "STANDARD") {
-                    setOpenModel(true);
-                  }
-                }}
-                className={`${
-                  hasActiveMembership === "STANDARD"
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer"
-                } border border-red-500  hover:bg-gray-200/50 hover:border-red-500 group dark:bg-gray-950 dark:hover:text-red-500 dark:text-gray-400`}
-              >
-                <CardHeader>
-                  <CardTitle className='text-black font-bold group-hover:text-red-500 dark:text-gray-400'>
-                    Delete Chatbot
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className='text-gray-500 '>
-                    Deleting this chatbot is an irreversible action. All
-                    associated data and conversations will be permanently
-                    removed.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
             <Button
               disabled={isPending}
               type='submit'
@@ -317,6 +240,88 @@ function SettingsPage({ chatbot }: { chatbot: ChatBot }) {
               Save Changes
             </Button>
           </form>
+        </div>
+
+        <div className='p-2 py-4'>
+          <h3 className='font-bold text-lg'>Choose Your Bot Type</h3>
+          <h5 className='pb-2'>
+            Choose the bot that best fits your needs. Whether it&#39;s a Sales
+            Bot to engage customers, a Services Bot for inquiries, or a Support
+            Bot for tickets, this decision shapes how your chatbot will serve
+            clients.
+          </h5>
+          <div className='bg-gray-200/50 p-3 rounded-md dark:bg-gray-950'>
+            <Select
+              defaultValue={botType}
+              onValueChange={(bot) => {
+                if (
+                  (hasActiveMembership === "STANDARD" ||
+                    hasActiveMembership === "PRO") &&
+                  bot === "Custom"
+                ) {
+                  alert("Customize prompt is not allowed for basic users.");
+                  return;
+                }
+
+                handleBotType(bot as botType);
+                setBotType(bot as botType);
+              }}
+            >
+              <SelectTrigger className='p-3 w-full dark:bg-gray-900'>
+                <SelectValue placeholder='Choose a bot type that fits your needs' />
+              </SelectTrigger>
+              <SelectContent>
+                {botTypeData?.map((bot) => (
+                  <SelectItem
+                    key={bot?.value}
+                    value={bot?.value}
+                    disabled={
+                      (hasActiveMembership === "STANDARD" ||
+                        hasActiveMembership === "PRO") &&
+                      bot.value === "Custom"
+                    }
+                    className={`${
+                      (hasActiveMembership === "STANDARD" ||
+                        hasActiveMembership === "PRO") &&
+                      bot.value === "Custom"
+                        ? "text-gray-500 cursor-not-allowed"
+                        : ""
+                    }`}
+                  >
+                    {bot?.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {botType === "Services" && <AvailabilityCalender id={chatbot?.id} />}
+        </div>
+
+        <div className=' bg-gray-200/50 p-3 rounded-md dark:bg-gray-900 mt-2'>
+          <Card
+            onClick={() => {
+              if (hasActiveMembership !== "STANDARD") {
+                setOpenModel(true);
+              }
+            }}
+            className={`${
+              hasActiveMembership === "STANDARD"
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+            } border border-red-500  hover:bg-gray-200/50 hover:border-red-500 group dark:bg-gray-950 dark:hover:text-red-500 dark:text-gray-400`}
+          >
+            <CardHeader>
+              <CardTitle className='text-black font-bold group-hover:text-red-500 dark:text-gray-400'>
+                Delete Chatbot
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-gray-500 '>
+                Deleting this chatbot is an irreversible action. All associated
+                data and conversations will be permanently removed.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

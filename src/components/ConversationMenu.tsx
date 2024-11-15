@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import logo from "../../public/golden.png";
 import MessageComponent from "./MessageTab/MessageComponent";
@@ -9,10 +9,11 @@ import { getChatBotByUser } from "@/actions/bot";
 import ConversationSearch from "./ConversationSearch";
 import { Button } from "./ui/button";
 import { Download } from "lucide-react";
-import { getAllActiveChats, getUserCustomers } from "@/actions/customer";
+import { getUserCustomers } from "@/actions/customer";
 import Image from "next/image";
-import jsPDF from "jspdf";
+
 import { fetchAndDownloadPDF } from "@/lib/pdfFomatter";
+import type { ChatRoom, Customer } from "@prisma/client";
 
 type Props = {
   domains?:
@@ -28,28 +29,16 @@ const ConversationMenu = () => {
   const { user } = useUser();
   const [selectedBotId, setSelectedBotId] = React.useState<string>("");
   const [activeTab, setActiveTab] = useState("active");
+  const [filteredData, setFilteredData] = useState<Customer[]>([]);
   const { data: chatbots } = useSWR(
     "/api/fetchBot",
     user ? async () => await getChatBotByUser(user?.id) : null
-  );
-
-  const { data: getAllActiveChat, isLoading } = useSWR(
-    `/api/getActiveChats/${user?.id}`,
-    user ? async () => await getAllActiveChats(user?.id) : null
   );
 
   const { data: allUserCustomers, isLoading: loading } = useSWR(
     `/api/getCustomers/${user?.id}`,
     user ? async () => await getUserCustomers(user?.id) : null
   );
-
-  const filteredChats = React.useMemo(() => {
-    if (!selectedBotId) return getAllActiveChat;
-    // console.log("getAllActive", getAllActiveChat);
-    return getAllActiveChat?.filter(
-      (chat: any) => chat.chatbotId === selectedBotId
-    );
-  }, [getAllActiveChat, selectedBotId]);
 
   const filteredCustomers = React.useMemo(() => {
     if (!selectedBotId) return allUserCustomers;
@@ -58,15 +47,34 @@ const ConversationMenu = () => {
     );
   }, [allUserCustomers, selectedBotId]);
 
-  if (loading || isLoading) {
+  const allActiveUsers = allUserCustomers?.filter((customer) =>
+    customer.chatRoom?.some((chatRoom: ChatRoom) => chatRoom.live === true)
+  );
+
+  const filteredActiveCustomers = React.useMemo(() => {
+    if (!selectedBotId) return allActiveUsers;
+    return allUserCustomers?.filter(
+      (customer: any) => customer.chatbotId === selectedBotId
+    );
+  }, [allUserCustomers, selectedBotId]);
+
+  useEffect(() => {
+    setFilteredData(
+      activeTab === "expired"
+        ? filteredCustomers || []
+        : filteredActiveCustomers || []
+    );
+  }, [activeTab, filteredCustomers, filteredActiveCustomers]);
+
+  if (loading) {
     return (
       <div className='flex md:max-w-md  mx-auto w-full h-screen justify-center items-center'>
         <div>
           <Image
             src={logo}
             alt='logo'
-            width={100}
-            height={100}
+            width={50}
+            height={50}
             className='rounded-full animate-spin'
           />
         </div>
@@ -74,8 +82,6 @@ const ConversationMenu = () => {
     );
   }
 
-  const filteredData =
-    activeTab === "expired" ? filteredCustomers : filteredChats;
   return (
     <div className='lg:w-1/3 md:w-1/3 w-full border-r bg-white dark:bg-transparent dark:text-gray-400 h-full'>
       <div className='p-5'>
@@ -119,7 +125,7 @@ const ConversationMenu = () => {
         />
       </div>
 
-      <MessageComponent data={filteredData as any} />
+      {allUserCustomers && <MessageComponent data={filteredData as any} />}
     </div>
   );
 };

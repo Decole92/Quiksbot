@@ -1,17 +1,9 @@
 "use server";
 
 import prisma from "../../../prisma/client";
-
 import { auth } from "@clerk/nextjs/server";
-
 import { BASE_URL } from "../../../constant/url";
-import { Kufam } from "next/font/google";
 import { revalidatePath } from "next/cache";
-
-type userDetails = {
-  name: string;
-  email: string;
-};
 
 export const updateCredits = async (userId: string) => {
   try {
@@ -42,14 +34,7 @@ export const updateCredits = async (userId: string) => {
   }
 };
 
-export const startNewChat = async ({
-  userDetails,
-  id,
-}: {
-  userDetails: userDetails;
-  id: string;
-}) => {
-  const { name, email } = userDetails;
+export const startNewChat = async ({ id }: { id: string }) => {
   try {
     const chatbot = await prisma.chatBot.findUnique({
       where: {
@@ -58,15 +43,13 @@ export const startNewChat = async ({
     });
 
     if (!chatbot) return;
-
-    // console.log("about to get location here>>>");
-
     const response = await fetch(`${BASE_URL}/api/getLocation`, {
       method: "GET",
       headers: {
         "Content-type": "application/json",
       },
     });
+
     const data = await response.json();
 
     // console.log("this is data server side", data);
@@ -74,8 +57,8 @@ export const startNewChat = async ({
 
     const customer = await prisma.customer.create({
       data: {
-        name: name === "" ? "guest" : name,
-        email: email === "" ? "guest" : email,
+        name: "guest",
+        email: "guest@mail.com",
         country: country ? country : null,
         city: city ? city : null,
         lat: lat ? lat.toString() : null,
@@ -88,7 +71,7 @@ export const startNewChat = async ({
     });
 
     // Log and return the customer ID
-    console.log("customerId", customer.id, name, email);
+    console.log("customerId", customer.id);
     const customerId = customer?.id;
 
     //insert chatRoom
@@ -106,20 +89,37 @@ export const startNewChat = async ({
     const chatSessionId = chatSession?.id;
 
     //insert initial message
-    if (chatbot?.botType === "SalesBot" || chatbot?.botType === "Custom") {
-      await prisma.chatMessage.create({
-        data: {
-          message: `${chatbot?.greetings}  `,
-          role: "ai",
-          ChatRoom: {
-            connect: {
-              id: chatSessionId,
-            },
+    // if (chatbot?.botType === "Sales" || chatbot?.botType === "Services" || chatbot?.botType === "Custom") {
+    await prisma.chatMessage.create({
+      data: {
+        message: `${chatbot?.greetings}  `,
+        role: "ai",
+        ChatRoom: {
+          connect: {
+            id: chatSessionId,
           },
-          seen: true,
         },
-      });
-    }
+        seen: true,
+      },
+    });
+    // }
+    //insert contact form
+
+    // if (chatbot.getDetails) {
+    //   await prisma.chatMessage.create({
+    //     data: {
+    //       message: "Please provide your contact information:",
+    //       role: "ai",
+    //       type: "contact_form",
+    //       ChatRoom: {
+    //         connect: {
+    //           id: chatSessionId,
+    //         },
+    //       },
+    //       seen: true,
+    //     },
+    //   });
+    // }
 
     return chatSessionId;
   } catch (err) {
@@ -203,5 +203,38 @@ export const deleteChatRoomById = async (id: string) => {
     return {
       completed: false,
     };
+  }
+};
+
+export const updateGuestDetails = async ({
+  userDetails,
+  id,
+}: {
+  userDetails: { name: string; email: string };
+  id: string;
+}) => {
+  if (!id || !userDetails) {
+    throw new Error("There's no id or userDetails provided!");
+  }
+
+  try {
+    const chatroom = await prisma.chatRoom.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    const guestUpdate = await prisma.customer.update({
+      where: {
+        id: chatroom?.customerId!,
+      },
+      data: {
+        name: userDetails?.name,
+        email: userDetails?.email,
+      },
+    });
+    return guestUpdate;
+  } catch (err) {
+    console.log("error occurs while try to update guest details", err);
   }
 };

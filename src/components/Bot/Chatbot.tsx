@@ -14,7 +14,7 @@ import axios from "axios";
 import type { ChatBot, ChatMessage, ChatRoom } from "@prisma/client";
 
 import ChatbotHeader from "@/components/ChatbotComponent/ChatbotHeader";
-import ChatbotMessages from "@/components/ChatbotMessages";
+import ChatbotMessages from "@/components/ChatbotComponent/ChatbotMessages";
 import SuggestItems from "@/components/ChatbotComponent/SuggestItems";
 import ChatbotInput from "@/components/ChatbotComponent/chatbotInput";
 import {
@@ -69,16 +69,6 @@ const ChatBot: React.FC = () => {
   );
 
   const handleOpenChatBot = () => setBotOpened(!botOpened);
-
-  const handleInformationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    startTransition(async () => {
-      const chatRoomId = await startNewChat({ userDetails, id: botId });
-      setChatId(chatRoomId!);
-      setIsOpen(false);
-    });
-  };
 
   useEffect(() => {
     if (chatId) {
@@ -144,7 +134,7 @@ const ChatBot: React.FC = () => {
     const startChatAutomatically = async () => {
       if (bot && !bot.getDetails) {
         startChatting(async () => {
-          const chatRoomId = await startNewChat({ userDetails, id: botId });
+          const chatRoomId = await startNewChat({ id: botId });
           setChatId(chatRoomId!);
         });
       }
@@ -164,6 +154,7 @@ const ChatBot: React.FC = () => {
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
           <div className='flex-1 overflow-y-auto'>
             <ChatbotMessages
+              chatId={chatId}
               chatbot={bot as ChatBot}
               messages={chatMessages as ChatMessage[]}
             />
@@ -171,13 +162,11 @@ const ChatBot: React.FC = () => {
           <div className='sticky bottom-0 z-30 bg-white dark:bg-gray-900 '>
             <SuggestItems
               firstQuestion={bot?.firstQuestion as any}
-              userDetails={userDetails}
               chatbot={bot!}
               chatId={chatId!}
             />
 
             <ChatbotInput
-              userDetails={userDetails}
               chatRoomId={chatId!}
               chatbot={bot as ChatBot}
               type='user'
@@ -210,63 +199,6 @@ const ChatBot: React.FC = () => {
           />
         )}
       </button>
-
-      <Dialog open={isOpen && botOpened} onOpenChange={setIsOpen}>
-        <DialogContent className='sm:max-w-[425px]'>
-          <form onSubmit={handleInformationSubmit}>
-            <DialogHeader>
-              <DialogTitle>Let&#39;s help you out!</DialogTitle>
-              <DialogDescription>
-                We just need a few details to get started.
-              </DialogDescription>
-            </DialogHeader>
-            <div className='grid gap-4 py-4'>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='name' className='text-right'>
-                  Name
-                </Label>
-                <Input
-                  id='name'
-                  required
-                  placeholder='John Doe'
-                  className='col-span-3'
-                  value={userDetails.name}
-                  onChange={(e) =>
-                    setUserDetails((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='email' className='text-right'>
-                  Email
-                </Label>
-                <Input
-                  id='email'
-                  required
-                  type='email'
-                  placeholder='john@example.com'
-                  className='col-span-3'
-                  value={userDetails.email}
-                  onChange={(e) =>
-                    setUserDetails((prev) => ({
-                      ...prev,
-                      email: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type='submit' disabled={isLoading}>
-                {isLoading ? "Loading..." : "Continue"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

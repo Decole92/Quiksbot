@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/SideMenu/Sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
 import { ClerkLoaded, RedirectToSignIn } from "@clerk/nextjs";
@@ -10,19 +10,18 @@ import React from "react";
 async function Adminlayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // const { userId } = await auth();
-
-  // if (!userId) RedirectToSignIn();
   return (
     <ClerkLoaded>
-      <div className=''>
+      <div className='min-h-screen bg-background'>
         <Header />
 
-        <div className='flex md:max-h-screen w-full h-full  '>
+        <div className='flex w-full'>
           <Sidebar />
-          <div className='w-full md:min-h-screen h-full flex flex-col pl-10 md:pl-4'>
-            {children}
-          </div>
+          <main className='flex-1 '>
+            <div className='w-full md:min-h-screen h-full flex flex-col pl-16 md:pl-4'>
+              {children}
+            </div>
+          </main>
         </div>
       </div>
     </ClerkLoaded>

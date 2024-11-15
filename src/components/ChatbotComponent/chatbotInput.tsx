@@ -9,14 +9,13 @@ import { sendMessage } from "@/actions/chat/sendMessage";
 import Image from "next/image";
 import logo from "../../../public/circlegolden.png";
 import Link from "next/link";
+import ContactForm from "./ContactForm";
 function ChatbotInput({
-  userDetails,
   chatRoomId,
   chatbot,
   type,
   isPageLoading,
 }: {
-  userDetails: { name: string; email: string };
   chatRoomId: string;
   chatbot: ChatBot;
   type: string;
@@ -24,10 +23,9 @@ function ChatbotInput({
 }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState("");
-  const [isOpen, setIsOpen, formStatus] = useGlobalStore((state) => [
+  const [isOpen, setIsOpen] = useGlobalStore((state) => [
     state.isOpen,
     state.setIsOpen,
-    state.formStatus,
   ]);
 
   const { data: chatMessages, mutate } = useSWR(
@@ -43,16 +41,10 @@ function ChatbotInput({
     chatRoomId !== null ? await getChatRoom(chatRoomId) : null
   );
 
-  const { name, email } = userDetails;
-
   const handleAskQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     // console.log("formStatus", formStatus);
-    if (!formStatus && chatbot?.getDetails) {
-      setIsOpen(true);
-      // console.log("isOpen from first if", isOpen);
-      return;
-    }
+
     const passedMessage = message;
     setMessage("");
 
@@ -64,6 +56,18 @@ function ChatbotInput({
       chatRoomId: chatRoomId,
       role: type === "assistant" ? "ai" : "user",
       seen: true,
+    };
+
+    const contactFormMessage: ChatMessage = {
+      id: Date.now().toString(),
+      message: "",
+      //@ts-ignore
+      createdAt: new Date().toISOString(),
+      chatRoomId: chatRoomId,
+      role: "ai",
+      seen: true,
+      type: "contact_form",
+      component: <ContactForm id={chatRoomId} />,
     };
 
     const loadingMessage: ChatMessage = {
@@ -102,7 +106,7 @@ function ChatbotInput({
           passedMessage,
           chatRoomId,
           chatbot,
-          type === "assistant" ? "ai" : name
+          type === "assistant" ? "ai" : "user"
         );
         // console.log("Message sent:", result);
 
@@ -113,10 +117,13 @@ function ChatbotInput({
                 ? { ...msg, message: result?.message!, id: result?.id! }
                 : msg?.id === userMessage?.id && chatRoom?.live!
                 ? { ...msg, message: result?.message!, id: result?.id! }
+                : msg.type === "contact_form"
+                ? { ...msg, component: <ContactForm id={chatRoomId} /> }
                 : msg
             ),
+
           populateCache: false,
-          revalidate: false,
+          revalidate: true,
         });
 
         setChatRoom(getChatRoom(chatRoomId));
@@ -125,8 +132,6 @@ function ChatbotInput({
       }
     });
   };
-
-  const isCheck = chatbot?.getDetails ? isPageLoading : false;
 
   return (
     <div className=''>
@@ -143,7 +148,7 @@ function ChatbotInput({
           placeholder='Ask your question ?'
         />
         <Button
-          disabled={isPending || !message || isCheck}
+          disabled={isPending || !message}
           type='submit'
           className={`p-2 dark:bg-gray-950  bg-gray-200 shadow-lg shadow-gray-300 dark:shadow-gray-700 rounded-md group dark:text-gray-400 dark:hover:bg-[${chatbot?.userMessageBgColor}] hover:bg-[${chatbot?.userMessageBgColor}]`}
         >

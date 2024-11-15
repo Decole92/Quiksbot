@@ -66,13 +66,23 @@ export const getUserPdfFiles = async (userId: string) => {
 
 export const getUserById = async (id: string) => {
   auth().protect();
+  if (!id) return;
+
   try {
     const user = await prisma.user.findUnique({
       where: {
-        clerkId: id,
+        clerkId: id!,
+      },
+      include: {
+        Mail: true,
       },
     });
-    return { openAikey: user?.openAIkey };
+    console.log("mail", user);
+    return {
+      openAikey: user?.openAIkey,
+      mailId: user?.MailId,
+      email: user?.Mail?.userEmail,
+    };
   } catch (err) {
     console.log(
       "err occurs while getting getUserById from the server action",

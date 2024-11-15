@@ -14,7 +14,7 @@ import useSWR from "swr";
 
 type Props = {
   firstQuestion: FirstQuestion[];
-  userDetails: { name: string; email: string };
+
   chatbot: ChatBot;
   chatId: string;
   // chatRoom: ChatRoom;
@@ -24,7 +24,7 @@ type Props = {
 
 function SuggestItems({
   firstQuestion,
-  userDetails,
+
   chatbot,
   chatId,
 }: // setChatRoom,
@@ -36,7 +36,6 @@ Props) {
     state.isOpen,
     state.setIsOpen,
   ]);
-  const { name, email } = userDetails;
 
   const { data: chatMessages, mutate } = useSWR("/getMessages", async () =>
     chatId !== null ? await getChatMessages(chatId) : null
@@ -48,14 +47,6 @@ Props) {
   );
 
   const handleFirstQuestion = async (question: string) => {
-    if (
-      (!name || !email) &&
-      chatbot?.getDetails
-      // hasActiveMembership !== "STANDARD"
-    ) {
-      setIsOpen(true);
-      return;
-    }
     const passedMessage = question;
 
     const userMessage: ChatMessage = {
@@ -126,22 +117,6 @@ Props) {
     });
   };
   return (
-    // <div className='w-full p-5'>
-    //   <ul className='flex flex-nowrap gap-3 w-full overflow-x-auto hide-scrollbar'>
-    //     {firstQuestion?.map((question) => (
-    //       <li key={question?.id} className='flex-shrink-0'>
-    //         <Button
-    //           disabled={isLoading || !chatRoom || !chatbot}
-    //           onClick={() => handleFirstQuestion(question?.question)}
-    //           variant={"ghost"}
-    //           className='rounded-full px-4 py-2 whitespace-nowrap hover:bg-muted border'
-    //         >
-    //           {question.question}
-    //         </Button>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
     <div className='p-2 md:p-3 lg:p-4 w-full'>
       <ul className='flex flex-nowrap gap-1 md:gap-3 w-full overflow-x-auto hide-scrollbar'>
         {firstQuestion?.map((question) => (

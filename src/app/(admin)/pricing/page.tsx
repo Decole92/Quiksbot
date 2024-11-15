@@ -1,4 +1,4 @@
-import PricingClient from "@/components/pricingComponent";
+import PricingClient from "@/components/MajorComponent/pricingComponent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,22 +1,11 @@
 "use client";
 import React, { useEffect, useState, useTransition } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { getChatMessages, getChatRoom, startNewChat } from "@/actions/chat";
 import ChatbotHeader from "@/components/ChatbotComponent/ChatbotHeader";
 import useSWR from "swr";
 import { getBot } from "@/actions/bot";
-import ChatbotMessages from "@/components/ChatbotMessages";
+import ChatbotMessages from "@/components/ChatbotComponent/ChatbotMessages";
 import ChatbotInput from "@/components/ChatbotComponent/chatbotInput";
 import SuggestItems from "@/components/ChatbotComponent/SuggestItems";
 import { useGlobalStore } from "@/store/globalStore";
@@ -32,33 +21,28 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
     "/getbot",
     id ? async () => await getBot(id) : null
   );
-  const [userDetails, setUserDetails] = useState({
-    name: "",
-    email: "",
-  });
-  const [isOpen, setIsOpen, formStatus, setFormStatus] = useGlobalStore(
-    (state) => [
-      state.isOpen,
-      state.setIsOpen,
-      state.formStatus,
-      state.setFormStatus,
-    ]
-  );
+
+  const [isOpen, setIsOpen, chatId, setChatId] = useGlobalStore((state) => [
+    state.isOpen,
+    state.setIsOpen,
+
+    state.chatId,
+    state.setChatId,
+  ]);
 
   useEffect(() => {
     const startChatAutomatically = async () => {
-      if (bot && !formStatus) {
+      if (bot) {
         startChatting(async () => {
-          const chatRoomId = await startNewChat({ userDetails, id });
+          const chatRoomId = await startNewChat({ id });
           setChatId(chatRoomId!);
         });
       }
     };
-
-    startChatAutomatically(); // Start chat on component mount
-  }, [id, bot]);
-
-  const [chatId, setChatId] = useState<string>("");
+    if (!chatId) {
+      startChatAutomatically();
+    }
+  }, [id, setChatId, bot, chatId]);
 
   const {
     data: chatMessages,
@@ -72,17 +56,7 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
     chatId ? `/getChatRoom/${chatId}` : null,
     async () => (chatId !== null ? await getChatRoom(chatId) : null)
   );
-  const handleInformationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    startTransition(async () => {
-      const chatRoomId = await startNewChat({ userDetails, id });
-      setChatId(chatRoomId!);
-      setIsOpen(false);
-      setFormStatus(true);
-    });
-  };
-
+  // console.log("chatrooom", chatMessages, chatRoom);
   useEffect(() => {
     const fetchMessages = async () => {
       await mutate(getChatMessages(chatId));
@@ -125,66 +99,13 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
 
   return (
     <div className=''>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className='sm:max-w-[425px]  '>
-          <form onSubmit={handleInformationSubmit}>
-            <DialogHeader>
-              <DialogTitle>Lets help you out!</DialogTitle>
-              <DialogDescription>
-                I just need a few details to get started.
-              </DialogDescription>
-            </DialogHeader>
-            <div className='grid gap-4 py-4 '>
-              <div className='grid grid-cols-4 items-center gap-4'>
-                <Label htmlFor='name' className='text-right'>
-                  Name
-                </Label>
-                <Input
-                  required
-                  placeholder='John Doe'
-                  className='col-span-3'
-                  value={userDetails.name}
-                  onChange={(e) =>
-                    setUserDetails((values) => ({
-                      ...values,
-                      name: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className='grid grid-cols-4 items-center gap-4 '>
-                <Label htmlFor='username' className='text-right'>
-                  Email
-                </Label>
-                <Input
-                  required
-                  type='email'
-                  value={userDetails.email}
-                  placeholder='abc@test.com'
-                  className='col-span-3'
-                  onChange={(e) =>
-                    setUserDetails((values) => ({
-                      ...values,
-                      email: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button disabled={isLoading} type='submit'>
-                {!isLoading ? "Continue" : "Loading..."}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
       {bot && (
         <div className='flex flex-col h-screen max-w-3xl mx-auto bg-white md:rounded-t-lg shadow-2xl md:mt-10 dark:bg-gray-900'>
           <ChatbotHeader bot={bot as ChatBot} live={chatRoom?.live} />
 
           <div className='flex-1 overflow-y-auto'>
             <ChatbotMessages
+              chatId={chatId}
               chatbot={bot as ChatBot}
               messages={chatMessages as ChatMessage[]}
               loading={loadingChatMessages}
@@ -195,13 +116,11 @@ function ChatbotPage({ params: { id } }: { params: { id: string } }) {
             {!chatRoom?.live && (
               <SuggestItems
                 firstQuestion={bot?.firstQuestion as any}
-                userDetails={userDetails}
                 chatbot={bot!}
                 chatId={chatId!}
               />
             )}
             <ChatbotInput
-              userDetails={userDetails}
               chatRoomId={chatId}
               chatbot={bot as ChatBot}
               type='user'

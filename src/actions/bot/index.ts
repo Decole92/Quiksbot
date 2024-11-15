@@ -9,6 +9,7 @@ import pineconeClient from "@/lib/pinecone";
 import { indexName } from "@/lib/langchain";
 import { ChatBot, PdfFile, botType } from "@prisma/client";
 import { backendClient } from "@/lib/edgstore-server";
+import { onMailer } from "../customer";
 
 export const updateBotName = async (
   id: string,
@@ -79,8 +80,10 @@ export const getBot = async (id: string) => {
           include: {
             pdfFile: true,
             characteristic: true,
+            webpage: true,
           },
         },
+        appointment: true,
         User: true,
         firstQuestion: true,
       },
@@ -185,7 +188,7 @@ export const getChatBotByUser = async (id: string) => {
     console.error("No ID provided");
     return null;
   }
-  console.log("userId", id);
+
   try {
     const user = await prisma.user.findUnique({
       where: { clerkId: id },
@@ -201,6 +204,95 @@ export const getChatBotByUser = async (id: string) => {
           email: getUser?.emailAddresses[0].emailAddress!,
         },
       });
+
+      const welcomeMail = {
+        from: process.env.NODE_MAILER_EMAIL,
+        to: newUser?.email,
+        subject: "🎉 Welcome to QUIKSBOT – Let's Get Started!",
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Welcome to QUIKSBOT</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  line-height: 1.6;
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  color: #555;
+                  background-color: #f4f4f4;
+                }
+                .container {
+                  background-color: #ffffff;
+                  border-radius: 10px;
+                  padding: 20px;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                .header {
+                  text-align: center;
+                  margin-bottom: 20px;
+                }
+                .header h1 {
+                  color: #333;
+                  font-size: 24px;
+                  margin-top: 0;
+                }
+                .button {
+                  background-color: #E1B177;
+                  color: white;
+                  padding: 12px 25px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  display: inline-block;
+                  font-weight: bold;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  margin: 20px 0;
+                }
+                .footer {
+                  font-size: 14px;
+                  color: #777;
+                  border-top: 1px solid #eee;
+                  padding-top: 15px;
+                  text-align: center;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>Welcome to QUIKSBOT, ${getUser?.firstName}!</h1>
+                </div>
+                <p>We're thrilled to have you join our community! At QUIKSBOT, we're committed to helping you connect with your customers in real-time, offering seamless chat support and making every interaction count.</p>
+                
+                <p>Here's a quick overview of what you can do:</p>
+                <ul>
+                  <li><strong>Engage</strong> in real-time chat support with your customers.</li>
+                  <li><strong>Access Chat Logs:</strong> View past interactions anytime.</li>
+                  <li><strong>Personalize</strong> your bot settings for a tailored customer experience.</li>
+                </ul>
+                
+                <div style="text-align: center;">
+                  <a href="https://quiksbot.com/dashboard" class="button">Go to Your Dashboard</a>
+                </div>
+      
+                <p>If you have any questions or need assistance getting started, our support team is just a click away. Feel free to reach out anytime!</p>
+      
+                <div class="footer">
+                  <p>Thank you for choosing QUIKSBOT. We're excited to be part of your journey!</p>
+                  <p>© 2023 QUIKSBOT. All rights reserved.</p>
+                  <p><small>This email was sent automatically. Please do not reply.</small></p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+      };
+
+      await onMailer({}, welcomeMail);
     }
 
     const getBotByUser = await prisma.chatBot.findMany({
@@ -210,6 +302,7 @@ export const getChatBotByUser = async (id: string) => {
           include: {
             pdfFile: true,
             characteristic: true,
+            webpage: true,
           },
         },
         customer: {
@@ -221,7 +314,7 @@ export const getChatBotByUser = async (id: string) => {
         firstQuestion: true,
       },
     });
-    console.log("getBotByUser", getBotByUser);
+
     //console.log("This is bot", getBotByUser);
     return getBotByUser;
   } catch (err) {
@@ -282,7 +375,7 @@ export const createNewChatbot = async (botName: string, fullName: string) => {
     const chatbot = await prisma.chatBot.create({
       data: {
         name: botName,
-        greetings: "Hey!, How can we help you today?",
+        greetings: "Hey 👋 , How can we help you today?",
         userId: user.id,
         role: "Customer support agent", // Associating the chatbot with the created/found user
       },
@@ -351,9 +444,22 @@ export const addCharacteristic = async (
   }
 };
 
+export const deleteWebsiteUrl = async (id: string) => {
+  auth().protect();
+  if (!id) throw new Error("invalid id");
+  try {
+    const del = await prisma.website.delete({
+      where: {
+        id: id,
+      },
+    });
+    return del;
+  } catch (err) {
+    console.log("error occurs while trying to delete website url", err);
+  }
+};
 export const deletePdf = async (id: string, chatbotId: string) => {
-  // const { userId } = await auth();
-  // if (!userId) throw new Error("unauthorized user");
+  auth().protect();
   if (!id) return;
 
   try {

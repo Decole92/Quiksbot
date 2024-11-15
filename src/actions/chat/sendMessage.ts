@@ -58,6 +58,7 @@ export const sendMessage = async (
           include: {
             characteristic: true,
             pdfFile: true,
+            webpage: true,
           },
         },
       },
@@ -107,8 +108,12 @@ export const sendMessage = async (
 
     //console.log(`this is formattedRelevantDocs ${formattedRelevantDocs}`);
 
-    const systemCharacteristicData = bot?.Source?.characteristic
-      ?.map((s: any) => s.characteristic)
+    const characteristicData = bot?.Source?.characteristic
+      ?.map((s) => s.characteristic)
+      .join(" + ");
+
+    const websiteUrlData = bot?.Source?.webpage
+      ?.map((s) => s.content)
       .join(" + ");
 
     //console.log("this is systemPromptData", systemCharacteristicData);
@@ -116,8 +121,8 @@ export const sendMessage = async (
 
     let AIContent = "";
 
-    if (chatbot?.botType === "SalesBot") {
-      AIContent = `You are a helpful AI assistant engaging with ${person} user. Your primary focus is on the following key information: ${systemCharacteristicData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
+    if (chatbot?.botType === "Defaults") {
+      AIContent = `You are a helpful AI assistant engaging with ${person} user. Your primary focus is on the following key information: ${characteristicData}, ${websiteUrlData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
       If a user's query falls within your specified content areas:
        - Respond helpfully based on your knowledge.
        - Do not add the "(realtime)" keyword to your response.
@@ -138,32 +143,30 @@ export const sendMessage = async (
        - Acknowledge their decision: "I understand. A human agent will continue this conversation shortly. (realtime)"
        
        Always prioritize user privacy and data protection. Be helpful within your defined scope, and gracefully hand off to human support when necessary.`;
-    } else if (chatbot?.botType === "ChatPdf") {
-      AIContent = `I can help you with information extracted from our available documents. My responses will be based on these key contexts: ${systemCharacteristicData}, along with relevant document details: ${formattedRelevantDocs}. Please focus your questions on the content of these documents, and I'll do my best to provide accurate answers!.`;
+    } else if (chatbot?.botType === "Services") {
+      AIContent = `You are a helpful AI assistant engaging with a user named ${person}. Your main goal is to address the following specific information: ${characteristicData}, ${websiteUrlData}, ${formattedRelevantDocs}. Maintain a friendly, respectful tone, and enhance communication with occasional emojis 😊.
+    If a user's question is relevant to your specified content areas:
+   - Provide a thorough, accurate response within your knowledge.
+   - **Do not** include the keyword "(realtime)" in your response.
+  If a user's question is beyond your content areas:
+   1. Politely explain that their question falls outside your current scope.
+   2. Offer to collect their email address to connect them with a human agent for a follow-up.
+   3. Assure them that a human agent will continue the conversation shortly, whether or not they provide an email address.
+   4. **Add "(realtime)" at the end of your response** to signal human assistance is incoming.
+  
+   Examples of off-topic responses:
+   - If they decline to provide an email: 
+     - "I understand. A human agent will continue this conversation shortly. (realtime)"
+   - If they provide an email: 
+     - "Thank you for providing your email. A human agent will be in touch soon. (realtime)"
+   - If they neither accept nor decline:
+     - "A human agent will follow up shortly to help you further. (realtime)"
+
+**Appointment Requests**: If the user requests to book an appointment, guide them to fill out the appointment form on their screen. Also, include **"(appointment)"** at the end of your response to indicate their booking intent.
+
+Always prioritize user privacy and data protection, assisting within your knowledge boundaries and efficiently passing the conversation to human support when needed.`;
     } else if (chatbot?.prompt && chatbot?.botType === "Custom") {
-      AIContent = `You have access to customized information tailored to your specific needs. You can ask me questions about the following topics: ${systemCharacteristicData}, and I can also assist you with information from these documents: ${formattedRelevantDocs}. Additionally, you have some custom queries or scenarios provided, which are: ${chatbot?.prompt}. Please keep your questions within this framework for the most relevant responses. If a question is outside this scope, I will escalate it to a real user to continue the conversation and add a keyword (realtime) at the end.`;
-    } else {
-      AIContent = `You are a helpful AI assistant engaging with an anonymous user. Your primary focus is on the following key information: ${systemCharacteristicData}, ${formattedRelevantDocs}. Maintain a respectful, friendly tone and use emojis judiciously to enhance communication 😊.
-     If a user's query falls within your specified content areas:
-    - Respond helpfully based on your knowledge.
-    - Do not add the "(realtime)" keyword to your response.
-    
-    If a user's query falls outside your specified content areas:
-    1. Politely inform them that the topic is beyond your current scope.
-    2. Ask if they would like to provide their email address for follow-up with a human agent.
-    3. Whether they provide an email or not, assure them that a human agent will assist them shortly.
-    4. Add the keyword "(realtime)" at the very end of your response.
-    
-    Example response for off-topic queries:
-    "I apologize, but your question is outside my area of expertise. Would you like to provide your email address so a human agent can follow up with you? Regardless of your choice, I'll make sure a human assistant continues this conversation soon. (realtime)"
-    
-    If they provide an email:
-    - Confirm receipt politely: "Thank you for providing your email. A human agent will contact you soon. (realtime)"
-    
-    If they decline to provide an email:
-    - Acknowledge their decision: "I understand. A human agent will continue this conversation shortly. (realtime)"
-    
-    Always prioritize user privacy and data protection. Be helpful within your defined scope, and gracefully hand off to human support when necessary.`;
+      AIContent = `You have access to customized information tailored to your specific needs. You can ask me questions about the following topics: ${characteristicData}, ${websiteUrlData}, and I can also assist you with information from these documents: ${formattedRelevantDocs}. Additionally, you have some custom queries or scenarios provided, which are: ${chatbot?.prompt}. Please keep your questions within this framework for the most relevant responses. If a question is outside this scope, I will escalate it to a real user to continue the conversation and add a keyword (realtime) at the end.`;
     }
 
     const messages: ChatCompletionMessageParam[] = [
@@ -269,7 +272,9 @@ export const sendMessage = async (
       if (!aiResponse1) {
         console.log("Failed to generate AI Response");
       }
+
       const aiResponseFilter = aiResponse1?.includes("(realtime)");
+      const aiResponseFilter2 = aiResponse1?.includes("(appointment)");
 
       if (aiResponseFilter) {
         console.log("live agent required here");
@@ -288,9 +293,12 @@ export const sendMessage = async (
 
         const sender =
           getUser && getUser?.User?.email
-            ? onMailer(getUser?.User?.email, chatbot?.name)
+            ? onMailer({
+                name: chatbot?.name,
+                email: getUser?.User.email!,
+              })
             : null;
-        console.log("sender", sender);
+
         if (sender) {
           await prisma.chatRoom
             .update({
@@ -336,6 +344,49 @@ export const sendMessage = async (
           seen: true,
         },
       });
+
+      if (aiResponseFilter2) {
+        await prisma.chatMessage
+          .create({
+            data: {
+              message: "Please book your appointment schedule:",
+              role: "user",
+              type: "appointment_form",
+              ChatRoom: {
+                connect: {
+                  id: chatRoomId,
+                },
+              },
+              seen: true,
+            },
+          })
+          .then(() => {
+            aiResponse = aiResponse1?.replace("(appointment)", "");
+          });
+      }
+
+      const foundFirstRow = await prisma.chatMessage.findMany({
+        where: {
+          chatRoomId: chatRoomId,
+        },
+      });
+      console.log("this is foundFirstRow length", foundFirstRow.length);
+      if (chatbot.getDetails && foundFirstRow.length <= 3) {
+        // console.log("contact_form added");
+        await prisma.chatMessage.create({
+          data: {
+            message: "Please provide your contact information:",
+            role: "ai",
+            type: "contact_form",
+            ChatRoom: {
+              connect: {
+                id: chatRoomId,
+              },
+            },
+            seen: true,
+          },
+        });
+      }
 
       return {
         id: aiMessageResult?.id,

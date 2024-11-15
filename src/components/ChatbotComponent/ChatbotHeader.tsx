@@ -1,9 +1,12 @@
-import { BotIcon } from "lucide-react";
+import { BotIcon, RefreshCcw } from "lucide-react";
 import Image from "next/image";
 import Avatar from "../Avatar";
 import botIcon from "../../../public/circlegolden.png";
 import { usePathname } from "next/navigation";
 import type { ChatBot } from "@prisma/client";
+import { Button } from "../ui/button";
+import { useGlobalStore } from "@/store/globalStore";
+import { toast } from "sonner";
 
 export default function ChatbotHeader({
   bot,
@@ -13,6 +16,10 @@ export default function ChatbotHeader({
   live?: boolean;
 }) {
   const pathname = usePathname();
+  const [setChatId, setFeedback] = useGlobalStore((state) => [
+    state.setChatId,
+    state.setFeedback,
+  ]);
 
   return (
     <header
@@ -53,10 +60,7 @@ export default function ChatbotHeader({
           >
             {bot?.name}
           </h3>
-          <p
-            //  className='text-xs text-muted-foreground'
-            className='text-xs md:text-sm text-muted-foreground'
-          >
+          <p className='text-xs md:text-sm text-muted-foreground'>
             {bot?.role ? bot?.role : "We're here to help 24/7"}
           </p>
         </div>
@@ -68,12 +72,31 @@ export default function ChatbotHeader({
             {/* <div className='relative inline-block h-3 w-3 rounded-full bg-primary' /> */}
             <div className='h-3 w-3 rounded-full bg-green-500' />
           </div>
-
-          <span className='text-sm font-medium text-muted-foreground'>
-            LIVE
-          </span>
         </div>
-      ) : null}
+      ) : (
+        <>
+          {!pathname.includes("/chatlogs") && (
+            <Button
+              variant='outline'
+              onClick={() => {
+                toast.promise(
+                  async () => {
+                    setChatId("");
+                    setFeedback(false);
+                  },
+                  {
+                    loading: "Clearing chat messages...",
+                    success: "Chat messages cleared successfully.",
+                    error: "Error clearing chat ID.",
+                  }
+                );
+              }}
+            >
+              <RefreshCcw className='h-5 w-5' />
+            </Button>
+          )}
+        </>
+      )}
     </header>
   );
 }

@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "CHROME_PATH": "./node_modules/@sparticuz/chromium-min/bin/chromium"
+    }
+  },
+  "functions": {
+    "api/fetch-url/route.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
+}

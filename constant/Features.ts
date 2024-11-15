@@ -10,6 +10,8 @@ import {
   GlobeIcon,
   Cpu,
   DownloadIcon,
+  WebcamIcon,
+  MailIcon,
 } from "lucide-react";
 
 export const plans = [
@@ -18,10 +20,11 @@ export const plans = [
     price: "Free",
     originalPrice: "Free",
     features: [
-      "2 PDF Documents",
-      "25 AI Chat Credits",
-      "Switch Between Chat with PDF & Salesbots",
-      "Website Chatbot Embedding",
+      "Train Chatbot with 2 PDF Documents",
+      "Train Chatbot with Your Website Content",
+      "12 AI Chat Credits",
+      "Switch Between Different Chatbot",
+      "Embed Chatbot on Your Website",
       "Chat with Memory Record",
       "Download Chatlogs ",
     ],
@@ -34,33 +37,40 @@ export const plans = [
     price: "$29.99",
     originalPrice: "$49.99",
     features: [
-      "22 PDF Documents",
+      "Train Chatbot with 10 PDF Documents",
+      "Train Chatbot with Your Website Content",
       "Unlimited AI Chat Messages",
-      "Delete & Manage Bots",
-      "Switch Between Chat with PDF & Salesbots",
+      "Email Marketing Campaign Integration",
+      "Embed Chatbot on Your Website",
+      "Manage & Delete Chatbots",
+      "Switch Between Chatbot type",
       "Switch Between ChatGPT Models",
-      "Access Chatbot Analytics",
-      "Client Can Switch to Live Agents",
-      "Chat with Memory Record",
-      "Remove chatbot watermark",
-      "Download Chatlogs",
+      "Access Detailed Chatbot Analytics",
+      "Clients Can Connect to Live Agents",
+      "Chat with Memory Capabilities",
+      "Notify when customers switch to live mode",
+      "Remove Quiksbot Watermark",
+      "Download Chat Logs",
     ],
-    buttonText: "Choose to Pro",
+    buttonText: "Choose Pro",
     buttonLink: "#",
     isMostPopular: true,
     description:
-      "Ideal for growing businesses needing advanced AI chatbot tools.",
+      "Perfect for businesses looking for advanced AI chatbot customization and engagement tools.",
   },
   {
     name: "Ultimate",
     price: "$99.99",
     originalPrice: "$149.99",
     features: [
-      "50 PDF Documents",
+      "Train Chatbot with 20 PDF Documents",
       "Unlimited AI Chat Messages",
-      "Remove chatbot watermark",
-      "Delete & Manage Bots",
-      "Switch Between Chat with PDF & Salesbots",
+      "Email Marketing Campaign",
+      "Embed Chatbot on Your Website",
+      "Remove Quiksbot Watermark",
+      "Train Chatbot with Your Website Content",
+      "Manage & Delete Chatbots",
+      "Switch Between Chatbot type",
       "Switch Between ChatGPT Models",
       "Access Chatbot Analytics",
       "Client Can Switch to Live Agents",
@@ -68,7 +78,7 @@ export const plans = [
       "Use Custom OpenAI API Keys",
       "Customize AI Prompts",
       "Download Chatlogs",
-      "Notify when customers switch to live mode.",
+      "Notify when customers switch to live mode",
     ],
     buttonText: "Upgrade to Ultimate",
     buttonLink: "#",
@@ -79,16 +89,29 @@ export const plans = [
 
 export const botTypeData = [
   {
-    value: "SalesBot",
-    label: "Sales Bot Customer Service - Engage and convert leads",
+    value: "Defaults",
+    label:
+      "Default Bot - Engage visitors, capture leads, and streamline general customer interactions.",
   },
+  // {
+  //   value: "Sales",
+  //   label:
+  //     "Sales Bot - Drive engagement and boost conversions by guiding prospects through the sales funnel.",
+  // },
   {
-    value: "ChatPdf",
-    label: "Chat with PDF Only - Answer queries based on your uploaded",
+    value: "Services",
+    label:
+      "Services Bot - Provide detailed responses to inquiries using information from uploaded documents.",
   },
+  // {
+  //   value: "Support",
+  //   label:
+  //     "Support Bot - Efficiently manage tickets and deliver accurate responses based on reference PDFs.",
+  // },
   {
     value: "Custom",
-    label: "Customize your own prompt",
+    label:
+      "Custom Bot - Design a personalized bot with custom prompts and tailored interactions.",
   },
 ];
 
@@ -99,12 +122,7 @@ export const features = [
       "Keep all your important PDF files securely stored and easily accessed.",
     icon: FileTextIcon,
   },
-  {
-    name: "AI Chat with PDF",
-    description:
-      "Interact with your PDF documents using AI-powered chat, answering queries and extracting information.",
-    icon: Bot,
-  },
+
   {
     name: "Embed Chatbot on Website",
     description:
@@ -148,7 +166,7 @@ export const features = [
     icon: CodeIcon,
   },
   {
-    name: "SalesBot for Lead Generation",
+    name: "Lead Generation",
     description:
       "Deploy a SalesBot to engage visitors, generate leads, and convert them into customers.",
     icon: BotIcon,
@@ -158,5 +176,17 @@ export const features = [
     description:
       "Download complete chat logs in PDF format for record-keeping and future reference.",
     icon: DownloadIcon,
+  },
+  {
+    name: "Train Chatbot with Your Content",
+    description:
+      "Empower your chatbot with knowledge from your website, context, and PDFs to deliver precise responses.",
+    icon: GlobeIcon,
+  },
+  {
+    name: "Email Marketing Campaigns",
+    description:
+      "Design targeted email campaigns with customizable content, recipient management, and performance tracking.",
+    icon: MailIcon,
   },
 ];

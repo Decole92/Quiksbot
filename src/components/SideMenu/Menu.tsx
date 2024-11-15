@@ -7,6 +7,7 @@ import {
   Settings,
   Settings2,
   StarIcon,
+  Unplug,
 } from "lucide-react";
 import { MailWarning, Inbox } from "lucide-react";
 
@@ -29,21 +30,22 @@ export const SIDE_BAR_MENU: MenuTypes[] = [
     icon: <MessageSquareMore />,
     path: "/chatlogs",
   },
-  // {
-  //   label: "Integrations",
-  //   icon: <Settings2 />,
-  //   path: "/integration",
-  // },
+  {
+    label: "Email",
+    icon: <Mail />,
+    path: "/email-campaign",
+  },
+  {
+    label: "Integrations",
+    icon: <Unplug />,
+    path: "/integration",
+  },
   {
     label: "Analytics",
     icon: <ActivitySquare />,
     path: "/analytic",
   },
-  // {
-  //   label: "Email",
-  //   icon: <Mail />,
-  //   path: "/email_compaign",
-  // },
+
   {
     label: "Settings",
     icon: <Settings />,

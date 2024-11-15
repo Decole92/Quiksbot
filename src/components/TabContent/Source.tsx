@@ -2,25 +2,34 @@ import React, { useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import DropzoneComponent from "../DropzoneComponent";
-import { Info, TrashIcon } from "lucide-react";
+import { Info, Loader2, TrashIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { toast } from "sonner";
 import useSWR from "swr";
-import { addCharacteristic, deletePdf, getBot } from "@/actions/bot";
+import {
+  addCharacteristic,
+  deletePdf,
+  deleteWebsiteUrl,
+  getBot,
+} from "@/actions/bot";
 import Characteristic from "../Characteristic";
 import type { PdfFile } from "@prisma/client";
 import useSubcription from "@/hook/useSubscription";
+import { BASE_URL } from "../../../constant/url";
 
 function Source({ chatbotId }: { chatbotId: string }) {
   const { isOverFileLimit, handleNewPdfUpload } = useSubcription();
   const [isPending, startTransition] = useTransition();
+  const [isCrawling, startCrawling] = useTransition();
+
   const { data: chatbot, mutate } = useSWR(
     chatbotId ? `/api/getBot/${chatbotId}` : null,
     chatbotId ? async () => getBot(chatbotId) : null
   );
 
   const [characteristic, setCharacteristic] = useState("");
-
+  const [url, setUrl] = useState("");
+  const [links, setLinks] = useState([]);
   const handleAddCharacteristics = async (e: React.FormEvent) => {
     e.preventDefault();
     const feature = characteristic;
@@ -50,6 +59,39 @@ function Source({ chatbotId }: { chatbotId: string }) {
     if (fetch?.completed) {
       handleNewPdfUpload();
     }
+  };
+
+  const handleDeleteWebsiteUrl = async (id: string) => {
+    const promise = deleteWebsiteUrl(id);
+    toast.promise(promise, {
+      loading: `Deleting url...`,
+      success: "Url Deleted!",
+      error: "error has occur while trying to delete website url",
+    });
+    await mutate(() => getBot(chatbotId));
+  };
+
+  const handleWebsiteUrl = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const sourceId = chatbot?.sourceId;
+    const address = url;
+    setUrl("");
+    startCrawling(async () => {
+      const res = await fetch("/api/fetch-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address, chatbotId, sourceId }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        await mutate(() => getBot(chatbotId));
+      } else {
+        console.error("Error fetching data");
+      }
+    });
   };
 
   return (
@@ -139,7 +181,7 @@ function Source({ chatbotId }: { chatbotId: string }) {
           </div>
         </div>
 
-        <div className='space-y-5 hidden'>
+        <div className='space-y-5 '>
           <div className=''>
             <h3 className='font-bold text-lg'>Crawl Website</h3>
             <h5 className=' pb-2 '>
@@ -147,18 +189,29 @@ function Source({ chatbotId }: { chatbotId: string }) {
               files on the website).
             </h5>
 
-            <div className='bg-gray-200/50 p-3 rounded-md space-y-3'>
+            <div className='bg-gray-200/50 dark:bg-gray-950 p-3 rounded-md space-y-3'>
               <form
-                // onSubmit={handleAddQuestions}
+                onSubmit={handleWebsiteUrl}
                 className='flex items-center md:flex-row flex-col md:gap-4'
               >
                 <Input
-                  className='flex-1'
+                  disabled={isCrawling}
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className='flex-1 dark:bg-gray-900'
                   placeholder='https://www.example.com '
                 />
-                <Button type='submit' className='bg-black/70 w-auto'>
-                  Fetch more links
-                </Button>
+                {isCrawling ? (
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                ) : (
+                  <Button
+                    type='submit'
+                    disabled={isCrawling || !url}
+                    className=' w-auto bg-black/70  dark:bg-gray-900 hover:bg-[#E1B177] dark:hover:bg-[#E1B177] dark:text-gray-200 '
+                  >
+                    Fetch more links
+                  </Button>
+                )}
               </form>
             </div>
 
@@ -171,51 +224,41 @@ function Source({ chatbotId }: { chatbotId: string }) {
                 <hr className='bg-black w-1/3' />
               </span>
 
-              <div className='px-5 py-2'>
-                <div className='flex items-center justify-between '>
-                  <div className='flex flex-1 items-center space-x-4'>
-                    <Badge
-                      //   variant='outline'
-                      className='p-2 bg-green-100 text-green-500 border border-green-500 gap-3 rounded-md '
-                    >
-                      trained
-                      <Info className='w-4 h-4' />
-                    </Badge>
+              {chatbot?.Source?.webpage &&
+              chatbot?.Source?.webpage?.length > 0 ? (
+                <>
+                  {chatbot?.Source.webpage.map((webpage) => (
+                    <div key={webpage.id} className='px-5 py-2'>
+                      <div className='flex items-center justify-between '>
+                        <div className='flex flex-1 items-center space-x-4'>
+                          <Badge className='p-2 bg-green-100 text-green-500 border border-green-500 gap-3 rounded-md '>
+                            trained
+                            <Info className='w-4 h-4' />
+                          </Badge>
 
-                    <Input
-                      disabled={true}
-                      className='w-1/2'
-                      value={"https://portfolio.decolemills.com/#about"}
-                      placeholder='https://portfolio.decolemills.com/#about'
-                    />
-                    <h5 className='text-gray-500 text-sm'>5021</h5>
-                  </div>
-                  <TrashIcon className='h-5 w-5 fill-red-100 text-red-500 cursor-pointer' />
-                </div>
-              </div>
-
-              <div className='px-5 py-2'>
-                <div className='flex items-center justify-between '>
-                  <div className='flex flex-1 items-center space-x-4'>
-                    <Badge
-                      //   variant='outline'
-                      className='p-2 bg-green-100 text-green-500 border border-green-500 gap-3 rounded-md '
-                    >
-                      trained
-                      <Info className='w-4 h-4' />
-                    </Badge>
-
-                    <Input
-                      disabled={true}
-                      className='w-1/2'
-                      value={"https://portfolio.decolemills.com/#about"}
-                      placeholder='https://portfolio.decolemills.com/#about'
-                    />
-                    <h5 className='text-gray-500 text-sm'>5021</h5>
-                  </div>
-                  <TrashIcon className='h-5 w-5 fill-red-100 text-red-500 cursor-pointer' />
-                </div>
-              </div>
+                          <Input
+                            disabled={true}
+                            className='w-1/2'
+                            value={`${webpage.weblinks}`}
+                            placeholder={`${webpage?.weblinks}`}
+                          />
+                          <h5 className='text-gray-500 text-sm'>
+                            {webpage.length}
+                          </h5>
+                        </div>
+                        <TrashIcon
+                          onClick={() => handleDeleteWebsiteUrl(webpage.id)}
+                          className='h-5 w-5 fill-red-100 text-red-500 cursor-pointer'
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <h4>
+                  {`Your ${chatbot?.name} bot has not been trained with any website  yet`}
+                </h4>
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import EditPageClient from "@/components/EditPageComponent";
+import EditPageClient from "@/components/MajorComponent/EditPageComponent";
 import { Metadata } from "next";
 import React from "react";
 

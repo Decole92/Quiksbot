@@ -2,11 +2,10 @@
 import React, { useEffect, useState, useTransition } from "react";
 import { Separator } from "./ui/separator";
 import { useGlobalStore } from "@/store/globalStore";
-import ChatbotMessages from "./ChatbotMessages";
+import ChatbotMessages from "./ChatbotComponent/ChatbotMessages";
 import ChatbotHeader from "./ChatbotComponent/ChatbotHeader";
 import ChatbotInput from "./ChatbotComponent/chatbotInput";
 import {
-  getAllActiveChats,
   getUserCustomers,
   updateChatRoomMode,
   viewMessage,
@@ -75,11 +74,6 @@ function ChatInterface() {
     () => getBot(chatRoom?.Customer?.chatbotId!)
   );
 
-  const { mutate: getEvery } = useSWR(
-    `/api/getActiveChats/${user?.id}`,
-    user ? async () => await getAllActiveChats(user?.id) : null
-  );
-
   const { mutate: getAll } = useSWR(
     `/api/getCustomers/${user?.id}`,
     user ? async () => await getUserCustomers(user?.id) : null
@@ -102,7 +96,6 @@ function ChatInterface() {
 
       const fetch = await del;
       if (fetch?.completed) {
-        await getEvery(getAllActiveChats(user?.id!));
         await getAll(getUserCustomers(user?.id!));
       }
     });
@@ -192,8 +185,8 @@ function ChatInterface() {
           <Image
             src={logo}
             alt='logo'
-            height={100}
-            width={100}
+            height={50}
+            width={50}
             className='animate-spin rounded-full'
           />
         </div>
@@ -236,6 +229,7 @@ function ChatInterface() {
           <ScrollArea className='h-[calc(100vh-400px)] p-0 '>
             {hasMessages ? (
               <ChatbotMessages
+                chatId={chatRoom?.id!}
                 chatbot={bot as ChatBot}
                 messages={chatMessages as ChatMessage[]}
               />
@@ -280,7 +274,6 @@ function ChatInterface() {
               </div>
             ) : (
               <ChatbotInput
-                userDetails={userDetails as any}
                 chatRoomId={chatRoom?.id!}
                 chatbot={bot as ChatBot}
                 type='assistant'
