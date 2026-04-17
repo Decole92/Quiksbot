@@ -1,5 +1,5 @@
 import { MessageParam } from "@anthropic-ai/sdk/resources/index.mjs";
-import { ChatCompletionMessageParam } from "openai/resources/chat";
+import { ChatCompletionMessageParam } from "openai/resources";
 
 // Helper function to convert OpenAI format to Anthropic format
 export const convertToAnthropicMessages = (
