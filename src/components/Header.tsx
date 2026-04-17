@@ -4,7 +4,7 @@ import Link from "next/link";
 import Avatar from "./Avatar";
 import logo from "../../public/circlegolden.png";
 import { Montserrat } from "next/font/google";
-import { SignInButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import CreditBar from "./CreditBar";
 import useSubcription from "@/hook/useSubscription";
@@ -142,12 +142,12 @@ function Header() {
           </div>
         )}
         <div className='md:col-span-2 lg:col-span-2 col-span-5'>
-          <Show when="signed-out">
+          <SignedOut>
             <SignInButton />
-          </Show>
-          <Show when="signed-in">
+          </SignedOut>
+          <SignedIn>
             <UserButton />
-          </Show>
+          </SignedIn>
         </div>
       </div>
     </header>
