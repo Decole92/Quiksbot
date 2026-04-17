@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import type { NextRequest } from "next/server";
 
 // Define route matchers for protected and public routes
 const isProtectedRoute = createRouteMatcher([
@@ -30,11 +29,10 @@ const isPublicRoute = createRouteMatcher([
   "/send-notification",
 ]);
 
-// Custom middleware function
-async function middleware(request: NextRequest, event: any) {
-  const { pathname } = request.nextUrl;
+export default clerkMiddleware(async (auth, req) => {
+  const { pathname } = req.nextUrl;
 
-  if (request.url.includes("/api/socket")) {
+  if (req.url.includes("/api/socket")) {
     return NextResponse.next();
   }
 
@@ -45,14 +43,10 @@ async function middleware(request: NextRequest, event: any) {
     return response;
   }
 
-  return clerkMiddleware(async (auth, req) => {
-    if (isProtectedRoute(req) || !isPublicRoute(req)) {
-      await auth.protect();
-    }
-  })(request, event);
-}
-
-export default middleware;
+  if (isProtectedRoute(req) || !isPublicRoute(req)) {
+    await auth.protect();
+  }
+});
 
 export const config = {
   matcher: [
