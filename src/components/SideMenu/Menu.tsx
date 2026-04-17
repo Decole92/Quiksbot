@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import {
   ActivitySquare,
   LayoutDashboard,
@@ -54,7 +55,7 @@ export const SIDE_BAR_MENU: MenuTypes[] = [
 ];
 type TABS_MENU_PROPS = {
   label: string;
-  icon?: JSX.Element;
+  icon?: ReactElement;
 };
 
 export const TABS_MENU: TABS_MENU_PROPS[] = [
