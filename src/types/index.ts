@@ -1,0 +1,21 @@
+// Local type definitions replacing Prisma types after migration to Convex
+export type ChatBot = any;
+export type ChatMessage = any;
+export type ChatRoom = any;
+export type Customer = any;
+export type FirstQuestion = any;
+export type PdfFile = any;
+export type Billing = any;
+export type Source = any;
+export type Website = any;
+export type Characteristic = any;
+export type BlockPages = any;
+export type Appointment = any;
+export type AppointmentType = any;
+export type AppointmentClient = any;
+export type BusinessHours = any;
+export type Campaign = any;
+export type User = any;
+export type Mail = any;
+export type WhatsAppInfo = any;
+export type botType = "Sales" | "Appointment" | "Support" | "Custom";
