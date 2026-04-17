@@ -6,11 +6,11 @@ import { Button } from "./ui/button";
 type Props = {
   triggers: {
     label: string;
-    icon?: JSX.Element;
+    icon?: React.ReactElement;
   }[];
   children: React.ReactNode;
   className?: string;
-  button?: JSX.Element;
+  button?: React.ReactElement;
 };
 
 const TabsMenu = ({ triggers, children, className, button }: Props) => {
