@@ -125,17 +125,9 @@ function ChatInterface() {
       (a: any, b: any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )[0];
-  let isTimeExceeded;
-
-  if (lastAIMessage) {
-    const lastMessageTime = new Date(lastAIMessage.createdAt).getTime();
-    const currentTime = new Date().getTime();
-
-    const timeDifferenceInMinutes =
-      (currentTime - lastMessageTime) / (1000 * 60);
-
-    isTimeExceeded = timeDifferenceInMinutes > 30;
-  }
+  const isTimeExceeded: boolean = lastAIMessage
+    ? (new Date().getTime() - new Date(lastAIMessage.createdAt).getTime()) / (1000 * 60) > 30
+    : false;
 
   useEffect(() => {
     if (!selectedChatRoomId) return;
