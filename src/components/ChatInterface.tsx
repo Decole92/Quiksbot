@@ -142,18 +142,13 @@ function ChatInterface() {
     setChatBot();
     mutate(getChatMessages(selectedChatRoomId));
     setChatRoom(getChatRoom(selectedChatRoomId));
-  }, [selectedChatRoomId, bot]);
+  }, [selectedChatRoomId]);
 
   useEffect(() => {
-    if (isTimeExceeded!) {
-      const updateChatRoom = async () => {
-        if (chatRoom && chatRoom.id) {
-          await updateChatRoomMode(chatRoom.id);
-        }
-      };
-      updateChatRoom();
+    if (isTimeExceeded && chatRoom?.id) {
+      updateChatRoomMode(chatRoom.id);
     }
-  }, [chatMessages, chatRoom]);
+  }, [isTimeExceeded, chatRoom?.id]);
 
   useEffect(() => {
     if (!chatRoom?.live || !selectedChatRoomId) return;
