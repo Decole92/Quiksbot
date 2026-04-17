@@ -13,7 +13,8 @@ import { useSearchParams } from "next/navigation";
 import { appointmentAction } from "@/actions/appointment";
 import useSWR from "swr";
 
-function AppointmentToken({ params: { id } }: { params: { id: string } }) {
+function AppointmentToken({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = React.use(params);
   const cleanId = id.split("&")[0];
 
   const searchParams = useSearchParams();
