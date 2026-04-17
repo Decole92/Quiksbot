@@ -4,7 +4,7 @@ import Link from "next/link";
 import Avatar from "./Avatar";
 import logo from "../../public/circlegolden.png";
 import { Montserrat } from "next/font/google";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import CreditBar from "./CreditBar";
 import useSubcription from "@/hook/useSubscription";
@@ -25,6 +25,7 @@ import {
 const Inter = Montserrat({ weight: "600", subsets: ["latin"] });
 
 function Header() {
+  const { isSignedIn } = useUser();
   const { hasActiveMembership, usedCredits, totalCredits } = useSubcription();
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
@@ -142,12 +143,7 @@ function Header() {
           </div>
         )}
         <div className='md:col-span-2 lg:col-span-2 col-span-5'>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          {isSignedIn ? <UserButton /> : <SignInButton />}
         </div>
       </div>
     </header>
