@@ -80,6 +80,7 @@ const useFcmToken = () => {
     if ("Notification" in window) {
       loadToken();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -146,7 +147,7 @@ const useFcmToken = () => {
     });
 
     return () => unsubscribe?.();
-  }, [token, router, toast]);
+  }, [token, router]);
 
   return { token, notificationPermissionStatus };
 };
